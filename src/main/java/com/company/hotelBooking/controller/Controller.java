@@ -16,37 +16,42 @@ import java.io.IOException;
 
 /**
  * Class for processing HttpServletRequest "/controller"
- * 
- * @author Yulia
  *
+ * @author Yulia
  */
 @WebServlet("/controller")
 @Log4j2
 public class Controller extends HttpServlet {
+    public static final String REDIRECT = "redirect:";
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String commandName = req.getParameter("command");
-		
-		if (!CommandName.contains(commandName.toUpperCase())) {
-			log.error("Incorrect address entered");
-			commandName = "error";
-		}
-		ICommand command = CommandFactory.getINSTANCE().getCommand(commandName);
-		try {
-			String page = command.execute(req);
-			req.getRequestDispatcher(page).forward(req, resp);
-		} catch (IOException e) {
-			req.getRequestDispatcher(ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR)).forward(req, resp);
-		}
-	}
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(req, resp);
-	}
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String commandName = req.getParameter("command");
 
-	@Override
-	public void destroy() {
-		DataSource.getINSTANCE().close();
-	}
+        if (!CommandName.contains(commandName.toUpperCase())) {
+            log.error("Incorrect address entered");
+            commandName = "error";
+        }
+        ICommand command = CommandFactory.getINSTANCE().getCommand(commandName);
+        try {
+            String page = command.execute(req);
+            if (page.startsWith(REDIRECT)) {
+                resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));
+            } else {
+                req.getRequestDispatcher(page).forward(req, resp);
+            }
+        } catch (IOException e) {
+            req.getRequestDispatcher(ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR))
+                    .forward(req, resp);
+        }
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    @Override
+    public void destroy() {
+        DataSource.getINSTANCE().close();
+    }
 }

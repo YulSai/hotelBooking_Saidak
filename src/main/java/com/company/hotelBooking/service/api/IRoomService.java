@@ -2,7 +2,6 @@ package com.company.hotelBooking.service.api;
 
 import com.company.hotelBooking.service.dto.RoomDto;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,12 +17,6 @@ public interface IRoomService extends IAbstractService<Long, RoomDto> {
      * @return Room Dto object
      */
     RoomDto findRoomByNumber(String number);
-
-    /**
-     * Method gets amount of rooms Dto
-     * @return amount of rooms Dto
-     */
-    int countAllRooms() throws SQLException;
 
     /**
      * Method gets list of an available Rooms limited by time period

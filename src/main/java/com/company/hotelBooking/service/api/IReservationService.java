@@ -1,12 +1,12 @@
 package com.company.hotelBooking.service.api;
 
-import com.company.hotelBooking.dao.entity.Reservation;
 import com.company.hotelBooking.exceptions.ServicesException;
+import com.company.hotelBooking.service.dto.ReservationDto;
 
 /**
  * Interface for serving reservation objects according to the business logics of reservation
  */
-public interface IReservationService extends IAbstractService<Long, Reservation> {
+public interface IReservationService extends IAbstractService<Long, ReservationDto> {
     /**
      * Method gets difference between two dates in reservation
      *
@@ -21,6 +21,5 @@ public interface IReservationService extends IAbstractService<Long, Reservation>
      * @param roomId        room id
      * @param reservationId reservation id
      */
-    void createInvoice(Long roomId, Long reservationId);
-
+    void createBooking(Long roomId, Long reservationId);
 }

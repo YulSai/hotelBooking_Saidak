@@ -40,6 +40,10 @@ public class ServiceFactory {
 
     @SuppressWarnings("unchecked")
     public <T> T getService(Class<?> clazz) {
-        return (T) map.get(clazz);
+        T service = (T) map.get(clazz);
+        if (service == null) {
+            throw new RuntimeException("Class " + clazz + "is not constructed");
+        }
+        return service;
     }
 }

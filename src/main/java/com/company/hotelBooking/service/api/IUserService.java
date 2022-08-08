@@ -1,8 +1,6 @@
 package com.company.hotelBooking.service.api;
 
 import com.company.hotelBooking.service.dto.UserDto;
-
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -22,12 +20,6 @@ public interface IUserService extends IAbstractService<Long, UserDto>{
 	 * @return list of user Dto
 	 */
 	List<UserDto> findAll();
-
-	/**
-	 * Method gets amount of users Dto
-	 * @return amount of users Dto
-	 */
-	int countAllUsers() throws SQLException;
 
 	/**
 	 * Method is used for user authentication
