@@ -1,5 +1,6 @@
 package com.company.hotelBooking.service.impl;
 
+import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
@@ -7,7 +8,6 @@ import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
 import lombok.extern.log4j.Log4j2;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +74,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<UserDto> findAllPages(Paging paging) {
+        log.debug("Calling a service method \"findAll\". Time = {}", new Date());
+        return userDao.findAllPages(paging.getLimit(), paging.getOffset()).stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
     public UserDto login(String email, String password) {
         log.debug("Calling a service method \"login\". UserDto email = {}, password = {}," +
                 " time = {}", email, password, new Date());
@@ -86,8 +94,6 @@ public class UserServiceImpl implements IUserService {
             log.error("SQLUserService login error. Wrong password = {}", password);
             throw new DaoException("Wrong password for user with email " + email);
         }
-
-
         return userDto;
     }
 
@@ -103,13 +109,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public int countAllUsers() throws SQLException {
-        log.debug("Calling a service method \"countAllUsers\". Time = {}", new Date());
-        return userDao.countAllUsers();
+    public long countRow() {
+        log.debug("Calling a service method \"countRow\". Time = {}", new Date());
+            return userDao.countRow();
     }
 
     /**
-     * Method transform object User into object UserDto
+     * Method transforms object User into object UserDto
      *
      * @param entity object User
      * @return object UserDto
@@ -133,7 +139,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * Method transform object UserDto into object User
+     * Method transforms object UserDto into object User
      *
      * @param dto UserDto
      * @return object User

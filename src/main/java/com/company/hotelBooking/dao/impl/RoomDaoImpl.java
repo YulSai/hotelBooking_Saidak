@@ -111,6 +111,11 @@ public class RoomDaoImpl implements IRoomDao {
         return false;
     }
 
+    @Override
+    public List<Room> findAllPages(int limit, long offset) {
+        return null;
+    }
+
     public Room findRoomByNumber(String number) {
         log.debug("Accessing the database using the \"findRoomByNumber\" command. Room number = {}, time = {}",
                 number, new Date());
@@ -127,16 +132,6 @@ public class RoomDaoImpl implements IRoomDao {
             throw new DaoException("Failed to find room with number " + number);
         }
         return null;
-    }
-
-    public int countAllRooms() throws SQLException {
-        log.debug("Accessing the database using the \"countAllRooms\" command. Time = {}", new Date());
-        ResultSet result;
-        try (Statement statement = dataSource.getConnection().createStatement()) {
-            result = statement.executeQuery(ConfigurationManager.getInstance().getString(ConfigurationManager.SQL_ROOM_COUNT_ROOMS));
-        }
-        result.next();
-        return result.getInt(1);
     }
 
     @Override
@@ -158,8 +153,42 @@ public class RoomDaoImpl implements IRoomDao {
             log.error("SQLRoomDAO findAllAvailableRooms error", e);
             throw new DaoException("Failed to find available rooms");
         }
-
         return rooms;
+    }
+
+    //@Override
+    public List<Room> findAllPages(int items, int begin) throws DaoException {
+        log.debug("Accessing the database using the \"findPaginatePage\" command. Time = {}", new Date());
+        List<Room> rooms = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+                .getString(ConfigurationManager.SQL_ROOM_PAGE))) {
+            statement.setInt(1, items);
+            statement.setInt(2, begin);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                rooms.add(processRoom(result));
+            }
+        } catch (SQLException e) {
+            log.error("SQLRoomDAO findPaginatePage error", e);
+            throw new DaoException("Failed to find rooms");
+        }
+        return rooms;
+    }
+
+    @Override
+    public long countRow() throws DaoException {
+        log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+                .getString(ConfigurationManager.SQL_ROOM_COUNT_ROOMS))) {
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return result.getLong("total");
+            }
+        } catch (SQLException e) {
+            log.error("SQLRoomDAO findRowCount error", e);
+            throw new DaoException("Failed to find count of rooms", e);
+        }
+        throw new DaoException("Failed to count rooms");
     }
 
     /**
@@ -171,7 +200,7 @@ public class RoomDaoImpl implements IRoomDao {
     private Room processRoom(ResultSet result) throws SQLException {
         Room room = new Room();
         room.setId(result.getLong("id"));
-        room.setNumber(result.getString("number"));
+        room.setNumber(result.getString("room_number"));
         room.setType(Room.RoomType.valueOf(result.getString("type")));
         room.setCapacity(Room.Capacity.valueOf(result.getString("capacity")));
         room.setPrice(result.getBigDecimal("price"));
@@ -186,10 +215,13 @@ public class RoomDaoImpl implements IRoomDao {
      * @param statement an object that represents a precompiled SQL statement
      */
     private void extractedDate(Room room, PreparedStatement statement) throws SQLException {
-        statement.setString(1, room.getType().toString().toUpperCase());
-        statement.setBigDecimal(2, room.getPrice());
-        statement.setString(3, room.getStatus().toString().toUpperCase());
-        statement.setString(4, room.getCapacity().toString().toUpperCase());
-        statement.setString(5, room.getNumber());
+        statement.setString(1, room.getNumber());
+        statement.setString(2, room.getType().toString().toUpperCase());
+        statement.setString(3, room.getCapacity().toString().toUpperCase());
+        statement.setBigDecimal(4, room.getPrice());
+        statement.setString(5, room.getStatus().toString().toUpperCase());
+
+
+
     }
 }

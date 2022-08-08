@@ -2,7 +2,6 @@ package com.company.hotelBooking.dao.api;
 
 import com.company.hotelBooking.dao.entity.Room;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public interface IRoomDao extends IAbstractDao<Long, Room> {
      * @return room
      */
     Room findRoomByNumber(String number);
-
-    /**
-     * Method counts the number of rooms in the data source
-     *
-     * @return amount of rooms
-     */
-    int countAllRooms() throws SQLException;
 
     /**
      * Method finds all available rooms limited by time period

@@ -1,5 +1,7 @@
 package com.company.hotelBooking.dao.api;
 
+import com.company.hotelBooking.exceptions.DaoException;
+
 import java.util.List;
 
 /**
@@ -40,4 +42,20 @@ public interface IAbstractDao<K, T> {
      * @param id Object id to be "soft" deleted
      */
     boolean delete(K id);
+
+    /**
+     * Method gets list of objects starting from begin position in the table
+     *
+     * @param limit number of records from the table
+     * @param offset starting position for search in the table
+     * @return List of objects
+     */
+    List<T> findAllPages(int limit, long offset);
+
+    /**
+     * Method finds number of rows in the table
+     *
+     * @return number of records in the table
+     */
+    long countRow() throws DaoException;
 }

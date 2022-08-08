@@ -1,6 +1,5 @@
 package com.company.hotelBooking.service.dto;
 
-import com.company.hotelBooking.dao.entity.Room;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,13 +11,13 @@ import java.time.LocalDate;
 @Data
 public class ReservationDto {
     private Long id;
-    private LocalDate dateCheckIn;
-    private LocalDate dateCheckOut;
-    private Room.RoomType type;
-    private Room.Capacity capacity;
-    private StatusDto status;
-    private Long userId;
+    private UserDto userDto;
     private Long roomId;
+    private RoomDto.RoomTypeDto type;
+    private RoomDto.CapacityDto capacity;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
+    private StatusDto status;
     private BigDecimal invoice;
 
     public enum StatusDto {

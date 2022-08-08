@@ -1,6 +1,7 @@
 package com.company.hotelBooking.dao.impl;
 
 import com.company.hotelBooking.dao.api.IReservationDao;
+import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.Reservation;
 import com.company.hotelBooking.dao.entity.Room;
@@ -8,11 +9,7 @@ import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,15 +20,13 @@ import java.util.List;
 @Log4j2
 public class ReservationDaoImpl implements IReservationDao {
     private final DataSource dataSource;
+    private final IUserDao userDao;
 
-
-    public ReservationDaoImpl(DataSource dataSource) {
+    public ReservationDaoImpl(DataSource dataSource, IUserDao userDao) {
         this.dataSource = dataSource;
+        this.userDao = userDao;
     }
 
-    /**
-     * Method gets the Reservation object from the database by id
-     */
     @Override
     public Reservation findById(Long id) {
         log.debug("Accessing the database using the \"findById\" command. Reservation id = {}, time = {}",
@@ -50,9 +45,7 @@ public class ReservationDaoImpl implements IReservationDao {
         return null;
     }
 
-    /**
-     * Method gets a list of all Reservation objects from the database
-     */
+    @Override
     public List<Reservation> findAll() {
         log.debug("Accessing the database using the \"findAll\" command. Time = {}", new Date());
         List<Reservation> reservations = new ArrayList<>();
@@ -107,6 +100,12 @@ public class ReservationDaoImpl implements IReservationDao {
         }
         return false;
     }
+
+    @Override
+    public List<Reservation> findAllPages(int limit, long offset) {
+        return null;
+    }
+
     @Override
     public Integer differenceBetweenDate(Long id) {
         Integer differenceDays = null;
@@ -125,44 +124,19 @@ public class ReservationDaoImpl implements IReservationDao {
     }
 
     @Override
-    public List<Reservation> findAllByRoomIdAndTimePeriod(Long id, LocalDate begin, LocalDate end) {
-        log.debug("Accessing the database using the \"findAllByRoomIdAndTimePeriod\" command. " +
-                "Room id = {}, time = {}", id, new Date());
-        List<Reservation> reservations = new ArrayList<>();
+    public long countRow() throws DaoException {
+        log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_FIND_ALL_RESERVATION_BY_ROOM_ID_AND_TIME_PERIOD))) {
-            statement.setLong(1, id);
-            statement.setDate(2, java.sql.Date.valueOf(begin));
-            statement.setDate(3, java.sql.Date.valueOf(end));
+                .getString(ConfigurationManager.SQL_RESERVATION_COUNT_RESERVATIONS))) {
             ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                reservations.add(processReservation(result));
+            if (result.next()) {
+                return result.getLong("total");
             }
         } catch (SQLException e) {
-            log.error("SQLReservationDAO findAllByRoomIdAndTimePeriod error. Room id = {}", id, e);
-            throw new DaoException("Failed to find rooms", e);
+            log.error("SQLReservationDAO findRowCount error", e);
+            throw new DaoException("Failed to find count of reservations", e);
         }
-        return null;
-    }
-
-    @Override
-    public List<Reservation> findAllByUserIdAndTimePeriod(Long id, LocalDate begin) {
-        log.debug("Accessing the database using the \"ffindAllByUserIdAndTimePeriod\" command. " +
-                "User id = {}, time = {}", id, new Date());
-        List<Reservation> reservations = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_FIND_ALL_RESERVATION_BY_USER_ID_AND_TIME_PERIOD))) {
-            statement.setLong(1, id);
-            statement.setDate(2, java.sql.Date.valueOf(begin));
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                reservations.add(processReservation(result));
-            }
-        } catch (SQLException e) {
-            log.error("SQLReservationDAO findAllByRoomIdAndTimePeriod error. User id = {}", id, e);
-            throw new DaoException("Failed to find rooms", e);
-        }
-        return null;
+        throw new DaoException("Failed to count reservations");
     }
 
     /**
@@ -174,14 +148,14 @@ public class ReservationDaoImpl implements IReservationDao {
     private Reservation processReservation(ResultSet result) throws SQLException {
         Reservation reservation = new Reservation();
         reservation.setId(result.getLong("id"));
+        reservation.setUser(userDao.findById((result.getLong("user_id"))));
+        reservation.setRoomId(result.getLong("room_id"));
+        reservation.setType(Room.RoomType.valueOf(result.getString("type").toUpperCase()));
+        reservation.setCapacity(Room.Capacity.valueOf(result.getString("capacity").toUpperCase()));
         reservation.setCheckIn(result.getTimestamp("check_in").toLocalDateTime().toLocalDate());
         reservation.setCheckOut(result.getTimestamp("check_out").toLocalDateTime().toLocalDate());
-        reservation.setRoomType(Room.RoomType.valueOf(result.getString("room_type")));
-        reservation.setRoomCapacity(Room.Capacity.valueOf(result.getString("room_capacity")));
-        reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
-        reservation.setUserId(result.getLong("user_id"));
-        reservation.setRoomId(result.getLong("room_id"));
         reservation.setInvoice(result.getBigDecimal("invoice"));
+        reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
         return reservation;
     }
 
@@ -192,13 +166,13 @@ public class ReservationDaoImpl implements IReservationDao {
      * @param statement   an object that represents a precompiled SQL statement
      */
     private void extractedDate(Reservation reservation, PreparedStatement statement) throws SQLException {
-        statement.setDate(1, java.sql.Date.valueOf(reservation.getCheckIn()));
-        statement.setDate(2, java.sql.Date.valueOf(reservation.getCheckOut()));
-        statement.setString(3, reservation.getRoomType().toString().toUpperCase());
-        statement.setString(4, reservation.getRoomCapacity().toString().toUpperCase());
-        statement.setString(5, reservation.getStatus().toString().toUpperCase());
-        statement.setLong(6, reservation.getUserId());
-        statement.setLong(7, reservation.getRoomId());
-        statement.setBigDecimal(8, reservation.getInvoice());
+        statement.setLong(1, reservation.getUser().getId());
+        statement.setLong(2, reservation.getRoomId());
+        statement.setString(3, reservation.getType().toString().toLowerCase());
+        statement.setString(4, reservation.getCapacity().toString().toLowerCase());
+        statement.setDate(5, java.sql.Date.valueOf(reservation.getCheckIn()));
+        statement.setDate(6, java.sql.Date.valueOf(reservation.getCheckOut()));
+        statement.setBigDecimal(7, reservation.getInvoice());
+        statement.setString(8, reservation.getStatus().toString().toLowerCase());
     }
 }

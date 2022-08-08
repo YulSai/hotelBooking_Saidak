@@ -115,6 +115,41 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
+	public List<User> findAllPages(int limit, long offset) throws DaoException {
+		log.debug("Accessing the database using the \"findPaginatePage\" command. Time = {}", new Date());
+		List<User> users = new ArrayList<>();
+		try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+				.getString(ConfigurationManager.SQL_USER_PAGE))) {
+			statement.setInt(1, limit);
+			statement.setLong(2, offset);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				users.add(processUser(result));
+			}
+		} catch (SQLException e) {
+			log.error("SQLUserDAO findPaginatePage error", e);
+			throw new DaoException("Failed to find users", e);
+		}
+		return users;
+	}
+
+	@Override
+	public long countRow() throws DaoException {
+		log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
+		try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+				.getString(ConfigurationManager.SQL_USER_COUNT_USERS))) {
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				return result.getLong("total");
+			}
+		} catch (SQLException e) {
+			log.error("SQLUserDAO findRowCount error", e);
+			throw new DaoException("Failed to find count of users", e);
+		}
+		throw new DaoException("Failed to count users");
+	}
+
+	@Override
 	public User findUserByEmail(String email) {
 		log.debug("Accessing the database using the \"findUserByEmail\" command. User's email = {}, time = {}", email,
 				new Date());
@@ -133,17 +168,6 @@ public class UserDaoImpl implements IUserDao {
 		return null;
 	}
 
-	@Override
-	public int countAllUsers() throws SQLException {
-		log.debug("Accessing the database using the \"countAllUsers\" command. Time = {}", new Date());
-		ResultSet result;
-		try (Statement statement = dataSource.getConnection().createStatement()) {
-			result = statement.executeQuery(ConfigurationManager.getInstance().getString(ConfigurationManager.SQL_USER_COUNT_USERS));
-		}
-		result.next();
-		return result.getInt(1);
-	}
-
 	/**
 	 * Method fills the User object with data from the database
 	 *
@@ -158,7 +182,7 @@ public class UserDaoImpl implements IUserDao {
 		user.setEmail(result.getString("email"));
 		user.setPassword(result.getString("password"));
 		user.setPhoneNumber(result.getString("phone_number"));
-		user.setRole(User.Role.valueOf(result.getString("role")));
+		user.setRole(User.Role.valueOf((result.getString("role")).toUpperCase()));
 		return user;
 	}
 

@@ -11,13 +11,13 @@ import java.time.LocalDate;
 @Data
 public class Reservation {
     private Long id;
+    private User user;
+    private Long roomId;
+    private Room.RoomType type;
+    private Room.Capacity capacity;
     private LocalDate checkIn;
     private LocalDate checkOut;
-    private Room.RoomType roomType;
-    private Room.Capacity roomCapacity;
     private Status status;
-    private Long userId;
-    private Long roomId;
     private BigDecimal invoice;
 
     public enum Status {
