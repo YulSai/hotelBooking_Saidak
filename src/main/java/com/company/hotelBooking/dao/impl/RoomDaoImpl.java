@@ -3,6 +3,7 @@ package com.company.hotelBooking.dao.impl;
 import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.Room;
+import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
@@ -113,7 +114,21 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public List<Room> findAllPages(int limit, long offset) {
-        return null;
+        log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
+        List<Room> rooms = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+                .getString(ConfigurationManager.SQL_ROOM_PAGE))) {
+            statement.setInt(1, limit);
+            statement.setLong(2, offset);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                rooms.add(processRoom(result));
+            }
+        } catch (SQLException e) {
+            log.error("SQLRoomDAO findAllPages error", e);
+            throw new DaoException("Failed to find rooms", e);
+        }
+        return rooms;
     }
 
     public Room findRoomByNumber(String number) {
@@ -152,25 +167,6 @@ public class RoomDaoImpl implements IRoomDao {
         } catch (SQLException e) {
             log.error("SQLRoomDAO findAllAvailableRooms error", e);
             throw new DaoException("Failed to find available rooms");
-        }
-        return rooms;
-    }
-
-    //@Override
-    public List<Room> findAllPages(int items, int begin) throws DaoException {
-        log.debug("Accessing the database using the \"findPaginatePage\" command. Time = {}", new Date());
-        List<Room> rooms = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_ROOM_PAGE))) {
-            statement.setInt(1, items);
-            statement.setInt(2, begin);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                rooms.add(processRoom(result));
-            }
-        } catch (SQLException e) {
-            log.error("SQLRoomDAO findPaginatePage error", e);
-            throw new DaoException("Failed to find rooms");
         }
         return rooms;
     }

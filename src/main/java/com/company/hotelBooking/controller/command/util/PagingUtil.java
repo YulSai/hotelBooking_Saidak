@@ -9,7 +9,7 @@ public class PagingUtil {
         String offsetStr = req.getParameter("page");
 
         int limit = limitStr == null ? 10 : Integer.parseInt(limitStr);
-        long page = offsetStr == null ? 0 : Long.parseLong(offsetStr);
+        long page = offsetStr == null ? 1 : Long.parseLong(offsetStr);
         long offset = (page - 1) * limit;
         return new Paging(limit, offset, page);
     }

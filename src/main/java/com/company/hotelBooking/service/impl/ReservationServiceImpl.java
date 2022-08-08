@@ -26,7 +26,6 @@ public class ReservationServiceImpl implements IReservationService {
         this.reservationDao = reservationDao;
     }
 
-
     @Override
     public ReservationDto findById(Long id) {
         log.debug("Calling a service method \"findById\". Reservation id = {}, time = {}", id, new Date());

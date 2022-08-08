@@ -115,8 +115,8 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public List<User> findAllPages(int limit, long offset) throws DaoException {
-		log.debug("Accessing the database using the \"findPaginatePage\" command. Time = {}", new Date());
+	public List<User> findAllPages(int limit, long offset){
+		log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
 		List<User> users = new ArrayList<>();
 		try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
 				.getString(ConfigurationManager.SQL_USER_PAGE))) {
@@ -127,7 +127,7 @@ public class UserDaoImpl implements IUserDao {
 				users.add(processUser(result));
 			}
 		} catch (SQLException e) {
-			log.error("SQLUserDAO findPaginatePage error", e);
+			log.error("SQLUserDAO findAllPages error", e);
 			throw new DaoException("Failed to find users", e);
 		}
 		return users;

@@ -103,7 +103,21 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public List<Reservation> findAllPages(int limit, long offset) {
-        return null;
+        log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
+        List<Reservation> reservations = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
+                .getString(ConfigurationManager.SQL_RESERVATION_PAGE))) {
+            statement.setInt(1, limit);
+            statement.setLong(2, offset);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                reservations.add(processReservation(result));
+            }
+        } catch (SQLException e) {
+            log.error("SQLReservationDAO findAllPages error", e);
+            throw new DaoException("Failed to find rooms", e);
+        }
+        return reservations;
     }
 
     @Override
