@@ -8,15 +8,15 @@
     <title>Update room</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <h1>Update room</h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">
     <input name="command" type="hidden" value="update_room"/>
     <input name="id" type="hidden" value="${requestScope.room.id}"/>
 
-    <label for="number-input">Number: </label>
-    <input id="number-input" name="number" type="text" value="${requestScope.room.number}"/>
+    <label for="room_number-input">Number: </label>
+    <input id="room_number-input" name="room_number" type="text" value="${requestScope.room.number}"/>
     <br/>
     <select name="type" required="required">
         <option value="">Choose type</option>

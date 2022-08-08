@@ -8,14 +8,14 @@
     <title>Register new room</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <h1>Register new room</h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">
     <input name="command" type="hidden" value="create_room"/>
 
-    <label for="number-input">Number: </label>
-    <input id="number-input" name="number" type="text"/>
+    <label for="room_number-input">Number: </label>
+    <input id="room_number-input" name="room_number" type="text"/>
     <br/>
         <select name="type" required="required">
             <option value="">Choose type</option>

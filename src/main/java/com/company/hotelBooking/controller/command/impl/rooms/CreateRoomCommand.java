@@ -25,7 +25,7 @@ public class CreateRoomCommand implements ICommand {
 		room.setPrice(new BigDecimal(req.getParameter("price")));
 		room.setStatusDto(RoomDto.RoomStatusDto.valueOf(req.getParameter("status")));
 		room.setCapacityDto(RoomDto.CapacityDto.valueOf(req.getParameter("capacity")));
-		room.setNumber(req.getParameter("number"));
+		room.setNumber(req.getParameter("room_number"));
 
 		RoomDto created = service.create(room);
 		req.setAttribute("room", created);

@@ -1,5 +1,6 @@
 package com.company.hotelBooking.controller.command.api;
 
+import com.company.hotelBooking.exceptions.ServicesException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
@@ -14,5 +15,5 @@ public interface ICommand {
 	 * @param req passed request
 	 * @return response
 	 */
-	String execute(HttpServletRequest req) throws IOException;
+	String execute(HttpServletRequest req);
 }

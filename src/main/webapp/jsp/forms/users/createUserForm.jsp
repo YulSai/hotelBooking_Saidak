@@ -8,7 +8,7 @@
     <title>Register new user</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <h1>Register new user</h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">

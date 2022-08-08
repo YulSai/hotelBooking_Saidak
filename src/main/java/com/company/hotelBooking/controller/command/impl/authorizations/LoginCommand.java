@@ -7,8 +7,6 @@ import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import java.io.IOException;
-
 public class LoginCommand implements ICommand {
     private final IUserService userService;
 
@@ -17,7 +15,7 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public String execute(HttpServletRequest req) throws IOException {
+    public String execute(HttpServletRequest req) {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 

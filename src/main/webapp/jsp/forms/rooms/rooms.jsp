@@ -8,7 +8,7 @@
 	<title>Rooms</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
 <table>
 	<th>#</th>

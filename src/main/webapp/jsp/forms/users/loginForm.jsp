@@ -8,7 +8,7 @@
 	<title>Login</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <h1>Login</h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">

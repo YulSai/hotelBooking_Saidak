@@ -8,7 +8,7 @@
 <title>Users</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
 	<table>
 		<th>#</th>
@@ -31,9 +31,9 @@
 		</c:forEach>
 
 		<ul>
-			<li><a href="/hotel_booking">Return to home page</a></li>
+			<li><a href="/hotel_booking">Home page</a></li>
 		</ul>
-		
+
 	</table>
 </body>
 </html>

@@ -34,12 +34,16 @@ public class DaoFactory {
         map = new HashMap<>();
         map.put(IRoomDao.class, new RoomDaoImpl(DataSource.getINSTANCE()));
         map.put(IUserDao.class, new UserDaoImpl(DataSource.getINSTANCE()));
-        map.put(IReservationDao.class, new ReservationDaoImpl(DataSource.getINSTANCE()));
+        map.put(IReservationDao.class, new ReservationDaoImpl(DataSource.getINSTANCE(), getDao(IUserDao.class)));
 
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getDao(Class<?> clazz) {
-        return (T) map.get(clazz);
+       T dao = (T) map.get(clazz);
+       if (dao == null) {
+           throw new RuntimeException("Class " + clazz + "is not constructed");
+       }
+        return dao;
     }
 }

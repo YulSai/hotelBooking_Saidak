@@ -6,6 +6,7 @@ import com.company.hotelBooking.controller.command.impl.ErrorCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginFormCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LogoutCommand;
+import com.company.hotelBooking.controller.command.impl.invoices.BookingCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.*;
@@ -63,6 +64,7 @@ public class CommandFactory {
         commands.put(CommandName.RESERVATIONS, new ReservationsCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
         commands.put(CommandName.RESERVATION, new ReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
 
+        commands.put(CommandName.BOOKING, new BookingCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
 
         commands.put(CommandName.ERROR, new ErrorCommand());
     }

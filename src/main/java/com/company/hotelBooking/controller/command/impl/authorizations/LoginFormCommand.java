@@ -5,8 +5,6 @@ import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.IOException;
-
 /**
  * Class for processing HttpServletRequest "login"
  */
@@ -14,7 +12,7 @@ import java.io.IOException;
 public class LoginFormCommand implements ICommand {
 
     @Override
-    public String execute(HttpServletRequest req) throws IOException {
+    public String execute(HttpServletRequest req) {
         return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN);
     }
 }

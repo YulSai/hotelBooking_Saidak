@@ -8,7 +8,7 @@
 <title>User</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp"/>
+<jsp:include page="../../navbar.jsp"/>
 	<h1>User personal info</h1>
 	<p>${requestScope.message}</p>
 	<table>
