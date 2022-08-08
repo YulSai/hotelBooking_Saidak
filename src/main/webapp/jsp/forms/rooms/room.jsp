@@ -17,35 +17,24 @@
         <th>Value</th>
     </tr>
     <tr>
-        <td class="name">Id</td>
-        <td class="sign">${requestScope.room.id}</td>
-    </tr>
-    <tr>
         <td class="name">Number</td>
         <td class="sign">${requestScope.room.number}</td>
     </tr>
     <tr>
         <td class="name">Type</td>
-        <td class="sign">${requestScope.room.typeDto}</td>
+        <td class="sign">${requestScope.room.type}</td>
     </tr>
     <tr>
         <td class="name">Capacity</td>
-        <td class="sign">${requestScope.room.capacityDto}</td>
+        <td class="sign">${requestScope.room.capacity}</td>
     </tr>
     <tr>
         <td class="name">Status</td>
-        <td class="sign">${requestScope.room.statusDto}</td>
+        <td class="sign">${requestScope.room.status}</td>
     </tr>
     <tr>
         <td class="name">Price/night, USD</td>
         <td class="sign">${requestScope.room.price}</td>
-    </tr>
-    <tr>
-        <form method="post" action="controller">
-            <input type="hidden" name="command" value="add_to_cart">
-            <input type="hidden" name="room_id" value="${requestScope.room.id}">
-            <input type="submit" value="Add to cart">
-        </form>
     </tr>
 
 </table>

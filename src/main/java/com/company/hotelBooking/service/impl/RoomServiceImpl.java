@@ -89,9 +89,9 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
-    public List<RoomDto> getAllAvailableRooms(LocalDate check_in, LocalDate check_out) {
-        log.debug("Calling a service method \"getAllAvailableRooms\". Time = {}", new Date());
-        return roomDao.findAllAvailableRooms(check_in, check_out).stream()
+    public List<RoomDto> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity) {
+        log.debug("Calling a service method \"findAvailableRooms\". Time = {}", new Date());
+        return roomDao.findAvailableRooms(check_in, check_out, type, capacity).stream()
                 .map(this::toDto)
                 .toList();
     }
@@ -119,10 +119,10 @@ public class RoomServiceImpl implements IRoomService {
         RoomDto dto = new RoomDto();
         try {
             dto.setId(entity.getId());
-            dto.setTypeDto(RoomDto.RoomTypeDto.valueOf(entity.getType().toString()));
+            dto.setType(RoomDto.RoomTypeDto.valueOf(entity.getType().toString()));
             dto.setPrice(entity.getPrice());
-            dto.setStatusDto(RoomDto.RoomStatusDto.valueOf(entity.getStatus().toString()));
-            dto.setCapacityDto(RoomDto.CapacityDto.valueOf(entity.getCapacity().toString()));
+            dto.setStatus(RoomDto.RoomStatusDto.valueOf(entity.getStatus().toString()));
+            dto.setCapacity(RoomDto.CapacityDto.valueOf(entity.getCapacity().toString()));
             dto.setNumber(entity.getNumber());
         } catch (NullPointerException e) {
             log.error("This room is not in the catalog.");
@@ -141,10 +141,10 @@ public class RoomServiceImpl implements IRoomService {
         log.debug("Calling a service method \"toEntity\". RoomDto = {}, time = {}", dto, new Date());
         Room entity = new Room();
         entity.setId(dto.getId());
-        entity.setType(Room.RoomType.valueOf(dto.getTypeDto().toString()));
+        entity.setType(Room.RoomType.valueOf(dto.getType().toString()));
         entity.setPrice(dto.getPrice());
-        entity.setStatus(Room.RoomStatus.valueOf(dto.getStatusDto().toString()));
-        entity.setCapacity(Room.Capacity.valueOf(dto.getCapacityDto().toString()));
+        entity.setStatus(Room.RoomStatus.valueOf(dto.getStatus().toString()));
+        entity.setCapacity(Room.Capacity.valueOf(dto.getCapacity().toString()));
         entity.setNumber(dto.getNumber());
         return entity;
     }

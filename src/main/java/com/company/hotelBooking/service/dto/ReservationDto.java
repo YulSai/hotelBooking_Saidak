@@ -11,14 +11,15 @@ import java.time.LocalDate;
 @Data
 public class ReservationDto {
     private Long id;
-    private UserDto userDto;
+    private UserDto user;
     private Long roomId;
     private RoomDto.RoomTypeDto type;
     private RoomDto.CapacityDto capacity;
     private LocalDate checkIn;
     private LocalDate checkOut;
     private StatusDto status;
-    private BigDecimal invoice;
+    private BigDecimal roomPrice;
+    private BigDecimal totalCost;
 
     public enum StatusDto {
         IN_PROGRESS,

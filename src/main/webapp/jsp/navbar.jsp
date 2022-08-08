@@ -16,4 +16,6 @@
     <li><a href="controller?command=reservations">All reservations</a></li>
 
     <li><a href="controller?command=create_room_form">Submit a new room</a></li>
+
+    <li><a href="controller?command=search_available_rooms_form">Search available rooms</a></li>
 </ul>

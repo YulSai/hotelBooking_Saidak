@@ -11,12 +11,15 @@
 <jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
 	<table>
+		<jsp:include page="pagination.jsp"/>
+		<tr>
 		<th>#</th>
 		<th>First name</th>
 		<th>Last name</th>
 		<th>Email</th>
 		<th>Phone number</th>
 		<th>Role</th>
+		</tr>
 
 		<c:forEach items="${requestScope.users}" var="user" varStatus="counter">
 			<tr>
@@ -25,7 +28,7 @@
 				<td><a href="controller?command=user&id=${user.id}">${user.lastName}</a></td>
 				<td>${user.email}</td>
 				<td>${user.phoneNumber}</td>
-				<td>${user.roleDto.toString().toLowerCase()}</td>
+				<td>${user.role.toString().toLowerCase()}</td>
 				<td><li><a href="controller?command=update_user_form&id=${user.id}">Update user</a></li></td>
 			</tr>
 		</c:forEach>

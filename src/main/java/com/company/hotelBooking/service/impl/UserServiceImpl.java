@@ -130,7 +130,7 @@ public class UserServiceImpl implements IUserService {
             dto.setEmail(entity.getEmail());
             dto.setPassword(entity.getPassword());
             dto.setPhoneNumber(entity.getPhoneNumber());
-            dto.setRoleDto(UserDto.RoleDto.valueOf(entity.getRole().toString()));
+            dto.setRole(UserDto.RoleDto.valueOf(entity.getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
             throw new DaoException("No user");
@@ -153,7 +153,7 @@ public class UserServiceImpl implements IUserService {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
         entity.setPhoneNumber(dto.getPhoneNumber());
-        entity.setRole(User.Role.valueOf(dto.getRoleDto().toString()));
+        entity.setRole(User.Role.valueOf(dto.getRole().toString()));
         return entity;
     }
 }

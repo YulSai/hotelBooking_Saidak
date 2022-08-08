@@ -21,10 +21,10 @@ public class UpdateRoomCommand implements ICommand {
 	@Override
 	public String execute(HttpServletRequest req) {
 		RoomDto room = new RoomDto();
-		room.setTypeDto(RoomDto.RoomTypeDto.valueOf(req.getParameter("type").toUpperCase()));
+		room.setType(RoomDto.RoomTypeDto.valueOf(req.getParameter("type").toUpperCase()));
 		room.setPrice(new BigDecimal(req.getParameter("price")));
-		room.setStatusDto(RoomDto.RoomStatusDto.valueOf(req.getParameter("status")));
-		room.setCapacityDto(RoomDto.CapacityDto.valueOf(req.getParameter("capacity")));
+		room.setStatus(RoomDto.RoomStatusDto.valueOf(req.getParameter("status")));
+		room.setCapacity(RoomDto.CapacityDto.valueOf(req.getParameter("capacity")));
 		room.setNumber(req.getParameter("room_number"));
 
 		RoomDto updated = service.update(room);

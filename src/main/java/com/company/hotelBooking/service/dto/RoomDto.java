@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 @Data
 public class RoomDto {
     private Long id;
-    private RoomTypeDto typeDto;
+    private RoomTypeDto type;
     private BigDecimal price;
-    private RoomStatusDto statusDto;
-    private CapacityDto capacityDto;
+    private RoomStatusDto status;
+    private CapacityDto capacity;
     private String number;
 
     public enum RoomStatusDto {

@@ -123,14 +123,15 @@ public class ReservationServiceImpl implements IReservationService {
         ReservationDto dto = new ReservationDto();
         try {
             dto.setId(entity.getId());
-            dto.setUserDto(getUserDto(entity));
+            dto.setUser(getUserDto(entity));
             dto.setRoomId(entity.getRoomId());
             dto.setType(RoomDto.RoomTypeDto.valueOf(entity.getType().toString()));
             dto.setCapacity(RoomDto.CapacityDto.valueOf(entity.getCapacity().toString()));
             dto.setCheckIn(entity.getCheckIn());
             dto.setCheckOut(entity.getCheckOut());
             dto.setStatus(ReservationDto.StatusDto.valueOf(entity.getStatus().toString()));
-            dto.setInvoice(entity.getInvoice());
+            dto.setRoomPrice(entity.getRoomPrice());
+            dto.setTotalCost(entity.getTotalCost());
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
             throw new DaoException("No reservation");
@@ -154,7 +155,7 @@ public class ReservationServiceImpl implements IReservationService {
             dto.setEmail(entity.getUser().getEmail());
             dto.setPassword(entity.getUser().getPassword());
             dto.setPhoneNumber(entity.getUser().getPhoneNumber());
-            dto.setRoleDto(UserDto.RoleDto.valueOf(entity.getUser().getRole().toString()));
+            dto.setRole(UserDto.RoleDto.valueOf(entity.getUser().getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
             throw new DaoException("No user");
@@ -180,7 +181,8 @@ public class ReservationServiceImpl implements IReservationService {
             entity.setCheckIn(dto.getCheckIn());
             entity.setCheckOut(dto.getCheckOut());
             entity.setStatus(Reservation.Status.valueOf(dto.getStatus().toString()));
-            entity.setInvoice(dto.getInvoice());
+            entity.setRoomPrice(dto.getRoomPrice());
+            entity.setTotalCost(dto.getTotalCost());
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
             throw new DaoException("No reservation");
@@ -198,13 +200,13 @@ public class ReservationServiceImpl implements IReservationService {
         log.debug("Calling a service method \"toDto\". ReservationDto = {}, time = {}", dto, new Date());
         User entity = new User();
         try {
-            entity.setId(dto.getUserDto().getId());
-            entity.setFirstName(dto.getUserDto().getFirstName());
-            entity.setLastName(dto.getUserDto().getLastName());
-            entity.setEmail(dto.getUserDto().getEmail());
-            entity.setPassword(dto.getUserDto().getPassword());
-            entity.setPhoneNumber(dto.getUserDto().getPhoneNumber());
-            entity.setRole(User.Role.valueOf(dto.getUserDto().getRoleDto().toString()));
+            entity.setId(dto.getUser().getId());
+            entity.setFirstName(dto.getUser().getFirstName());
+            entity.setLastName(dto.getUser().getLastName());
+            entity.setEmail(dto.getUser().getEmail());
+            entity.setPassword(dto.getUser().getPassword());
+            entity.setPhoneNumber(dto.getUser().getPhoneNumber());
+            entity.setRole(User.Role.valueOf(dto.getUser().getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
             throw new DaoException("No user");

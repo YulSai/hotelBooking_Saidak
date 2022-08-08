@@ -32,7 +32,7 @@ public class CreateUserCommand implements ICommand {
         user.setEmail(req.getParameter("email"));
         user.setPassword(req.getParameter("password"));
         user.setPhoneNumber(req.getParameter("phone_number"));
-        user.setRoleDto(UserDto.RoleDto.valueOf(req.getParameter("role").toUpperCase()));
+        user.setRole(UserDto.RoleDto.valueOf(req.getParameter("role").toUpperCase()));
         return user;
     }
 }

@@ -9,6 +9,6 @@
 <body>
 <jsp:include page="jsp/navbar.jsp"/>
 <h1>Welcome to HotelBooking, ${sessionScope.user != null ? sessionScope.user.firstName : 'Guest'}!</h1>
-<img src="images/hotel_main.jpg" alt="hotelBooking"/>
+<img src="images/jsp/hotel_main.jpg" alt="hotelBooking"/>
 </body>
 </html>

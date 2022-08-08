@@ -12,6 +12,7 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1>Reservations</h1>
 <table>
+    <jsp:include page="pagination.jsp"/>
     <tr>
         <th>#</th>
         <th>Id</th>
@@ -26,7 +27,7 @@
             <td><a href="controller?command=reservation&id=${reservation.id}">${reservation.id}</a></td>
             <td><a href="controller?command=user&id=${reservation.user.id}">${reservation.user.email}</a></td>
             <td>${reservation.type} ${reservation.capacity}</td>
-            <td>TOTAL PRICE: ${reservation.invoice} USD</td>
+            <td>TOTAL PRICE: ${reservation.totalCost} USD</td>
             <td>${reservation.status.toString().toLowerCase()}</td>
         </tr>
     </c:forEach>

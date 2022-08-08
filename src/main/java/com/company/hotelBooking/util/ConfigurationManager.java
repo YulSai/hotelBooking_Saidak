@@ -26,7 +26,7 @@ public class ConfigurationManager {
     public static final String SQL_RESERVATION_COUNT_RESERVATIONS = "sql.reservation.count.reservations";
     public static final String SQL_RESERVATION_PAGE = "sql.reservation.page";
     public static final String SQL_RESERVATION_TOTAL_COUNT_BY_USER_ID = "sql.reservation.total.count.by.user.id";
-    public static final String SQL_RESERVATION_GET_PAGE_BY_USER_ID = "sql.reservation.get.page,by.user.id";
+    public static final String SQL_RESERVATION_GET_PAGE_BY_USER_ID = "sql.reservation.get.page.by.user.id";
     public static final String SQL_RESERVATION_PAGE_IN_PROGRESS = "sql.reservation.page.in.progress";
     public static final String SQL_RESERVATION_TOTAL_COUNT_IN_PROGRESS = "sql.reservation.total.count.in.progress";
 
@@ -47,7 +47,7 @@ public class ConfigurationManager {
     public static final String SQL_ROOM_FIND_BY_NUMBER = "sql.room.find.by.number";
     public static final String SQL_ROOM_FIND_ROOMS_BY_DATES_AND_TYPE = "sql.room.find.by.dates.and.type";
     public static final String SQL_ROOM_COUNT_ROOMS = "sql.room.count.rooms";
-    public static final String SQL_ROOM_FIND_ALL_AVAILABLE_ROOMS = "sql.room.find.all.available.rooms";
+    public static final String SQL_ROOM_FIND_AVAILABLE_ROOMS = "sql.room.find.all.available.rooms";
     public static final String SQL_ROOM_PAGE = "sql.room.page";
 
     // User
@@ -83,6 +83,9 @@ public class ConfigurationManager {
     public static final String PAGE_ROOM = "page.room";
     public static final String PAGE_CREATE_ROOM = "page.create.room";
     public static final String PAGE_UPDATE_ROOM = "page.update.room";
+    public static final String  PAGE_ROOMS_AVAILABLE = "page.rooms.available";
+
+    public static final String  PAGE_SEARCH_AVAILABLE_ROOMS = "page.search.available";
 
     // User
     public static final String PAGE_USERS = "page.users";

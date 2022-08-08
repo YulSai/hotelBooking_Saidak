@@ -13,7 +13,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private RoleDto roleDto;
+    private RoleDto role;
 
     public enum RoleDto {
         ADMIN,

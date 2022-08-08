@@ -25,5 +25,5 @@ public interface IRoomDao extends IAbstractDao<Long, Room> {
      * @param check_out end date to search
      * @return list of on available rooms
      */
-    List<Room> findAllAvailableRooms(LocalDate check_in, LocalDate check_out);
+    List<Room> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity);
 }

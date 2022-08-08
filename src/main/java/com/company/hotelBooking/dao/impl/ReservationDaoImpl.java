@@ -168,7 +168,8 @@ public class ReservationDaoImpl implements IReservationDao {
         reservation.setCapacity(Room.Capacity.valueOf(result.getString("capacity").toUpperCase()));
         reservation.setCheckIn(result.getTimestamp("check_in").toLocalDateTime().toLocalDate());
         reservation.setCheckOut(result.getTimestamp("check_out").toLocalDateTime().toLocalDate());
-        reservation.setInvoice(result.getBigDecimal("invoice"));
+        reservation.setRoomPrice(result.getBigDecimal("room_price"));
+        reservation.setTotalCost(result.getBigDecimal("total_cost"));
         reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
         return reservation;
     }
@@ -186,7 +187,8 @@ public class ReservationDaoImpl implements IReservationDao {
         statement.setString(4, reservation.getCapacity().toString().toLowerCase());
         statement.setDate(5, java.sql.Date.valueOf(reservation.getCheckIn()));
         statement.setDate(6, java.sql.Date.valueOf(reservation.getCheckOut()));
-        statement.setBigDecimal(7, reservation.getInvoice());
-        statement.setString(8, reservation.getStatus().toString().toLowerCase());
+        statement.setBigDecimal(7, reservation.getRoomPrice());
+        statement.setBigDecimal(8, reservation.getTotalCost());
+        statement.setString(9, reservation.getStatus().toString().toLowerCase());
     }
 }

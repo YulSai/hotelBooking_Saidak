@@ -17,10 +17,6 @@
 			<th>Value</th>
 		</tr>
 		<tr>
-			<td>Id</td>
-			<td>${requestScope.user.id}</td>
-		</tr>
-		<tr>
 			<td>First name</td>
 			<td>${requestScope.user.firstName}</td>
 		</tr>
@@ -38,7 +34,7 @@
 		</tr>
 		<tr>
 			<td>Role</td>
-			<td>${requestScope.user.roleDto.toString().toLowerCase()}</td>
+			<td>${requestScope.user.role.toString().toLowerCase()}</td>
 		</tr>
 	</table>
 	<ul>

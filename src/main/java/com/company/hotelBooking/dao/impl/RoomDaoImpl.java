@@ -150,15 +150,17 @@ public class RoomDaoImpl implements IRoomDao {
     }
 
     @Override
-    public List<Room> findAllAvailableRooms(LocalDate check_in, LocalDate check_out){
-        log.debug("Accessing the database using the \"findAllAvailableRooms\" command. Time = {}", new Date());
+    public List<Room> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity) {
+        log.debug("Accessing the database using the \"findAvailableRooms\" command. Time = {}", new Date());
         List<Room> rooms = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_ROOM_FIND_ALL_AVAILABLE_ROOMS))) {
-            statement.setDate(1, java.sql.Date.valueOf(check_in));
-            statement.setDate(2, java.sql.Date.valueOf(check_out));
+                .getString(ConfigurationManager.SQL_ROOM_FIND_AVAILABLE_ROOMS))) {
+            statement.setString(1, type.toUpperCase());
+            statement.setString(2, capacity.toUpperCase());
             statement.setDate(3, java.sql.Date.valueOf(check_in));
             statement.setDate(4, java.sql.Date.valueOf(check_out));
+            statement.setDate(5, java.sql.Date.valueOf(check_in));
+            statement.setDate(6, java.sql.Date.valueOf(check_out));
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -170,7 +172,6 @@ public class RoomDaoImpl implements IRoomDao {
         }
         return rooms;
     }
-
     @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());

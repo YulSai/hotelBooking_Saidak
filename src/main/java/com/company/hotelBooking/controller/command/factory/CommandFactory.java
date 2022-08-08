@@ -11,6 +11,7 @@ import com.company.hotelBooking.controller.command.impl.reservations.Reservation
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.*;
 import com.company.hotelBooking.controller.command.impl.users.*;
+import com.company.hotelBooking.controller.command.util.PagingUtil;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.api.IUserService;
@@ -44,14 +45,14 @@ public class CommandFactory {
      */
     private CommandFactory() {
         commands = new HashMap<>();
-        commands.put(CommandName.ROOMS, new RoomsCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
+        commands.put(CommandName.ROOMS, new RoomsCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.ROOM, new RoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
         commands.put(CommandName.CREATE_ROOM_FORM, new CreateRoomFormCommand());
         commands.put(CommandName.CREATE_ROOM, new CreateRoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
         commands.put(CommandName.UPDATE_ROOM_FORM, new UpdateRoomFormCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
         commands.put(CommandName.UPDATE_ROOM, new UpdateRoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
 
-        commands.put(CommandName.USERS, new UsersCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)));
+        commands.put(CommandName.USERS, new UsersCommand(ServiceFactory.getINSTANCE().getService(IUserService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.USER, new UserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)));
         commands.put(CommandName.CREATE_USER_FORM, new CreateUserFormCommand());
         commands.put(CommandName.CREATE_USER, new CreateUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)));
@@ -61,10 +62,13 @@ public class CommandFactory {
         commands.put(CommandName.LOGIN, new LoginCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)));
         commands.put(CommandName.LOGOUT, new LogoutCommand());
 
-        commands.put(CommandName.RESERVATIONS, new ReservationsCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
+        commands.put(CommandName.RESERVATIONS, new ReservationsCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.RESERVATION, new ReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
 
-        commands.put(CommandName.BOOKING, new BookingCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
+        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS_FORM, new RoomsAvailableFormCommand());
+        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS, new RoomsAvailableCommand((ServiceFactory.getINSTANCE().getService(IRoomService.class))));
+
+        commands.put(CommandName.ROOMS_AVAILABLE)
 
         commands.put(CommandName.ERROR, new ErrorCommand());
     }

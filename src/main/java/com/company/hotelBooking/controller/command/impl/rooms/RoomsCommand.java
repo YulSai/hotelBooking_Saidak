@@ -12,28 +12,28 @@ import lombok.extern.log4j.Log4j2;
 import java.util.Date;
 import java.util.List;
 
-import static com.company.hotelBooking.controller.command.util.PagingUtil.getPaging;
-
 /**
  * Class for processing HttpServletRequest "rooms"
  */
 @Log4j2
 public class RoomsCommand implements ICommand {
     private final IRoomService roomService;
+    private final PagingUtil pagingUtil;
 
-    public RoomsCommand(IRoomService service) {
+    public RoomsCommand(IRoomService service, PagingUtil pagingUtil) {
         this.roomService = service;
+        this.pagingUtil = pagingUtil;
     }
 
     @Override
     public String execute(HttpServletRequest req) {
-        Paging paging = getPaging(req);
+        Paging paging = pagingUtil.getPaging(req);
         List<RoomDto> rooms = roomService.findAllPages(paging);
         if (rooms.size() == 0) {
             log.error("Incorrect address entered. Time = {}", new Date());
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         } else {
-            PagingUtil.setTotalPages(req, paging, roomService);
+            pagingUtil.setTotalPages(req, paging, roomService);
             req.setAttribute("rooms", rooms);
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOMS);
         }

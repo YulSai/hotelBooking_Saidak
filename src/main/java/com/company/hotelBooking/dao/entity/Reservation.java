@@ -18,7 +18,8 @@ public class Reservation {
     private LocalDate checkIn;
     private LocalDate checkOut;
     private Status status;
-    private BigDecimal invoice;
+    private BigDecimal roomPrice;
+    private BigDecimal totalCost;
 
     public enum Status {
         IN_PROGRESS,

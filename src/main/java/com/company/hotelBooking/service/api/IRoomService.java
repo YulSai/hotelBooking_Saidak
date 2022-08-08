@@ -25,5 +25,5 @@ public interface IRoomService extends IAbstractService<Long, RoomDto> {
      * @param check_out end date to search
      * @return List of reservations
      */
-    List<RoomDto> getAllAvailableRooms(LocalDate check_in, LocalDate check_out);
+    List<RoomDto> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity);
 }
