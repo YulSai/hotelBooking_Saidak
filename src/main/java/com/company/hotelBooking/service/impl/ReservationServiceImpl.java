@@ -57,7 +57,7 @@ public class ReservationServiceImpl implements IReservationService {
         return toDto(reservationDao.save(toEntity(entity)));
     }
 
-    //@Override
+    @Override
     public ReservationDto processBooking(UserDto user, RoomDto room, Long roomId, LocalDate checkIn,
                                          LocalDate checkOut) {
         ReservationDto reservation = new ReservationDto();
@@ -110,38 +110,6 @@ public class ReservationServiceImpl implements IReservationService {
     public long countRow() {
         log.debug("Calling a service method \"countRow\". Time = {}", new Date());
         return reservationDao.countRow();
-    }
-
-    @Override
-    public Integer getDifferenceDate(Long id) {
-        log.debug("Calling a service method \"getDifferenceDate\". Reservation id = {}, time = {}", id, new Date());
-        return reservationDao.differenceBetweenDate(id);
-    }
-
-    @Override
-    public void createBooking(Long roomId, Long reservationId) {
-        //TODO Thinking about realisation
-//        try {
-//            Optional<Room> optionalRoom = Optional.ofNullable(roomDao.findById(roomId));
-//            Room room = optionalRoom.orElseThrow(() -> new ServicesException("room with id=" + roomId + "doesn't exist"));
-//
-//            Optional<Reservation> optionalReservation = Optional.ofNullable(reservationDao.findById(reservationId));
-//            Reservation reservation = optionalReservation.orElseThrow(() ->
-//                    new ServicesException("application with id=" + reservationId + "doesn't exist"));
-//
-//            Integer differenceDate = reservationDao.differenceBetweenDate(reservationId);
-//            BigDecimal priceRoom = room.getPrice();
-//            BigDecimal totalPrice = priceRoom.multiply(new BigDecimal(differenceDate));
-//
-//            reservation.setStatus(Reservation.Status.CONFIRMED);
-//            reservation.setRoomId(roomId);
-//            reservation.setInvoice(totalPrice);
-//            reservationDao.save(reservation);
-//        } catch (DaoException | ServicesException e) {
-//            log.error("SQLReservationService create error. Failed to create reservation with roomid = {} " +
-//                    "and reservationid = {}", roomId, reservationId);
-//            throw new RuntimeException("Failed to create reservation", e);
-//        }
     }
 
     /**

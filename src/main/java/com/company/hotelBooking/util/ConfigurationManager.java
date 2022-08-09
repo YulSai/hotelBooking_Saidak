@@ -18,17 +18,8 @@ public class ConfigurationManager {
     public static final String SQL_RESERVATION_CREATE = "sql.reservation.create";
     public static final String SQL_RESERVATION_UPDATE = "sql.reservation.update";
     public static final String SQL_RESERVATION_DELETE = "sql.reservation.delete";
-    public static final String SQL_RESERVATION_DIFFERENCE_DATE = "sql.reservation.difference.date";
-    public static final String SQL_RESERVATION_FIND_ALL_RESERVATION_BY_ROOM_ID_AND_TIME_PERIOD =
-            "sql.reservation.find.all.reservation.by.room.id.and.time.period";
-    public static final String SQL_RESERVATION_FIND_ALL_RESERVATION_BY_USER_ID_AND_TIME_PERIOD =
-            "sql.reservation.find.all.reservation.by.user.id.and.time.period";
     public static final String SQL_RESERVATION_COUNT_RESERVATIONS = "sql.reservation.count.reservations";
     public static final String SQL_RESERVATION_PAGE = "sql.reservation.page";
-    public static final String SQL_RESERVATION_TOTAL_COUNT_BY_USER_ID = "sql.reservation.total.count.by.user.id";
-    public static final String SQL_RESERVATION_GET_PAGE_BY_USER_ID = "sql.reservation.get.page.by.user.id";
-    public static final String SQL_RESERVATION_PAGE_IN_PROGRESS = "sql.reservation.page.in.progress";
-    public static final String SQL_RESERVATION_TOTAL_COUNT_IN_PROGRESS = "sql.reservation.total.count.in.progress";
 
 
     // ReservationInfo
@@ -37,6 +28,8 @@ public class ConfigurationManager {
     public static final String SQL_RESERVATION_INFO_CREATE = "sql.reservation.info.create";
     public static final String SQL_RESERVATION_INFO_UPDATE = "sql.reservation.info.update";
     public static final String SQL_RESERVATION_INFO_DELETE = "sql.reservation.info.delete";
+    public static final String SQL_RESERVATION_INFO_PAGE = "sql.reservation.info.page";
+    public static final String SQL_RESERVATION_INFO_COUNT_RESERVATIONS = "sql.reservation.info.count";
 
     // Room
     public static final String SQL_ROOM_FIND_BY_ID = "sql.room.find.by.id";
@@ -45,7 +38,6 @@ public class ConfigurationManager {
     public static final String SQL_ROOM_UPDATE = "sql.room.update";
     public static final String SQL_ROOM_DELETE = "sql.room.delete";
     public static final String SQL_ROOM_FIND_BY_NUMBER = "sql.room.find.by.number";
-    public static final String SQL_ROOM_FIND_ROOMS_BY_DATES_AND_TYPE = "sql.room.find.by.dates.and.type";
     public static final String SQL_ROOM_COUNT_ROOMS = "sql.room.count.rooms";
     public static final String SQL_ROOM_FIND_AVAILABLE_ROOMS = "sql.room.find.all.available.rooms";
     public static final String SQL_ROOM_PAGE = "sql.room.page";
@@ -57,9 +49,7 @@ public class ConfigurationManager {
     public static final String SQL_USER_UPDATE = "sql.user.update";
     public static final String SQL_USER_DELETE = "sql.user.delete";
     public static final String SQL_USER_FIND_BY_EMAIL = "sql.user.find.by.email";
-    public static final String SQL_USER_FIND_BY_LAST_NAME = "sql.user.find.by.last.name";
     public static final String SQL_USER_COUNT_USERS = "sql.user.count.users";
-    public static final String SQL_USER_FIND_BY_EMAIL_AND_PASSWORD = "sql.user.find.by.email.and.password";
     public static final String SQL_USER_PAGE = "sql.user.page";
 
     // JSP
@@ -83,9 +73,9 @@ public class ConfigurationManager {
     public static final String PAGE_ROOM = "page.room";
     public static final String PAGE_CREATE_ROOM = "page.create.room";
     public static final String PAGE_UPDATE_ROOM = "page.update.room";
-    public static final String  PAGE_ROOMS_AVAILABLE = "page.rooms.available";
+    public static final String PAGE_ROOMS_AVAILABLE = "page.rooms.available";
 
-    public static final String  PAGE_SEARCH_AVAILABLE_ROOMS = "page.search.available";
+    public static final String PAGE_SEARCH_AVAILABLE_ROOMS = "page.search.available";
 
     // User
     public static final String PAGE_USERS = "page.users";
@@ -100,6 +90,7 @@ public class ConfigurationManager {
 
     private final ResourceBundle resourceBundle;
     private static ConfigurationManager INSTANCE;
+
     public static ConfigurationManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ConfigurationManager();

@@ -31,8 +31,9 @@ public class ReservationDaoImpl implements IReservationDao {
     public Reservation findById(Long id) {
         log.debug("Accessing the database using the \"findById\" command. Reservation id = {}, time = {}",
                 id, new Date());
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_FIND_BY_ID))) {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_FIND_BY_ID))) {
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -65,8 +66,9 @@ public class ReservationDaoImpl implements IReservationDao {
     @Override
     public Reservation save(Reservation entity) {
         log.debug("Accessing the database using the \"save\" command. Time = {}", new Date());
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_CREATE), Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_CREATE), Statement.RETURN_GENERATED_KEYS)) {
             extractedDate(entity, statement);
             statement.executeUpdate();
 
@@ -89,9 +91,11 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public boolean delete(Long id) {
-        log.debug("Accessing the database using the \"delete\" command. Reservation id = {}, time = {}", id, new Date());
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_DELETE))) {
+        log.debug("Accessing the database using the \"delete\" command. Reservation id = {}, time = {}", id,
+                new Date());
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_DELETE))) {
             statement.setLong(1, id);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted == 1;
@@ -105,8 +109,9 @@ public class ReservationDaoImpl implements IReservationDao {
     public List<Reservation> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
         List<Reservation> reservations = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_PAGE))) {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_PAGE))) {
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
@@ -115,33 +120,17 @@ public class ReservationDaoImpl implements IReservationDao {
             }
         } catch (SQLException e) {
             log.error("SQLReservationDAO findAllPages error", e);
-            throw new DaoException("Failed to find rooms", e);
+            throw new DaoException("Failed to find reservation", e);
         }
         return reservations;
     }
 
     @Override
-    public Integer differenceBetweenDate(Long id) {
-        Integer differenceDays = null;
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_DIFFERENCE_DATE))) {
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                differenceDays = result.getInt("difference");
-            }
-        } catch (SQLException e) {
-            //TODO Exceptions
-            throw new RuntimeException(e);
-        }
-        return differenceDays;
-    }
-
-    @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(ConfigurationManager.getInstance()
-                .getString(ConfigurationManager.SQL_RESERVATION_COUNT_RESERVATIONS))) {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_COUNT_RESERVATIONS))) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 return result.getLong("total");
