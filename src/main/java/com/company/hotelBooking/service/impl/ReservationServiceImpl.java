@@ -81,6 +81,41 @@ public class ReservationServiceImpl implements IReservationService {
         return totalCost;
     }
 
+//    (Map<Long, Integer> booking, User user, LocalDateTime reservationDate,
+//    LocalDate checkIn, LocalDate checkOut) {
+//        Reservation reservation = new Reservation();
+//        reservation.setUser(user);
+//        reservation.setStatus(Reservation.Status.NEW);
+//        List<ReservationInfo> details = new ArrayList<>();
+//        booking.forEach((roomId, quantity) -> {
+//            ReservationInfo info = new ReservationInfo();
+//            Room room = roomDao.findById(roomId);
+//            info.setRoom(room);
+//            info.setRoomQuantity(quantity);
+//            info.setRoomPrice(room.getRoomType().getPrice());
+//            info.setReservationDate(reservationDate);
+//            info.setCheckIn(checkIn);
+//            info.setCheckOut(checkOut);
+//            details.add(info);
+//        });
+//        reservation.setDetails(details);
+//        BigDecimal totalCost = calculatePrice(details);
+//        reservation.setTotalCost(totalCost);
+//        return reservation;
+//    }
+//
+//    private BigDecimal calculatePrice(List<ReservationInfo> details) {
+//        BigDecimal totalCost = BigDecimal.ZERO;
+//        for (ReservationInfo detail : details) {
+//            BigDecimal roomPrice = detail.getRoomPrice();
+//            Long nights = ChronoUnit.DAYS.between(detail.getCheckIn(),detail.getCheckOut());
+//            BigDecimal itemPrice = roomPrice.multiply(BigDecimal.valueOf(detail.getRoomQuantity()))
+//                    .multiply(BigDecimal.valueOf(nights));
+//            totalCost = totalCost.add(itemPrice);
+//        }
+//        return totalCost;
+//    }
+
 
     @Override
     public ReservationDto update(ReservationDto entity) {

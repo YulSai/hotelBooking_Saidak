@@ -24,22 +24,40 @@ public class BookingCommand implements ICommand {
 
     @Override
     public String execute(HttpServletRequest req) {
-        HttpSession session = req.getSession();
-        String id = req.getParameter("id");
-        UserDto user = (UserDto) session.getAttribute("user");
-        Long roomId = Long.valueOf(req.getParameter("room_id"));
-        RoomDto room = roomService.findById(roomId);
-        LocalDate checkIn = LocalDate.parse(req.getParameter("check_in"));
-        LocalDate checkOut = LocalDate.parse(req.getParameter("check_out"));
-        Long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
-        String roomNumber = room.getNumber();
-        ReservationDto reservation = reservationService.processBooking(user, room, roomId, checkIn, checkOut);
-        reservationService.create(reservation);
+//        HttpSession session = req.getSession();
+//        String id = req.getParameter("id");
+//        UserDto user = (UserDto) session.getAttribute("user");
+//        Long roomId = Long.valueOf(req.getParameter("room_id"));
+//        RoomDto room = roomService.findById(roomId);
+//        LocalDate checkIn = LocalDate.parse(req.getParameter("check_in"));
+//        LocalDate checkOut = LocalDate.parse(req.getParameter("check_out"));
+//        Long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+//        String roomNumber = room.getNumber();
+//        ReservationDto reservation = reservationService.processBooking(user, room, roomId, checkIn, checkOut);
+//        reservationService.create(reservation);
+//
+//        session.setAttribute("reservation", reservation);
+//        session.setAttribute("nights", nights);
+//        session.setAttribute("room_number", roomNumber);
+//
+//        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_BOOKING);
+//
+//            Long roomId = Long.valueOf(req.getParameter("room_id"));
+//            HttpSession session = req.getSession();
+//            @SuppressWarnings("unchecked")
+//            Map<Long, Integer> booking = (Map<Long, Integer>) session.getAttribute("booking");
+//            if (booking == null) {
+//                booking = new HashMap<>();
+//            }
+//            Integer quantity = booking.get(roomId);
+//            if (quantity == null) {
+//                booking.put(roomId, 1);
+//            } else {
+//                booking.put(roomId, quantity + 1);
+//            }
+//            session.setAttribute("booking", booking);
 
-        session.setAttribute("reservation", reservation);
-        session.setAttribute("nights", nights);
-        session.setAttribute("room_number", roomNumber);
-
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_BOOKING);
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOMS);
+        }
     }
 }
