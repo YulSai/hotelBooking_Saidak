@@ -2,16 +2,21 @@ package com.company.hotelBooking.service.impl;
 
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.dao.api.IReservationDao;
+import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.entity.Reservation;
 import com.company.hotelBooking.dao.entity.Room;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.service.api.IReservationService;
+import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.RoomDto;
 import com.company.hotelBooking.service.dto.UserDto;
 import lombok.extern.log4j.Log4j2;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -21,6 +26,8 @@ import java.util.*;
 public class ReservationServiceImpl implements IReservationService {
 
     IReservationDao reservationDao;
+    IRoomDao roomDao;
+    IRoomService roomService;
 
     public ReservationServiceImpl(IReservationDao reservationDao) {
         this.reservationDao = reservationDao;
@@ -49,6 +56,31 @@ public class ReservationServiceImpl implements IReservationService {
         log.debug("Calling a service method \"create\". Reservation = {}, time = {}", entity, new Date());
         return toDto(reservationDao.save(toEntity(entity)));
     }
+
+    //@Override
+    public ReservationDto processBooking(UserDto user, RoomDto room, Long roomId, LocalDate checkIn,
+                                         LocalDate checkOut) {
+        ReservationDto reservation = new ReservationDto();
+        reservation.setUser(user);
+        reservation.setRoomId(roomId);
+        reservation.setType(room.getType());
+        reservation.setCapacity(room.getCapacity());
+        reservation.setCheckIn(checkIn);
+        reservation.setCheckOut(checkOut);
+        reservation.setRoomPrice(room.getPrice());
+        reservation.setStatus(ReservationDto.StatusDto.CONFIRMED);
+        BigDecimal totalCost = calculatePrice(room, checkIn, checkOut);
+        reservation.setTotalCost(totalCost);
+        return reservation;
+    }
+
+    private BigDecimal calculatePrice(RoomDto room, LocalDate checkIn, LocalDate checkOut) {
+        BigDecimal totalCost = BigDecimal.ZERO;
+        Long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        totalCost = totalCost.add(room.getPrice().multiply(BigDecimal.valueOf(nights)));
+        return totalCost;
+    }
+
 
     @Override
     public ReservationDto update(ReservationDto entity) {
