@@ -1,10 +1,11 @@
 package com.company.hotelBooking.dao.impl;
 
 import com.company.hotelBooking.dao.api.IReservationDao;
+import com.company.hotelBooking.dao.api.IReservationInfoDao;
 import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.Reservation;
-import com.company.hotelBooking.dao.entity.Room;
+import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
@@ -21,10 +22,12 @@ import java.util.List;
 public class ReservationDaoImpl implements IReservationDao {
     private final DataSource dataSource;
     private final IUserDao userDao;
+    private final IReservationInfoDao reservationInfoDao;
 
-    public ReservationDaoImpl(DataSource dataSource, IUserDao userDao) {
+    public ReservationDaoImpl(DataSource dataSource, IUserDao userDao, IReservationInfoDao reservationInfoDao) {
         this.dataSource = dataSource;
         this.userDao = userDao;
+        this.reservationInfoDao = reservationInfoDao;
     }
 
     @Override
@@ -152,14 +155,11 @@ public class ReservationDaoImpl implements IReservationDao {
         Reservation reservation = new Reservation();
         reservation.setId(result.getLong("id"));
         reservation.setUser(userDao.findById((result.getLong("user_id"))));
-        reservation.setRoomId(result.getLong("room_id"));
-        reservation.setType(Room.RoomType.valueOf(result.getString("type").toUpperCase()));
-        reservation.setCapacity(Room.Capacity.valueOf(result.getString("capacity").toUpperCase()));
-        reservation.setCheckIn(result.getTimestamp("check_in").toLocalDateTime().toLocalDate());
-        reservation.setCheckOut(result.getTimestamp("check_out").toLocalDateTime().toLocalDate());
         reservation.setRoomPrice(result.getBigDecimal("room_price"));
         reservation.setTotalCost(result.getBigDecimal("total_cost"));
         reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
+        List<ReservationInfo> details = reservationInfoDao.findByReservationId(reservation.getId());
+        reservation.setDetails(details);
         return reservation;
     }
 
@@ -171,13 +171,12 @@ public class ReservationDaoImpl implements IReservationDao {
      */
     private void extractedDate(Reservation reservation, PreparedStatement statement) throws SQLException {
         statement.setLong(1, reservation.getUser().getId());
-        statement.setLong(2, reservation.getRoomId());
-        statement.setString(3, reservation.getType().toString().toLowerCase());
-        statement.setString(4, reservation.getCapacity().toString().toLowerCase());
-        statement.setDate(5, java.sql.Date.valueOf(reservation.getCheckIn()));
-        statement.setDate(6, java.sql.Date.valueOf(reservation.getCheckOut()));
-        statement.setBigDecimal(7, reservation.getRoomPrice());
-        statement.setBigDecimal(8, reservation.getTotalCost());
-        statement.setString(9, reservation.getStatus().toString().toLowerCase());
+        statement.setBigDecimal(2, reservation.getRoomPrice());
+        statement.setBigDecimal(3, reservation.getTotalCost());
+        statement.setString(4, reservation.getStatus().toString().toLowerCase());
+        List<ReservationInfo> details = reservation.getDetails();
+        for (ReservationInfo info : details) {
+            reservationInfoDao.save(info);
+        }
     }
 }

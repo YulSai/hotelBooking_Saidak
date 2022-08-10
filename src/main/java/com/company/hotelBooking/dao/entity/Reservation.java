@@ -3,7 +3,7 @@ package com.company.hotelBooking.dao.entity;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Class describing the object Reservation
@@ -12,14 +12,10 @@ import java.time.LocalDate;
 public class Reservation {
     private Long id;
     private User user;
-    private Long roomId;
-    private Room.RoomType type;
-    private Room.Capacity capacity;
-    private LocalDate checkIn;
-    private LocalDate checkOut;
-    private Status status;
     private BigDecimal roomPrice;
     private BigDecimal totalCost;
+    private Status status;
+    List<ReservationInfo> details;
 
     public enum Status {
         IN_PROGRESS,

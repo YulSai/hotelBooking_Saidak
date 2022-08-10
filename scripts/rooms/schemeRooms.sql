@@ -22,7 +22,7 @@ name VARCHAR(10) UNIQUE NOT NULL
 
 CREATE TABLE IF NOT EXISTS rooms (
 id BIGSERIAL PRIMARY KEY,
-room_number TEXT NOT NULL,
+room_number TEXT UNIQUE NOT NULL,
 room_type_id BIGINT NOT NULL REFERENCES room_type,
 room_capacity_id BIGINT NOT NULL REFERENCES room_capacity,
 price DECIMAL(6, 2) NOT NULL,

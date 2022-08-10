@@ -1,3 +1,6 @@
+/*CREATE DATABASE "hotelBooking";
+*/
+
 /*
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;

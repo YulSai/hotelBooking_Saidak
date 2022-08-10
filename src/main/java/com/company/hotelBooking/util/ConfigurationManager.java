@@ -29,8 +29,8 @@ public class ConfigurationManager {
     public static final String SQL_RESERVATION_INFO_UPDATE = "sql.reservation.info.update";
     public static final String SQL_RESERVATION_INFO_DELETE = "sql.reservation.info.delete";
     public static final String SQL_RESERVATION_INFO_PAGE = "sql.reservation.info.page";
-    public static final String SQL_RESERVATION_INFO_COUNT_RESERVATIONS = "sql.reservation.info.count";
-
+    public static final String SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO = "sql.reservation.info.count.reservations.info";
+    public static final String SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID = "sql.reservation.info.find0be.reservation.id";
     // Room
     public static final String SQL_ROOM_FIND_BY_ID = "sql.room.find.by.id";
     public static final String SQL_ROOM_FIND_ALL = "sql.room.find.all";

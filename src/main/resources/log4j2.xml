@@ -17,14 +17,14 @@
     </Appenders>
     <Loggers>
         <Logger name="LogConsole" level="debug" additivity="false">
-          <!--  <AppenderRef ref="LogToConsole"/> -->
+            <AppenderRef ref="LogToConsole"/>
         </Logger>
         <Logger name="LogFile" level="info" additivity="false">
             <AppenderRef ref="LogToFile"/>
-            <!--  <AppenderRef ref="LogToConsole"/> -->
+            <AppenderRef ref="LogToConsole"/>
         </Logger>
         <Root level="debug">
-            <!--  <AppenderRef ref="LogToConsole"/> -->
+            <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="LogToFile" level="info"/>
         </Root>
     </Loggers>

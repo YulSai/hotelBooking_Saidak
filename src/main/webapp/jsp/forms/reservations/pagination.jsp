@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<link rel="stylesheet" type="text/css" href="css/pages.css">
 <div class="pagination">
     <a href="controller?command=reservations&page=1">First</a>
     <c:if test="${requestScope.current_page > 1}">

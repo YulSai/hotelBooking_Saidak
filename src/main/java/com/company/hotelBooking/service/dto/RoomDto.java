@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 public class RoomDto {
     private Long id;
     private RoomTypeDto type;
-    private BigDecimal price;
     private RoomStatusDto status;
     private CapacityDto capacity;
+    private BigDecimal price;
     private String number;
 
     public enum RoomStatusDto {
@@ -27,6 +27,7 @@ public class RoomDto {
         LUX,
         PRESIDENT
     }
+
     public enum CapacityDto {
         SINGLE,
         DOUBLE,

@@ -21,11 +21,11 @@ public class ConnectionPool {
     private final Queue<ProxyConnection> givenAwayConnections;
 
     ConnectionPool(String driver, String url, String login, String password) {
-    	freeConnections = new LinkedBlockingDeque<>(POOL_SIZE);
-    	givenAwayConnections = new ArrayDeque<>();
+        freeConnections = new LinkedBlockingDeque<>(POOL_SIZE);
+        givenAwayConnections = new ArrayDeque<>();
         try {
             Class.forName(driver);
-            for(int i = 0; i < POOL_SIZE; i++) {
+            for (int i = 0; i < POOL_SIZE; i++) {
                 Connection connection = DriverManager.getConnection(url, login, password);
                 freeConnections.offer(new ProxyConnection(connection));
                 log.info("Database connection created. Time = {}", new Date());
@@ -37,6 +37,7 @@ public class ConnectionPool {
 
     /**
      * Method gets connection
+     *
      * @return connection
      */
     public Connection getConnection() {
@@ -53,22 +54,23 @@ public class ConnectionPool {
 
     /**
      * Method releases connection
+     *
      * @param connection existing connection
      */
     public void releaseConnection(Connection connection) {
         if (connection instanceof ProxyConnection proxy && givenAwayConnections.remove(connection)) {
-               freeConnections.offer(proxy);
-                log.info("Connection was released. Time = {}", new Date());
+            freeConnections.offer(proxy);
+            log.info("Connection was released. Time = {}", new Date());
         } else {
-        	log.warn("Returned not proxy connection. Time = {}", new Date());
-            }
+            log.warn("Returned not proxy connection. Time = {}", new Date());
         }
+    }
 
     /**
      * Method destroys pool connection
      */
     public void destroyPool() {
-        for(int i = 0; i < POOL_SIZE; i++) {
+        for (int i = 0; i < POOL_SIZE; i++) {
             try {
                 freeConnections.take().reallyClose();
                 log.info("Connection closed. Time = {}", new Date());

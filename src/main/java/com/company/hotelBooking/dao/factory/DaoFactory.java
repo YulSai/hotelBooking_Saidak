@@ -16,6 +16,19 @@ public class DaoFactory {
     private final Map<Class<?>, Object> map;
 
     /**
+     * Method creates a list relationships between a class and a DAO object
+     */
+    private DaoFactory() {
+        map = new HashMap<>();
+        map.put(IUserDao.class, new UserDaoImpl(DataSource.getINSTANCE()));
+        map.put(IRoomDao.class, new RoomDaoImpl(DataSource.getINSTANCE()));
+        map.put(IReservationInfoDao.class, new ReservationInfoDaoImpl(DataSource.getINSTANCE(),
+                getDao(IRoomDao.class)));
+        map.put(IReservationDao.class, new ReservationDaoImpl(DataSource.getINSTANCE(), getDao(IUserDao.class),
+                getDao(IReservationInfoDao.class)));
+    }
+
+    /**
      * Method gets an instance of the class object
      *
      * @return an instance of the class object
@@ -27,23 +40,12 @@ public class DaoFactory {
         return INSTANCE;
     }
 
-    /**
-     * Method creates a list relationships between a class and a DAO object
-     */
-    private DaoFactory() {
-        map = new HashMap<>();
-        map.put(IRoomDao.class, new RoomDaoImpl(DataSource.getINSTANCE()));
-        map.put(IUserDao.class, new UserDaoImpl(DataSource.getINSTANCE()));
-        map.put(IReservationDao.class, new ReservationDaoImpl(DataSource.getINSTANCE(), getDao(IUserDao.class)));
-
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T getDao(Class<?> clazz) {
-       T dao = (T) map.get(clazz);
-       if (dao == null) {
-           throw new RuntimeException("Class " + clazz + "is not constructed");
-       }
+        T dao = (T) map.get(clazz);
+        if (dao == null) {
+            throw new RuntimeException("Class " + clazz + "is not constructed");
+        }
         return dao;
     }
 }

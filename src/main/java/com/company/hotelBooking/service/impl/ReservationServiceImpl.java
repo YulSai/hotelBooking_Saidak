@@ -4,12 +4,13 @@ import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.dao.api.IReservationDao;
 import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.entity.Reservation;
+import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.service.api.IReservationService;
-import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.ReservationDto;
+import com.company.hotelBooking.service.dto.ReservationInfoDto;
 import com.company.hotelBooking.service.dto.RoomDto;
 import com.company.hotelBooking.service.dto.UserDto;
 import lombok.extern.log4j.Log4j2;
@@ -25,12 +26,12 @@ import java.util.*;
 @Log4j2
 public class ReservationServiceImpl implements IReservationService {
 
-    IReservationDao reservationDao;
-    IRoomDao roomDao;
-    IRoomService roomService;
+    private final IReservationDao reservationDao;
+    private final IRoomDao roomDao;
 
-    public ReservationServiceImpl(IReservationDao reservationDao) {
+    public ReservationServiceImpl(IReservationDao reservationDao, IRoomDao roomDao) {
         this.reservationDao = reservationDao;
+        this.roomDao = roomDao;
     }
 
     @Override
@@ -58,64 +59,36 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public ReservationDto processBooking(UserDto user, RoomDto room, Long roomId, LocalDate checkIn,
+    public ReservationDto processBooking(Map<Long, Long> booking, UserDto user, LocalDate checkIn,
                                          LocalDate checkOut) {
         ReservationDto reservation = new ReservationDto();
         reservation.setUser(user);
-        reservation.setRoomId(roomId);
-        reservation.setType(room.getType());
-        reservation.setCapacity(room.getCapacity());
-        reservation.setCheckIn(checkIn);
-        reservation.setCheckOut(checkOut);
-        reservation.setRoomPrice(room.getPrice());
-        reservation.setStatus(ReservationDto.StatusDto.CONFIRMED);
-        BigDecimal totalCost = calculatePrice(room, checkIn, checkOut);
+        reservation.setStatus(ReservationDto.StatusDto.IN_PROGRESS);
+        List<ReservationInfoDto> details = new ArrayList<>();
+        booking.forEach((roomId, quantity) -> {
+            ReservationInfoDto info = new ReservationInfoDto();
+            RoomDto room = getRoomDto(roomId);
+            info.setRoom(room);
+            info.setCheckIn(checkIn);
+            info.setCheckOut(checkOut);
+            info.setRoomPrice(room.getPrice());
+            details.add(info);
+        });
+        reservation.setDetails(details);
+        BigDecimal totalCost = calculatePrice(details);
         reservation.setTotalCost(totalCost);
         return reservation;
     }
 
-    private BigDecimal calculatePrice(RoomDto room, LocalDate checkIn, LocalDate checkOut) {
+    private BigDecimal calculatePrice(List<ReservationInfoDto> details) {
         BigDecimal totalCost = BigDecimal.ZERO;
-        Long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
-        totalCost = totalCost.add(room.getPrice().multiply(BigDecimal.valueOf(nights)));
+        for (ReservationInfoDto detail : details) {
+            BigDecimal roomPrice = detail.getRoomPrice();
+            Long nights = ChronoUnit.DAYS.between(detail.getCheckIn(), detail.getCheckOut());
+            totalCost = totalCost.add(roomPrice.multiply(BigDecimal.valueOf(nights)));
+        }
         return totalCost;
     }
-
-//    (Map<Long, Integer> booking, User user, LocalDateTime reservationDate,
-//    LocalDate checkIn, LocalDate checkOut) {
-//        Reservation reservation = new Reservation();
-//        reservation.setUser(user);
-//        reservation.setStatus(Reservation.Status.NEW);
-//        List<ReservationInfo> details = new ArrayList<>();
-//        booking.forEach((roomId, quantity) -> {
-//            ReservationInfo info = new ReservationInfo();
-//            Room room = roomDao.findById(roomId);
-//            info.setRoom(room);
-//            info.setRoomQuantity(quantity);
-//            info.setRoomPrice(room.getRoomType().getPrice());
-//            info.setReservationDate(reservationDate);
-//            info.setCheckIn(checkIn);
-//            info.setCheckOut(checkOut);
-//            details.add(info);
-//        });
-//        reservation.setDetails(details);
-//        BigDecimal totalCost = calculatePrice(details);
-//        reservation.setTotalCost(totalCost);
-//        return reservation;
-//    }
-//
-//    private BigDecimal calculatePrice(List<ReservationInfo> details) {
-//        BigDecimal totalCost = BigDecimal.ZERO;
-//        for (ReservationInfo detail : details) {
-//            BigDecimal roomPrice = detail.getRoomPrice();
-//            Long nights = ChronoUnit.DAYS.between(detail.getCheckIn(),detail.getCheckOut());
-//            BigDecimal itemPrice = roomPrice.multiply(BigDecimal.valueOf(detail.getRoomQuantity()))
-//                    .multiply(BigDecimal.valueOf(nights));
-//            totalCost = totalCost.add(itemPrice);
-//        }
-//        return totalCost;
-//    }
-
 
     @Override
     public ReservationDto update(ReservationDto entity) {
@@ -159,19 +132,33 @@ public class ReservationServiceImpl implements IReservationService {
         try {
             dto.setId(entity.getId());
             dto.setUser(getUserDto(entity));
-            dto.setRoomId(entity.getRoomId());
-            dto.setType(RoomDto.RoomTypeDto.valueOf(entity.getType().toString()));
-            dto.setCapacity(RoomDto.CapacityDto.valueOf(entity.getCapacity().toString()));
-            dto.setCheckIn(entity.getCheckIn());
-            dto.setCheckOut(entity.getCheckOut());
-            dto.setStatus(ReservationDto.StatusDto.valueOf(entity.getStatus().toString()));
             dto.setRoomPrice(entity.getRoomPrice());
             dto.setTotalCost(entity.getTotalCost());
+            dto.setStatus(ReservationDto.StatusDto.valueOf(entity.getStatus().toString()));
+            List<ReservationInfoDto> reservationInfoDto = new ArrayList<>();
+            List<ReservationInfo> reservationInfo = entity.getDetails();
+            for (ReservationInfo info : reservationInfo) {
+                ReservationInfoDto resDto = getReservationInfoDto(info);
+                reservationInfoDto.add(resDto);
+            }
+            dto.setDetails(reservationInfoDto);
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
             throw new DaoException("No reservation");
         }
         return dto;
+    }
+
+    private ReservationInfoDto getReservationInfoDto(ReservationInfo info) {
+        ReservationInfoDto resDto = new ReservationInfoDto();
+        resDto.setId(info.getId());
+        resDto.setReservationId(info.getReservationId());
+        resDto.setRoom(getRoomDto(info.getRoom().getId()));
+        resDto.setCheckIn(info.getCheckIn());
+        resDto.setCheckOut(info.getCheckOut());
+        resDto.setNights(info.getNights());
+        resDto.setRoomPrice(info.getRoomPrice());
+        return resDto;
     }
 
     /**
@@ -210,14 +197,9 @@ public class ReservationServiceImpl implements IReservationService {
         try {
             entity.setId(dto.getId());
             entity.setUser(getUser(dto));
-            entity.setRoomId(dto.getRoomId());
-            entity.setType(Room.RoomType.valueOf(dto.getType().toString()));
-            entity.setCapacity(Room.Capacity.valueOf(dto.getCapacity().toString()));
-            entity.setCheckIn(dto.getCheckIn());
-            entity.setCheckOut(dto.getCheckOut());
-            entity.setStatus(Reservation.Status.valueOf(dto.getStatus().toString()));
             entity.setRoomPrice(dto.getRoomPrice());
             entity.setTotalCost(dto.getTotalCost());
+            entity.setStatus(Reservation.Status.valueOf(dto.getStatus().toString()));
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
             throw new DaoException("No reservation");
@@ -247,5 +229,23 @@ public class ReservationServiceImpl implements IReservationService {
             throw new DaoException("No user");
         }
         return entity;
+    }
+
+    /**
+     * Method transforms object RoomDto into object Room
+     *
+     * @param roomId Id Room
+     * @return object RoomDto
+     */
+    private RoomDto getRoomDto(Long roomId) {
+        RoomDto room = new RoomDto();
+        Room entity = roomDao.findById(roomId);
+        room.setId(entity.getId());
+        room.setType(RoomDto.RoomTypeDto.valueOf(entity.getType().toString()));
+        room.setCapacity(RoomDto.CapacityDto.valueOf(entity.getCapacity().toString()));
+        room.setStatus(RoomDto.RoomStatusDto.valueOf(entity.getStatus().toString()));
+        room.setPrice(entity.getPrice());
+        room.setNumber(entity.getNumber());
+        return room;
     }
 }

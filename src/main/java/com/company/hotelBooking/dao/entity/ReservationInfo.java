@@ -15,5 +15,6 @@ public class ReservationInfo {
     private Room room;
     private LocalDate checkIn;
     private LocalDate checkOut;
+    private Long nights;
     private BigDecimal roomPrice;
 }

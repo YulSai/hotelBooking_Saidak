@@ -17,25 +17,25 @@ import java.util.List;
  */
 @Log4j2
 public class ReservationsCommand implements ICommand {
-	private final IReservationService reservationService;
-	private final PagingUtil pagingUtil;
+    private final IReservationService reservationService;
+    private final PagingUtil pagingUtil;
 
-	public ReservationsCommand(IReservationService service, PagingUtil pagingUtil) {
-		this.reservationService = service;
-		this.pagingUtil = pagingUtil;
-	}
+    public ReservationsCommand(IReservationService service, PagingUtil pagingUtil) {
+        this.reservationService = service;
+        this.pagingUtil = pagingUtil;
+    }
 
-	@Override
-	public String execute(HttpServletRequest req) {
-		Paging paging = pagingUtil.getPaging(req);
-		List<ReservationDto> reservations = reservationService.findAllPages(paging);
-		if (reservations.size() == 0) {
-			log.error("Incorrect address entered. Time = {}", new Date());
-			return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
-		} else {
-			pagingUtil.setTotalPages(req, paging, reservationService);
-			req.setAttribute("reservations", reservations);
-			return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATIONS);
-		}
-	}
+    @Override
+    public String execute(HttpServletRequest req) {
+        Paging paging = pagingUtil.getPaging(req);
+        List<ReservationDto> reservations = reservationService.findAllPages(paging);
+        if (reservations.size() == 0) {
+            log.error("Incorrect address entered. Time = {}", new Date());
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+        } else {
+            pagingUtil.setTotalPages(req, paging, reservationService);
+            req.setAttribute("reservations", reservations);
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATIONS);
+        }
+    }
 }

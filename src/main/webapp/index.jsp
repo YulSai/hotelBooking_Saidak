@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page language="java" contentType="text/html; charser=UTF-8"
         pageEncoding="UTF-8" %>
 <html>
@@ -9,6 +9,6 @@
 <body>
 <jsp:include page="jsp/navbar.jsp"/>
 <h1>Welcome to HotelBooking, ${sessionScope.user != null ? sessionScope.user.firstName : 'Guest'}!</h1>
-<img src="images/jsp/hotel_main.jpg" alt="hotelBooking"/>
+<img src="images/main_hotel.jpg" alt="hotelBooking"/>
 </body>
 </html>

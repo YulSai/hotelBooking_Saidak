@@ -36,11 +36,13 @@
     <br/>
 
     <input id="role-input-admin" name="role" type="radio"
-           value="ADMIN" ${requestScope.user.roleDto='ADMIN' ? 'checked' : ''}/>
+           value="ADMIN" ${requestScope.user.role='ADMIN' ? 'checked' : ''}/>
     <label for="role-input-admin">Admin</label>
-    <input id="role-input-client" name="role" type="radio" value="CLIENT" ${requestScope.user.roleDto='CLIENT' ? 'checked' : ''}/>
+    <input id="role-input-client" name="role" type="radio"
+           value="CLIENT" ${requestScope.user.role='CLIENT' ? 'checked' : ''}/>
     <label for="role-input-client">Client</label>
-    <input id="role-input-guest" name="role" type="radio" value="GUEST" ${requestScope.user.roleDto='GUEST' ? 'checked' : ''}/>
+    <input id="role-input-guest" name="role" type="radio"
+           value="GUEST" ${requestScope.user.role='GUEST' ? 'checked' : ''}/>
     <label for="role-input-guest">Guest</label>
     <br/>
 

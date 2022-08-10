@@ -33,6 +33,7 @@ public class CommandFactory {
      */
     private CommandFactory() {
         commands = new HashMap<>();
+        //Rooms
         commands.put(CommandName.ROOMS,
                 new RoomsCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.ROOM, new RoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
@@ -43,7 +44,7 @@ public class CommandFactory {
                 .getService(IRoomService.class)));
         commands.put(CommandName.UPDATE_ROOM, new UpdateRoomCommand(ServiceFactory.getINSTANCE()
                 .getService(IRoomService.class)));
-
+        //Users
         commands.put(CommandName.USERS, new UsersCommand(ServiceFactory.getINSTANCE()
                 .getService(IUserService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.USER, new UserCommand(ServiceFactory.getINSTANCE()
@@ -55,23 +56,24 @@ public class CommandFactory {
                 .getService(IUserService.class)));
         commands.put(CommandName.UPDATE_USER, new UpdateUserCommand(ServiceFactory.getINSTANCE()
                 .getService(IUserService.class)));
+        //Autorizations
         commands.put(CommandName.LOGIN_FORM, new LoginFormCommand());
         commands.put(CommandName.LOGIN, new LoginCommand(ServiceFactory.getINSTANCE()
                 .getService(IUserService.class)));
         commands.put(CommandName.LOGOUT, new LogoutCommand());
 
+        //Reservations
         commands.put(CommandName.RESERVATIONS, new ReservationsCommand(ServiceFactory.getINSTANCE()
                 .getService(IReservationService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.RESERVATION, new ReservationCommand(ServiceFactory.getINSTANCE()
                 .getService(IReservationService.class)));
-
         commands.put(CommandName.SEARCH_AVAILABLE_ROOMS_FORM, new RoomsAvailableFormCommand());
         commands.put(CommandName.SEARCH_AVAILABLE_ROOMS, new RoomsAvailableCommand((ServiceFactory.getINSTANCE()
                 .getService(IRoomService.class))));
         commands.put(CommandName.BOOKING,
-                new BookingCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class),
-                        ServiceFactory.getINSTANCE().getService(IReservationService.class)));
+                new BookingCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
 
+//        //Other
         commands.put(CommandName.ERROR, new ErrorCommand());
     }
 

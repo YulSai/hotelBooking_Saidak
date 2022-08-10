@@ -10,40 +10,30 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1 id="title">Your booking</h1>
-<p>${requestScope.message}</p>
-<tr>
-    <th>Full name</th>
-    <th>Items</th>
-    <th>Price</th>
-    <th>Type</th>
-    <th>Capacity</th>
-    <th>Price/nights USD</th>
-    <th>Check in date</th>
-    <th>Check out date</th>
-    <th>Nights</th>
-    <th>Calculation</th>
-</tr>
-
-<td>
+<c:if test="${requestScope.booking == null}}">
+    <p>There are no current bookings</p>
+</c:if>
+<c:if test="${requestScope.booking != null}">
     <table>
-        <td><a
-                href="controller?command=user&id=${requestScope.reservation.user.id}">${requestScope.reservation.user.firstName}
-            ${requestScope.reservation.user.lastName}</a>
-        </td>
-        <td><a
-                href="controller?command=reservation&id=${requestScope.reservation.id}">${requestScope.reservation.id}</a>
-        </td>
-        <td><a href="controller?command=room&id=${requestScope.reservation.roomId}">${requestScope.room_number}</a></td>
-        <td>${requestScope.reservation.type}</td>
-        <td>${requestScope.reservation.capacity}</td>
-        <td>${requestScope.reservation.roomPrice}</td>
-        <td>${requestScope.reservation.checkIn}</td>
-        <td>${requestScope.reservation.checkOut}</td>
-        <td>${requestScope.nights}</td>
-        <td>$${requestScope.reservation.roomPrice} x ${requestScope.nights}</td>
+        <tr>
+            <th>Items</th>
+            <th>Price/nights USD</th>
+            <th>Check in date</th>
+            <th>Check out date</th>
+        </tr>
+        <c:forEach items="${requestScope.booking.details}" var="item">
+            <tr>
+                <td><a href="controller?command=room&id=${item.room.id}">${item.room.number}</a></td>
+                <td>${item.room.price}</td>
+                <td>${item.chekIn}</td>
+                <td>${item.checkOut}</td>
+            </tr>
+        </c:forEach>
+        <tr>
+            <td colspan="3">TOTAL COST: ${requestScope.booking.totalCost} USD</td>
+        </tr>
     </table>
-</td>
-TOTAL PRICE: ${requestScope.reservation.totalCost} USD
-<td>${requestScope.reservation.status.toString().toLowerCase()}</td>
+    <a href="controller?command=create_reservation">Place reservation</a>
+</c:if>
 </body>
 </html>

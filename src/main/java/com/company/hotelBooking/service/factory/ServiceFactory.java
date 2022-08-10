@@ -17,6 +17,21 @@ public class ServiceFactory {
     private final Map<Class<?>, Object> map;
 
     /**
+     * Method creates a list relationships between a class and a Service object
+     */
+    private ServiceFactory() {
+        map = new HashMap<>();
+        map.put(IUserService.class, new UserServiceImpl(DaoFactory.getINSTANCE().getDao(IUserDao.class)));
+        map.put(IRoomService.class, new RoomServiceImpl(DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
+        map.put(IReservationInfoService.class,
+                new ReservationInfoServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationInfoDao.class),
+                        DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
+        map.put(IReservationService.class,
+                new ReservationServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationDao.class),
+                        DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
+    }
+
+    /**
      * Method gets an instance of the class object
      *
      * @return an instance of the class object
@@ -26,16 +41,6 @@ public class ServiceFactory {
             INSTANCE = new ServiceFactory();
         }
         return INSTANCE;
-    }
-
-    /**
-     * Method creates a list relationships between a class and a Service object
-     */
-    private ServiceFactory() {
-        map = new HashMap<>();
-        map.put(IRoomService.class, new RoomServiceImpl(DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
-        map.put(IUserService.class, new UserServiceImpl(DaoFactory.getINSTANCE().getDao(IUserDao.class)));
-        map.put(IReservationService.class, new ReservationServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationDao.class)));
     }
 
     @SuppressWarnings("unchecked")

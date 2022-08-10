@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>Reservation</title>
 </head>
@@ -12,33 +11,39 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1>Reservation Detailed Info</h1>
 <table>
+    <jsp:include page="pagination.jsp"/>
     <tr>
-        <th>Id</th>
-        <th>User</th>
-        <th>Type</th>
-        <th>Capacity</th>
-        <th>Price/night USD</th>
-        <th>CheckIn</th>
-        <th>CheckOut</th>
-        <th>Nights</th>
-        <th>Calculation</th>
-        <th>Total cost USD</th>
-        <th>Status</th>
+        <th>Reservations id</th>
     </tr>
-    <tr>
-        <td>${requestScope.reservation.id}</td>
-        <td><a
-                href="controller?command=user&id=${requestScope.reservation.user.id}">${requestScope.reservation.user.email}</a>
-        </td>
-        <td><a href="controller?command=room&id=${requestScope.reservation.roomId}">${requestScope.reservation.type}</a></td>
-        <td>${requestScope.reservation.capacity}</td>
-        <td>${requestScope.reservation.roomPrice}</td>
-        <td>${requestScope.reservation.checkIn}</td>
-        <td>${requestScope.reservation.checkOut}</td>
-        <td>${nights}</td>
-        <td>$${requestScope.reservation.roomPrice} x ${nights}</td>
-        <td>TOTAL PRICE: ${requestScope.reservation.totalCost} USD</td>
-        <td>${requestScope.reservation.status.toString().toLowerCase()}</td>
+    <td><a
+            href="controller?command=reservation&id=${requestScope.reservation.id}">${requestScope.reservation.id}</a>
+    </td>
+    <td>
+        <table>
+            <th>Room number</th>
+            <th>Type</th>
+            <th>CheckIn</th>
+            <th>CheckOut</th>
+            <th>Nights</th>
+            <th>Price/night USD</th>
+            <th>Calculation</th>
+            <th>Total cost USD</th>
+            <th>Status</th>
+            <c:forEach items="${requestScope.reservation.details }" var="info">
+                <tr>
+                    <td><a href="controller?command=room&id=${info.room.id}">${info.room.number}</a></td>
+                    <td>${info.room.type}</td>
+                    <td>${info.room.capacity}</td>
+                    <td>${info.checkIn}</td>
+                    <td>${info.checkOut}</td>
+                    <td>${info.nights}</td>
+                    <td>${info.room.price} x ${info.nights}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        TOTAL COST: ${requestScope.reservation.totalCost} USD
+    </td>
+    <td>${requestScope.reservation.status.toString().toLowerCase()}</td>
     </tr>
 </table>
 </body>

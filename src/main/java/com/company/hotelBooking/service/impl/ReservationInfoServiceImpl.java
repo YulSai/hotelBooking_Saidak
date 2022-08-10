@@ -97,6 +97,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             dto.setRoom(getRoomDto(entity));
             dto.setCheckIn(entity.getCheckIn());
             dto.setCheckOut(entity.getCheckOut());
+            dto.setNights(entity.getNights());
             dto.setRoomPrice(entity.getRoomPrice());
         } catch (NullPointerException e) {
             log.error("This reservation info is not in the catalog.");
@@ -143,6 +144,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             entity.setRoom(getRoom(dto));
             entity.setCheckIn(dto.getCheckIn());
             entity.setCheckOut(dto.getCheckOut());
+            entity.setNights(dto.getNights());
             entity.setRoomPrice(dto.getRoomPrice());
         } catch (NullPointerException e) {
             log.error("This reservation info is not in the catalog.");

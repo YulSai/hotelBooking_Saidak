@@ -1,33 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8" %>
+         pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<title>Login</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <title>Login</title>
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1>Login</h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">
-	<input name="command" type="hidden" value="login"/>
+    <input name="command" type="hidden" value="login"/>
+    <div class="imgcontainer">
+        <img src="${pageContext.request.contextPath}/images/img_avatar.png" alt="Avatar" class="avatar">
+    </div>
 
-	<label for="email-input">Email: </label>
-	<input id="email-input" name="email" type="email"/>
-	<br/>
+    <div class="container">
+        <label for="email-input"><b>Email</b></label>
+        <input id="email-input" type="email" placeholder="Enter email" name="email" required>
+        <br/>
+        <label for="password-input"><b>Password</b></label>
+        <input id="password-input" type="password" placeholder="Enter password" name="password" min="6" required>
+        <br/>
 
-	<label for="password-input">Password: </label>
-	<input id="password-input" name="password" type="password" min="6"/>
-	<br/>
+        <button type="submit">Login</button>
+    </div>
 
-	<input type="submit" value="LOGIN"/>
+    <div class="container" style="background-color:#f1f1f1">
+        <button type="button" class="cancelbtn"><a href="/hotel_booking">Cancel</a></button>
+    </div>
 </form>
-
-<ul>
-	<li><a href="/hotel_booking">Home page</a></li>
-</ul>
-
 </body>
 </html>

@@ -15,6 +15,7 @@ public class ReservationInfoDto {
     private RoomDto room;
     private LocalDate checkIn;
     private LocalDate checkOut;
+    private Long nights;
     private BigDecimal roomPrice;
 
 }

@@ -7,7 +7,6 @@ import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -39,9 +38,7 @@ public class ReservationCommand implements ICommand {
                 log.error("Incorrect address entered. Time = {}", new Date());
                 return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
             } else {
-                Long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
                 req.setAttribute("reservation", reservation);
-                req.setAttribute("nights", nights);
                 log.info("Appeal to reservation.jsp. Time = {}", new Date());
                 return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATION);
             }

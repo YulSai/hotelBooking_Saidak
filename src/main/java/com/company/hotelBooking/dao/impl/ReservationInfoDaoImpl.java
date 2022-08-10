@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,10 +133,11 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public long countRow() throws DaoException {
+
         log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS))) {
+                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO))) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 return result.getLong("total");
@@ -145,6 +147,25 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
             throw new DaoException("Failed to find count of reservations info", e);
         }
         throw new DaoException("Failed to count reservations info");
+    }
+
+    @Override
+    public List<ReservationInfo> findByReservationId(Long id) {
+        log.debug("Accessing the database using the \"findByReservationId\" command. Time = {}", new Date());
+        List<ReservationInfo> reservationsInfo = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.getInstance()
+                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID))) {
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                reservationsInfo.add(processReservationInfo(result));
+            }
+        } catch (SQLException e) {
+            log.error("SQLReservationInfoDAO findByReservationId", e);
+            throw new DaoException("Error findByReservationId");
+        }
+        return reservationsInfo;
     }
 
     /**
@@ -159,8 +180,11 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         reservationInfo.setReservationId(result.getLong("reservation_id"));
         Room room = roomDao.findById(result.getLong("room_id"));
         reservationInfo.setRoom(room);
-        reservationInfo.setCheckIn(LocalDate.parse(result.getString("check_in")));
-        reservationInfo.setCheckOut(LocalDate.parse(result.getString("check_out")));
+        LocalDate checkIn = LocalDate.parse(result.getString("check_in"));
+        LocalDate checkOut = LocalDate.parse(result.getString("check_out"));
+        reservationInfo.setCheckIn(checkIn);
+        reservationInfo.setCheckOut(checkOut);
+        reservationInfo.setNights(ChronoUnit.DAYS.between(checkIn, checkOut));
         reservationInfo.setRoomPrice(result.getBigDecimal("room_price"));
         return reservationInfo;
     }
@@ -176,6 +200,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         statement.setLong(2, reservationInfo.getRoom().getId());
         statement.setDate(3, java.sql.Date.valueOf(reservationInfo.getCheckIn()));
         statement.setDate(4, java.sql.Date.valueOf(reservationInfo.getCheckOut()));
-        statement.setBigDecimal(5, reservationInfo.getRoomPrice());
+        statement.setLong(5, reservationInfo.getNights());
+        statement.setBigDecimal(6, reservationInfo.getRoomPrice());
     }
 }

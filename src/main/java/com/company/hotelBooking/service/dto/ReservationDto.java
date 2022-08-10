@@ -3,7 +3,7 @@ package com.company.hotelBooking.service.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Class describing the object ReservationDto
@@ -12,14 +12,10 @@ import java.time.LocalDate;
 public class ReservationDto {
     private Long id;
     private UserDto user;
-    private Long roomId;
-    private RoomDto.RoomTypeDto type;
-    private RoomDto.CapacityDto capacity;
-    private LocalDate checkIn;
-    private LocalDate checkOut;
-    private StatusDto status;
     private BigDecimal roomPrice;
     private BigDecimal totalCost;
+    private StatusDto status;
+    List<ReservationInfoDto> details;
 
     public enum StatusDto {
         IN_PROGRESS,
