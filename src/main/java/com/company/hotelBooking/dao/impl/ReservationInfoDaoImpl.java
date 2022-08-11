@@ -6,6 +6,7 @@ import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
 import com.company.hotelBooking.exceptions.DaoException;
+import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
 
@@ -18,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class object ReservationInfoDao with implementation of CRUD operation operations
@@ -87,6 +89,25 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
             log.error("SQLReservationInfoDAO save error: " + entity, e);
         }
         throw new DaoException("Failed to save new reservation " + entity);
+    }
+
+    @Override
+    public List<ReservationInfo> processBookingInfo(Map<Long, Long> booking, LocalDate checkIn,
+                                                    LocalDate checkOut, ReservationDto reservation) {
+        List<ReservationInfo> reservationsInfo = new ArrayList<>();
+        booking.forEach((roomId, quantity) -> {
+            ReservationInfo info = new ReservationInfo();
+            info.setReservationId(reservation.getId());
+            Room room = roomDao.findById(roomId);
+            info.setRoom(room);
+            info.setCheckIn(checkIn);
+            info.setCheckOut(checkOut);
+            info.setNights(ChronoUnit.DAYS.between(checkIn, checkOut));
+            info.setRoomPrice(room.getPrice());
+            reservationsInfo.add(info);
+            save(info);
+        });
+        return reservationsInfo;
     }
 
 

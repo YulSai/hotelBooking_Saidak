@@ -12,7 +12,6 @@ import java.util.List;
 public class Reservation {
     private Long id;
     private User user;
-    private BigDecimal roomPrice;
     private BigDecimal totalCost;
     private Status status;
     List<ReservationInfo> details;

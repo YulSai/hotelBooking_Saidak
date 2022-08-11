@@ -24,14 +24,14 @@ public class BookingCommand implements ICommand {
         @SuppressWarnings("unchecked")
         Map<Long, Long> booking = (Map<Long, Long>) session.getAttribute("booking");
         if (booking == null) {
-            req.setAttribute("massage", "Booking is empty");
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_BOOKING);
+        } else {
+            UserDto user = (UserDto) session.getAttribute("user");
+            LocalDate checkIn = (LocalDate) session.getAttribute("check_in");
+            LocalDate checkOut = (LocalDate) session.getAttribute("check_out");
+            ReservationDto processed = reservationService.processBooking(booking, user, checkIn, checkOut);
+            req.setAttribute("booking", processed);
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_BOOKING);
         }
-        UserDto user = (UserDto) session.getAttribute("user");
-        LocalDate checkIn = (LocalDate) session.getAttribute("check_in");
-        LocalDate checkOut = (LocalDate) session.getAttribute("check_out");
-        ReservationDto processed = reservationService.processBooking(booking, user, checkIn, checkOut);
-        req.setAttribute("booking", processed);
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_BOOKING);
     }
 }

@@ -6,12 +6,11 @@ import com.company.hotelBooking.controller.command.impl.ErrorCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginFormCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LogoutCommand;
-import com.company.hotelBooking.controller.command.impl.reservations.BookingCommand;
-import com.company.hotelBooking.controller.command.impl.reservations.ReservationCommand;
-import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.*;
 import com.company.hotelBooking.controller.command.impl.rooms.*;
 import com.company.hotelBooking.controller.command.impl.users.*;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
+import com.company.hotelBooking.service.api.IReservationInfoService;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.api.IUserService;
@@ -56,7 +55,8 @@ public class CommandFactory {
                 .getService(IUserService.class)));
         commands.put(CommandName.UPDATE_USER, new UpdateUserCommand(ServiceFactory.getINSTANCE()
                 .getService(IUserService.class)));
-        //Autorizations
+
+        //Authorizations
         commands.put(CommandName.LOGIN_FORM, new LoginFormCommand());
         commands.put(CommandName.LOGIN, new LoginCommand(ServiceFactory.getINSTANCE()
                 .getService(IUserService.class)));
@@ -67,11 +67,18 @@ public class CommandFactory {
                 .getService(IReservationService.class), PagingUtil.INSTANCE));
         commands.put(CommandName.RESERVATION, new ReservationCommand(ServiceFactory.getINSTANCE()
                 .getService(IReservationService.class)));
-        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS_FORM, new RoomsAvailableFormCommand());
-        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS, new RoomsAvailableCommand((ServiceFactory.getINSTANCE()
+
+        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS_FORM, new RoomsSearchAvailableFormCommand());
+        commands.put(CommandName.SEARCH_AVAILABLE_ROOMS, new RoomsSearchAvailableCommand((ServiceFactory.getINSTANCE()
                 .getService(IRoomService.class))));
+        commands.put(CommandName.ROOMS_AVAILABLE,
+                new RoomsAvailableCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)));
+        commands.put(CommandName.ADD_BOOKING, new AddBookingCommand());
         commands.put(CommandName.BOOKING,
                 new BookingCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)));
+        commands.put(CommandName.CREATE_RESERVATION,
+                new CreateReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class),
+                        ServiceFactory.getINSTANCE().getService(IReservationInfoService.class)));
 
 //        //Other
         commands.put(CommandName.ERROR, new ErrorCommand());

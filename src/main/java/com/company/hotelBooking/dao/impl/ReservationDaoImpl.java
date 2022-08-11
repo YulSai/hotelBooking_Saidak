@@ -155,7 +155,6 @@ public class ReservationDaoImpl implements IReservationDao {
         Reservation reservation = new Reservation();
         reservation.setId(result.getLong("id"));
         reservation.setUser(userDao.findById((result.getLong("user_id"))));
-        reservation.setRoomPrice(result.getBigDecimal("room_price"));
         reservation.setTotalCost(result.getBigDecimal("total_cost"));
         reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
         List<ReservationInfo> details = reservationInfoDao.findByReservationId(reservation.getId());
@@ -171,12 +170,7 @@ public class ReservationDaoImpl implements IReservationDao {
      */
     private void extractedDate(Reservation reservation, PreparedStatement statement) throws SQLException {
         statement.setLong(1, reservation.getUser().getId());
-        statement.setBigDecimal(2, reservation.getRoomPrice());
-        statement.setBigDecimal(3, reservation.getTotalCost());
-        statement.setString(4, reservation.getStatus().toString().toLowerCase());
-        List<ReservationInfo> details = reservation.getDetails();
-        for (ReservationInfo info : details) {
-            reservationInfoDao.save(info);
-        }
+        statement.setBigDecimal(2, reservation.getTotalCost());
+        statement.setString(3, reservation.getStatus().toString().toUpperCase());
     }
 }

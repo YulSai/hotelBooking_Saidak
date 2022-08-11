@@ -10,8 +10,8 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1 id="title">Your booking</h1>
-<c:if test="${requestScope.booking == null}}">
-    <p>There are no current bookings</p>
+<c:if test="${requestScope.booking == null}">
+    <h2>There are no current bookings</h2>
 </c:if>
 <c:if test="${requestScope.booking != null}">
     <table>
@@ -25,7 +25,7 @@
             <tr>
                 <td><a href="controller?command=room&id=${item.room.id}">${item.room.number}</a></td>
                 <td>${item.room.price}</td>
-                <td>${item.chekIn}</td>
+                <td>${item.checkIn}</td>
                 <td>${item.checkOut}</td>
             </tr>
         </c:forEach>
@@ -33,7 +33,7 @@
             <td colspan="3">TOTAL COST: ${requestScope.booking.totalCost} USD</td>
         </tr>
     </table>
-    <a href="controller?command=create_reservation">Place reservation</a>
+    <a href="controller?command=create_reservation">Reserve</a>
 </c:if>
 </body>
 </html>

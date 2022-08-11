@@ -7,12 +7,15 @@ import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.service.api.IReservationInfoService;
+import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.ReservationInfoDto;
 import com.company.hotelBooking.service.dto.RoomDto;
 import lombok.extern.log4j.Log4j2;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class object ReservationInfoDTO with implementation of CRUD operation operations
@@ -50,6 +53,15 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
     public ReservationInfoDto create(ReservationInfoDto entity) {
         log.debug("Calling a service method \"create\". ReservationInfo = {}, time = {}", entity, new Date());
         return toDto(reservationInfoDao.save(toEntity(entity)));
+    }
+
+    @Override
+    public List<ReservationInfoDto> processBookingInfo(Map<Long, Long> booking, LocalDate checkIn,
+                                                       LocalDate checkOut, ReservationDto reservation) {
+        log.debug("Calling a service method \"processBookingInfo\". Time = {}", new Date());
+        return reservationInfoDao.processBookingInfo(booking, checkIn, checkOut, reservation).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Override

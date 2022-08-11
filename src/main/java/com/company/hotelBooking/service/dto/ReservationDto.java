@@ -12,7 +12,6 @@ import java.util.List;
 public class ReservationDto {
     private Long id;
     private UserDto user;
-    private BigDecimal roomPrice;
     private BigDecimal totalCost;
     private StatusDto status;
     List<ReservationInfoDto> details;

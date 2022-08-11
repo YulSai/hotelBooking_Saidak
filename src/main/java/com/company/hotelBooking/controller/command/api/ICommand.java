@@ -1,9 +1,6 @@
 package com.company.hotelBooking.controller.command.api;
 
-import com.company.hotelBooking.exceptions.ServicesException;
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
 
 /**
  * Interface

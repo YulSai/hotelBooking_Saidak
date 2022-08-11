@@ -71,6 +71,7 @@ public class ReservationServiceImpl implements IReservationService {
             info.setRoom(room);
             info.setCheckIn(checkIn);
             info.setCheckOut(checkOut);
+            info.setNights(ChronoUnit.DAYS.between(checkIn, checkOut));
             info.setRoomPrice(room.getPrice());
             details.add(info);
         });
@@ -132,7 +133,6 @@ public class ReservationServiceImpl implements IReservationService {
         try {
             dto.setId(entity.getId());
             dto.setUser(getUserDto(entity));
-            dto.setRoomPrice(entity.getRoomPrice());
             dto.setTotalCost(entity.getTotalCost());
             dto.setStatus(ReservationDto.StatusDto.valueOf(entity.getStatus().toString()));
             List<ReservationInfoDto> reservationInfoDto = new ArrayList<>();
@@ -197,7 +197,6 @@ public class ReservationServiceImpl implements IReservationService {
         try {
             entity.setId(dto.getId());
             entity.setUser(getUser(dto));
-            entity.setRoomPrice(dto.getRoomPrice());
             entity.setTotalCost(dto.getTotalCost());
             entity.setStatus(Reservation.Status.valueOf(dto.getStatus().toString()));
         } catch (NullPointerException e) {
@@ -234,7 +233,7 @@ public class ReservationServiceImpl implements IReservationService {
     /**
      * Method transforms object RoomDto into object Room
      *
-     * @param roomId Id Room
+     * @param roomId id Room
      * @return object RoomDto
      */
     private RoomDto getRoomDto(Long roomId) {

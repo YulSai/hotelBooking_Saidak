@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 @Log4j2
 public class ConnectionPool {
-    private static final int POOL_SIZE = 35;
+    private static final int POOL_SIZE = 100;
     private final BlockingQueue<ProxyConnection> freeConnections;
     private final Queue<ProxyConnection> givenAwayConnections;
 

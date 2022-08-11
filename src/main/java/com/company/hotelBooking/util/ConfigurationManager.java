@@ -73,9 +73,8 @@ public class ConfigurationManager {
     public static final String PAGE_ROOM = "page.room";
     public static final String PAGE_CREATE_ROOM = "page.create.room";
     public static final String PAGE_UPDATE_ROOM = "page.update.room";
-    public static final String PAGE_ROOMS_AVAILABLE = "page.rooms.available";
-
     public static final String PAGE_SEARCH_AVAILABLE_ROOMS = "page.search.available";
+    public static final String PAGE_ROOMS_AVAILABLE = "page.rooms.available";
 
     // User
     public static final String PAGE_USERS = "page.users";
