@@ -5,14 +5,14 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/tables.css">
     <title>Rooms</title>
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
-<table>
+<table class="first">
     <jsp:include page="pagination.jsp"/>
-
     <tr>
         <th>#</th>
         <th>Number</th>
@@ -22,7 +22,6 @@
         <th>Price/night USD</th>
         <th>Action</th>
     </tr>
-
     <c:forEach items="${rooms}" var="room" varStatus="counter">
         <tr>
             <td><a href="controller?command=room&id=${room.id}">${counter.count}</a></td>
@@ -34,11 +33,6 @@
             <td><a href="controller?command=update_room_form&id=${room.id}">Update</a></td>
         </tr>
     </c:forEach>
-
-    <ul>
-        <li><a href="/hotel_booking">Home page</a></li>
-    </ul>
-
 </table>
 </body>
 </html>

@@ -48,12 +48,5 @@
 
     <input type="submit" value="Save"/>
 </form>
-
-<ul>
-    <li><a href="controller?command=users">Return to the list of
-        all users</a></li>
-    <li><a href="/hotel_booking">Home page</a></li>
-</ul>
-
 </body>
 </html>

@@ -13,17 +13,16 @@
 <p>${requestScope.message}</p>
 <form method="post" action="controller">
     <input name="command" type="hidden" value="create_room"/>
-
     <label for="room_number-input">Number: </label>
     <input id="room_number-input" name="room_number" type="text"/>
     <br/>
-        <select name="type" required="required">
-            <option value="">Choose type</option>
-            <option value="STANDARD">STANDARD</option>
-            <option value="COMFORT">COMFORT</option>
-            <option value="LUX">LUX</option>
-            <option value="PRESIDENT">PRESIDENT</option>
-        </select>
+    <select name="type" required="required">
+        <option value="">Choose type</option>
+        <option value="STANDARD">STANDARD</option>
+        <option value="COMFORT">COMFORT</option>
+        <option value="LUX">LUX</option>
+        <option value="PRESIDENT">PRESIDENT</option>
+    </select>
     <br/>
     <select name="capacity" required="required">
         <option value="">Choose capacity</option>
@@ -42,15 +41,12 @@
     <label for="price-input">Price/night, USD: </label>
     <input id="price-input" name="price" type="text"/>
     <br/>
-
     <input type="submit" value="REGISTER"/>
 </form>
-
 <ul>
     <li><a id="all_rooms" href="controller?command=rooms">Return
         to the list of all rooms</a></li>
     <li><a id="home" href="/hotel_booking">Home page</a></li>
 </ul>
-
 </body>
 </html>

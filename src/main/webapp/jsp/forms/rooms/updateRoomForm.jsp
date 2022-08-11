@@ -14,7 +14,6 @@
 <form method="post" action="controller">
     <input name="command" type="hidden" value="update_room"/>
     <input name="id" type="hidden" value="${requestScope.room.id}"/>
-
     <label for="room_number-input">Number: </label>
     <input id="room_number-input" name="room_number" type="text" value="${requestScope.room.number}"/>
     <br/>
@@ -43,16 +42,7 @@
     <label for="price-input">Price/night, USD: </label>
     <input id="price-input" name="price" type="text" value="${requestScope.room.price}"/>
     <br/>
-
     <input type="submit" value="Update"/>
-
 </form>
-
-<ul>
-    <li><a id="allBooks" href="controller?command=rooms">Return
-        to the list of all rooms</a></li>
-    <li><a id="home" href="/hotel_booking">Home page</a></li>
-</ul>
-
 </body>
 </html>

@@ -5,13 +5,14 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/tables.css">
     <title>Room</title>
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1 id="title">The Room</h1>
 <p>${requestScope.message}</p>
-<table>
+<table class="first">
     <tr>
         <th>Field</th>
         <th>Value</th>
@@ -36,14 +37,9 @@
         <td class="name">Price/night, USD</td>
         <td class="sign">${requestScope.room.price}</td>
     </tr>
-
 </table>
-
 <ul>
     <li><a href="controller?command=update_room_form&id=${requestScope.room.id}">Update room</a></li>
-    <li><a id="allBooks" href="controller?command=rooms">Return
-        to the list of all rooms</a></li>
-    <li><a id="home" href="/hotel_booking">Home page</a></li>
 </ul>
 </body>
 </html>
