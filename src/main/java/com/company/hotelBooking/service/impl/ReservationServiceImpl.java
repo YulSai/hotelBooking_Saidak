@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public ReservationDto findById(Long id) {
-        log.debug("Calling a service method \"findById\". Reservation id = {}, time = {}", id, new Date());
+        log.debug("Calling a service method findById. Reservation id = {}", id);
         ReservationDto reservation = toDto(reservationDao.findById(id));
         if (reservation == null) {
             log.error("SQLReservationService findById error. id = {}", id);
@@ -46,7 +46,7 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     public List<ReservationDto> findAll() {
-        log.debug("Calling a service method \"findAll\". Time = {}", new Date());
+        log.debug("Calling a service method findAll");
         return reservationDao.findAll().stream()
                 .map(this::toDto)
                 .toList();
@@ -54,7 +54,7 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public ReservationDto create(ReservationDto entity) {
-        log.debug("Calling a service method \"create\". Reservation = {}, time = {}", entity, new Date());
+        log.debug("Calling a service method create. Reservation = {}", entity);
         return toDto(reservationDao.save(toEntity(entity)));
     }
 
@@ -93,13 +93,13 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public ReservationDto update(ReservationDto entity) {
-        log.debug("Calling a service method \"update\". Reservation = {}, time = {}", entity, new Date());
+        log.debug("Calling a service method update. Reservation = {}", entity);
         return toDto(reservationDao.update(toEntity(entity)));
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Calling a service method \"delete\". Reservation id = {}, time = {}", id, new Date());
+        log.debug("Calling a service method delete. Reservation id = {}", id);
         reservationDao.delete(id);
         if (!reservationDao.delete(id)) {
             log.error("SQLReservationService deleted error. Failed to delete reservation with id = {}", id);
@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public List<ReservationDto> findAllPages(Paging paging) {
-        log.debug("Calling a service method \"findAllPages\". Time = {}", new Date());
+        log.debug("Calling a service method findAllPages");
         return reservationDao.findAllPages(paging.getLimit(), paging.getOffset()).stream()
                 .map(this::toDto)
                 .toList();
@@ -117,7 +117,7 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public long countRow() {
-        log.debug("Calling a service method \"countRow\". Time = {}", new Date());
+        log.debug("Calling a service method countRow");
         return reservationDao.countRow();
     }
 
@@ -128,7 +128,7 @@ public class ReservationServiceImpl implements IReservationService {
      * @return object ReservationDto
      */
     private ReservationDto toDto(Reservation entity) {
-        log.debug("Calling a service method \"toDto\". Reservation = {}, time = {}", entity, new Date());
+        log.debug("Calling a service method toDto. Reservation = {}", entity);
         ReservationDto dto = new ReservationDto();
         try {
             dto.setId(entity.getId());
@@ -150,6 +150,7 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     private ReservationInfoDto getReservationInfoDto(ReservationInfo info) {
+        log.debug("Calling a service method getReservationInfoDto. ReservationInfo = {}", info);
         ReservationInfoDto resDto = new ReservationInfoDto();
         resDto.setId(info.getId());
         resDto.setReservationId(info.getReservationId());
@@ -168,7 +169,7 @@ public class ReservationServiceImpl implements IReservationService {
      * @return object UserDto
      */
     private UserDto getUserDto(Reservation entity) {
-        log.debug("Calling a service method \"toDto\". Reservation = {}, time = {}", entity, new Date());
+        log.debug("Calling a service method getUserDto. Reservation = {}", entity);
         UserDto dto = new UserDto();
         try {
             dto.setId(entity.getUser().getId());
@@ -192,7 +193,7 @@ public class ReservationServiceImpl implements IReservationService {
      * @return object Reservation
      */
     private Reservation toEntity(ReservationDto dto) {
-        log.debug("Calling a service method \"toDto\". ReservationDto = {}, time = {}", dto, new Date());
+        log.debug("Calling a service method toEntity. ReservationDto = {}", dto);
         Reservation entity = new Reservation();
         try {
             entity.setId(dto.getId());
@@ -213,7 +214,7 @@ public class ReservationServiceImpl implements IReservationService {
      * @return object User
      */
     private User getUser(ReservationDto dto) {
-        log.debug("Calling a service method \"toDto\". ReservationDto = {}, time = {}", dto, new Date());
+        log.debug("Calling a service method getUser. ReservationDto = {}", dto);
         User entity = new User();
         try {
             entity.setId(dto.getUser().getId());
@@ -237,6 +238,7 @@ public class ReservationServiceImpl implements IReservationService {
      * @return object RoomDto
      */
     private RoomDto getRoomDto(Long roomId) {
+        log.debug("Calling a service method getRoomDto. Room id = {}", roomId);
         RoomDto room = new RoomDto();
         Room entity = roomDao.findById(roomId);
         room.setId(entity.getId());

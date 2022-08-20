@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public Room findById(Long id) {
-        log.debug("Accessing the database using the \"findById\" command. Room id = {}, time = {}", id, new Date());
+        log.debug("Accessing the database using the findById  command. Room id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_FIND_BY_ID))) {
@@ -46,7 +45,7 @@ public class RoomDaoImpl implements IRoomDao {
     }
 
     public List<Room> findAll() {
-        log.debug("Accessing the database using the \"findAll\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAll command");
         List<Room> rooms = new ArrayList<>();
         try (Statement statement = dataSource.getConnection().createStatement()) {
             ResultSet result = statement.executeQuery(ConfigurationManager.getInstance()
@@ -63,7 +62,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public Room save(Room room) {
-        log.debug("Accessing the database using the \"create\" command. Room = {}, time = {}", room, new Date());
+        log.debug("Accessing the database using the create command. Room = {}", room);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_CREATE), Statement.RETURN_GENERATED_KEYS)) {
@@ -83,7 +82,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public Room update(Room room) {
-        log.debug("Accessing the database using the \"update\" command. Room = {}, time = {}", room, new Date());
+        log.debug("Accessing the database using the update command. Room = {}", room);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_UPDATE))) {
@@ -102,7 +101,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public boolean delete(Long id) {
-        log.debug("Accessing the database using the \"delete\" command. Room id = {}, time = {}", id, new Date());
+        log.debug("Accessing the database using the delete command. Room id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_DELETE))) {
@@ -117,7 +116,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public List<Room> findAllPages(int limit, long offset) {
-        log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAllPages command");
         List<Room> rooms = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
@@ -136,8 +135,7 @@ public class RoomDaoImpl implements IRoomDao {
     }
 
     public Room findRoomByNumber(String number) {
-        log.debug("Accessing the database using the \"findRoomByNumber\" command. Room number = {}, time = {}",
-                number, new Date());
+        log.debug("Accessing the database using the findRoomByNumber command. Room number = {}", number);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_FIND_BY_NUMBER))) {
@@ -156,7 +154,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public List<Room> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity) {
-        log.debug("Accessing the database using the \"findAvailableRooms\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAvailableRooms command");
         List<Room> rooms = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
@@ -181,7 +179,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public long countRow() throws DaoException {
-        log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findRowCount command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_ROOM_COUNT_ROOMS))) {
@@ -203,6 +201,7 @@ public class RoomDaoImpl implements IRoomDao {
      * @return Room object
      */
     private Room processRoom(ResultSet result) throws SQLException {
+
         Room room = new Room();
         room.setId(result.getLong("id"));
         room.setNumber(result.getString("room_number"));
@@ -225,7 +224,5 @@ public class RoomDaoImpl implements IRoomDao {
         statement.setString(3, room.getCapacity().toString().toUpperCase());
         statement.setBigDecimal(4, room.getPrice());
         statement.setString(5, room.getStatus().toString().toUpperCase());
-
-
     }
 }

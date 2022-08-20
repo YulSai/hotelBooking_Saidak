@@ -3,7 +3,6 @@ package com.company.hotelBooking.dao.connection;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -24,14 +23,8 @@ public class ProxyConnection implements Connection {
         DataSource.getINSTANCE().getConnectionPool().releaseConnection(this);
     }
 
-    void reallyClose() {
-        try {
-            connection.close();
-            log.info("Connection closed. Time = {}", new Date());
-        } catch (SQLException var2) {
-            log.error("Error closing connection", var2);
-        }
-
+    void reallyClose() throws SQLException {
+        connection.close();
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {

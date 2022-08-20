@@ -19,7 +19,7 @@ public class LoginCommand implements ICommand {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        if (email == null || email.equals("") || password == null || password.equals("")) {
+        if (email == null || ("").equals(email) || password == null || ("").equals(password)) {
             req.setAttribute("massage", "Enter your login details");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN);
         }

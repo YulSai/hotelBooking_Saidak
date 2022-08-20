@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +35,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public ReservationInfo findById(Long id) {
-        log.debug("Accessing the database using the \"findById\" command. ReservationInfo id = {}, time = {}",
-                id, new Date());
+        log.debug("Accessing the database using the findById command. ReservationInfo id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_ID))) {
@@ -55,7 +53,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public List<ReservationInfo> findAll() {
-        log.debug("Accessing the database using the \"findAll\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAll command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
         try (Statement statement = dataSource.getConnection().createStatement()) {
             ResultSet result = statement.executeQuery(ConfigurationManager.getInstance()
@@ -72,7 +70,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public ReservationInfo save(ReservationInfo entity) {
-        log.debug("Accessing the database using the \"save\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the save command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_INFO_CREATE),
@@ -94,6 +92,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     @Override
     public List<ReservationInfo> processBookingInfo(Map<Long, Long> booking, LocalDate checkIn,
                                                     LocalDate checkOut, ReservationDto reservation) {
+        log.debug("Accessing the database using the processBookingInfo command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
         booking.forEach((roomId, quantity) -> {
             ReservationInfo info = new ReservationInfo();
@@ -118,8 +117,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public boolean delete(Long id) {
-        log.debug("Accessing the database using the \"delete\" command. ReservationInfo id = {}, time = {}", id,
-                new Date());
+        log.debug("Accessing the database using the delete command. ReservationInfo id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_INFO_DELETE))) {
@@ -134,7 +132,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public List<ReservationInfo> findAllPages(int limit, long offset) {
-        log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAllPages command");
         List<ReservationInfo> reservationInfos = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
@@ -154,8 +152,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public long countRow() throws DaoException {
-
-        log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findRowCount command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO))) {
@@ -172,7 +169,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
 
     @Override
     public List<ReservationInfo> findByReservationId(Long id) {
-        log.debug("Accessing the database using the \"findByReservationId\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findByReservationId command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()

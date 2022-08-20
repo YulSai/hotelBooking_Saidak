@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +31,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public Reservation findById(Long id) {
-        log.debug("Accessing the database using the \"findById\" command. Reservation id = {}, time = {}",
-                id, new Date());
+        log.debug("Accessing the database using the findById command. Reservation id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_FIND_BY_ID))) {
@@ -51,7 +49,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        log.debug("Accessing the database using the \"findAll\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAll command");
         List<Reservation> reservations = new ArrayList<>();
         try (Statement statement = dataSource.getConnection().createStatement()) {
             ResultSet result = statement.executeQuery(ConfigurationManager.getInstance()
@@ -68,7 +66,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public Reservation save(Reservation entity) {
-        log.debug("Accessing the database using the \"save\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the save command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_CREATE), Statement.RETURN_GENERATED_KEYS)) {
@@ -94,8 +92,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public boolean delete(Long id) {
-        log.debug("Accessing the database using the \"delete\" command. Reservation id = {}, time = {}", id,
-                new Date());
+        log.debug("Accessing the database using the delete command. Reservation id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_DELETE))) {
@@ -110,7 +107,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public List<Reservation> findAllPages(int limit, long offset) {
-        log.debug("Accessing the database using the \"findAllPages\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findAllPages command");
         List<Reservation> reservations = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
@@ -130,7 +127,7 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public long countRow() throws DaoException {
-        log.debug("Accessing the database using the \"findRowCount\" command. Time = {}", new Date());
+        log.debug("Accessing the database using the findRowCount command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
                 ConfigurationManager.getInstance()
                         .getString(ConfigurationManager.SQL_RESERVATION_COUNT_RESERVATIONS))) {

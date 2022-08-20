@@ -9,7 +9,6 @@ import com.company.hotelBooking.service.dto.RoomDto;
 import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public RoomDto findById(Long id) {
-        log.debug("Calling a service method \"findById\". RoomDto id = {}, time = {}", id, new Date());
+        log.debug("Calling a service method findById. RoomDto id = {}", id);
         RoomDto roomDto = toDto(roomDao.findById(id));
         if (roomDto == null) {
             log.error("SQLRoomService findById error. id = {}", id);
@@ -36,7 +35,7 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     public List<RoomDto> findAll() {
-        log.debug("Calling a service method \"findAll\". Time = {}", new Date());
+        log.debug("Calling a service method findAll");
         return roomDao.findAll().stream()
                 .map(this::toDto)
                 .toList();
@@ -44,7 +43,7 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public RoomDto create(RoomDto roomDto) {
-        log.debug("Calling a service method \"create\". RoomDto = {}, time = {}", roomDto, new Date());
+        log.debug("Calling a service method create. RoomDto = {}", roomDto);
         Room existing = roomDao.findRoomByNumber(roomDto.getNumber());
         if (existing != null) {
             log.error("Room with number = {} already exists", roomDto.getNumber());
@@ -55,7 +54,7 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public RoomDto update(RoomDto roomDto) {
-        log.debug("Calling a service method \"update\". RoomDto = {}, time = {}", roomDto, new Date());
+        log.debug("Calling a service method update. RoomDto = {}", roomDto);
         Room existing = roomDao.findRoomByNumber((roomDto.getNumber()));
         if (existing != null && !existing.getId().equals(roomDto.getId())) {
             log.error("Room with number = {} already exists", roomDto.getNumber());
@@ -66,7 +65,7 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public void delete(Long id) {
-        log.debug("Calling a service method \"delete\". RoomDto id = {}, time = {}", id, new Date());
+        log.debug("Calling a service method delete. RoomDto id = {}", id);
         roomDao.delete(id);
         if (!roomDao.delete(id)) {
             log.error("SQLRoomService deleted error. Failed to delete room with id = {}", id);
@@ -76,7 +75,7 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public List<RoomDto> findAllPages(Paging paging) {
-        log.debug("Calling a service method \"findAllPages\". Time = {}", new Date());
+        log.debug("Calling a service method findAllPages");
         return roomDao.findAllPages(paging.getLimit(), paging.getOffset()).stream()
                 .map(this::toDto)
                 .toList();
@@ -84,13 +83,13 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     public long countRow() {
-        log.debug("Calling a service method \"countRow\". Time = {}", new Date());
+        log.debug("Calling a service method countRow");
         return roomDao.countRow();
     }
 
     @Override
     public List<RoomDto> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity) {
-        log.debug("Calling a service method \"findAvailableRooms\". Time = {}", new Date());
+        log.debug("Calling a service method findAvailableRooms");
         return roomDao.findAvailableRooms(check_in, check_out, type, capacity).stream()
                 .map(this::toDto)
                 .toList();
@@ -98,8 +97,7 @@ public class RoomServiceImpl implements IRoomService {
 
 
     public RoomDto findRoomByNumber(String number) {
-        log.debug("Calling a service method \"findRoomByNumber\". RoomDto number = {}, time = {}",
-                number, new Date());
+        log.debug("Calling a service method findRoomByNumber. RoomDto number = {}", number);
         RoomDto roomDto = toDto(roomDao.findRoomByNumber(number));
         if (roomDto == null) {
             log.error("SQLRoomService deleted error. No room with number = {}", number);
@@ -115,7 +113,7 @@ public class RoomServiceImpl implements IRoomService {
      * @return object RoomDto
      */
     private RoomDto toDto(Room entity) {
-        log.debug("Calling a service method \"toDto\". Room = {}, time = {}", entity, new Date());
+        log.debug("Calling a service method toDto. Room = {}", entity);
         RoomDto dto = new RoomDto();
         try {
             dto.setId(entity.getId());
@@ -138,7 +136,7 @@ public class RoomServiceImpl implements IRoomService {
      * @return object Room
      */
     private Room toEntity(RoomDto dto) {
-        log.debug("Calling a service method \"toEntity\". RoomDto = {}, time = {}", dto, new Date());
+        log.debug("Calling a service method toEntity. RoomDto = {}", dto);
         Room entity = new Room();
         entity.setId(dto.getId());
         entity.setType(Room.RoomType.valueOf(dto.getType().toString()));

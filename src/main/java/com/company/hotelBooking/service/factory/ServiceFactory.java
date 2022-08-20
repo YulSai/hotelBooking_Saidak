@@ -24,8 +24,7 @@ public class ServiceFactory {
         map.put(IUserService.class, new UserServiceImpl(DaoFactory.getINSTANCE().getDao(IUserDao.class)));
         map.put(IRoomService.class, new RoomServiceImpl(DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
         map.put(IReservationInfoService.class,
-                new ReservationInfoServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationInfoDao.class),
-                        DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
+                new ReservationInfoServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationInfoDao.class)));
         map.put(IReservationService.class,
                 new ReservationServiceImpl(DaoFactory.getINSTANCE().getDao(IReservationDao.class),
                         DaoFactory.getINSTANCE().getDao(IRoomDao.class)));
