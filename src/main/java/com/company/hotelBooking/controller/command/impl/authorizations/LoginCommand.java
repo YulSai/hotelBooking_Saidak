@@ -6,7 +6,9 @@ import com.company.hotelBooking.service.dto.UserDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class LoginCommand implements ICommand {
     private final IUserService userService;
 
@@ -26,6 +28,7 @@ public class LoginCommand implements ICommand {
         UserDto userDto = userService.login(email, password);
         HttpSession session = req.getSession();
         session.setAttribute("user", userDto);
+        log.info("Appeal to login.jsp.");
         return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_INDEX);
     }
 }

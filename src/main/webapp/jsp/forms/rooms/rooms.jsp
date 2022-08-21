@@ -12,7 +12,7 @@
 <jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
 <table class="first">
-    <jsp:include page="pagination.jsp"/>
+    <jsp:include page="../pagination.jsp"/>
     <tr>
         <th>#</th>
         <th>Number</th>

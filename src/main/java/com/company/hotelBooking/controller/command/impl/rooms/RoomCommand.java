@@ -7,7 +7,6 @@ import com.company.hotelBooking.service.dto.RoomDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -15,36 +14,36 @@ import java.util.regex.Pattern;
  */
 @Log4j2
 public class RoomCommand implements ICommand {
-	private final IRoomService service;
+    private final IRoomService service;
 
-	public RoomCommand(IRoomService service) {
-		this.service = service;
-	}
+    public RoomCommand(IRoomService service) {
+        this.service = service;
+    }
 
-	@Override
-	public String execute(HttpServletRequest req) {
-		String regexId = "\\d*";
-		String argument = req.getParameter("id");
-		if (argument == null) {
-			log.error("Incorrect address entered. Time = {}", new Date());
-			return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
-		} else if (argument.equals("")) {
-			log.error("Incorrect address entered. Time = {}", new Date());
-			return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
-		} else if (Pattern.matches(regexId, argument)) {
-			Long id = Long.parseLong(req.getParameter("id"));
-			RoomDto room = service.findById(id);
-			if (room.getId() == null) {
-				log.error("Incorrect address entered. Time = {}", new Date());
-				return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
-			} else {
-				req.setAttribute("room", room);
-				log.info("Appeal to room.jsp. Time = {}", new Date());
-				return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOM);
-			}
-		} else {
-			log.error("Incorrect address entered. Time = {}", new Date());
-			return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
-		}
-	}
+    @Override
+    public String execute(HttpServletRequest req) {
+        String regexId = "\\d*";
+        String argument = req.getParameter("id");
+        if (argument == null) {
+            log.error("Incorrect address entered");
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+        } else if (argument.equals("")) {
+            log.error("Incorrect address entered");
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+        } else if (Pattern.matches(regexId, argument)) {
+            Long id = Long.parseLong(req.getParameter("id"));
+            RoomDto room = service.findById(id);
+            if (room.getId() == null) {
+                log.error("Incorrect address entered");
+                return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            } else {
+                req.setAttribute("room", room);
+                log.info("Appeal to room.jsp");
+                return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOM);
+            }
+        } else {
+            log.error("Incorrect address entered");
+            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+        }
+    }
 }

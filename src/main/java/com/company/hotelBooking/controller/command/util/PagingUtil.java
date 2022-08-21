@@ -25,7 +25,9 @@ public enum PagingUtil {
     public void setTotalPages(HttpServletRequest req, Paging paging, IAbstractService service) {
         long totalEntities = service.countRow();
         long totalPages = getTotalPages(totalEntities, paging.getLimit());
+        String command = req.getParameter("command");
         req.setAttribute("current_page", paging.getPage());
         req.setAttribute("total_pages", totalPages);
+        req.setAttribute("command", command);
     }
 }

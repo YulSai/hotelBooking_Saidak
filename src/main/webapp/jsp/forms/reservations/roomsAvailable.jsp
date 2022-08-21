@@ -14,7 +14,7 @@
 <h2>${requestScope.check_in} - ${requestScope.check_out}</h2>
 <p>${requestScope.message}</p>
 <table>
-    <jsp:include page="../rooms/paginationRoomsAvalable.jsp"/>
+    <jsp:include page="../pagination.jsp"/>
     <tr>
         <th>#</th>
         <th>Number</th>

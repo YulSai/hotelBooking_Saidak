@@ -14,10 +14,10 @@
 <form method="post" action="controller">
     <input name="command" type="hidden" value="search_available_rooms"/>
     <label for="check_in">Check in:</label>
-    <input id="check_in" name="check_in" type="date" min="2022-08-10" max="2025-12-30">
+    <input id="check_in" name="check_in" type="date" min="2022-08-21" max="2025-12-30">
     <br/>
     <label for="check_out">Check out:</label>
-    <input id="check_out" name="check_out" type="date" min="2022-08-11" max="2025-12-31">
+    <input id="check_out" name="check_out" type="date" min="2022-08-22" max="2025-12-31">
     <br/>
     <select name="type" required="required">
         <option value="">Choose type</option>

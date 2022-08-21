@@ -9,7 +9,6 @@ import com.company.hotelBooking.service.dto.RoomDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class RoomsCommand implements ICommand {
         Paging paging = pagingUtil.getPaging(req);
         List<RoomDto> rooms = roomService.findAllPages(paging);
         if (rooms.size() == 0) {
-            log.error("Incorrect address entered. Time = {}", new Date());
+            log.error("Incorrect address entered");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         } else {
             pagingUtil.setTotalPages(req, paging, roomService);
