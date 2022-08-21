@@ -1,6 +1,7 @@
 package com.company.hotelBooking.controller.filters;
 
 import com.company.hotelBooking.controller.command.api.CommandName;
+import com.company.hotelBooking.controller.command.api.SecurityLevel;
 import com.company.hotelBooking.service.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +21,7 @@ public class UserRoleFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         String command = req.getParameter("command");
-        String level = CommandName.valueOf(command.toUpperCase()).getLevel().toString();
+        SecurityLevel level = CommandName.valueOf(command.toUpperCase()).getLevel();
         HttpSession session = req.getSession(false);
         String role = "GUEST";
         if (session.getAttribute("user") != null) {
@@ -35,7 +36,7 @@ public class UserRoleFilter extends HttpFilter {
         chain.doFilter(req, res);
     }
 
-    private boolean requiredUserCommand(String role, String level) {
+    private boolean requiredUserCommand(String role, SecurityLevel level) {
         return switch (role) {
             case "ADMIN" -> false;
             case "CLIENT" -> level.equals("CLIENT_LEVEL") || level.equals("GUEST_LEVEL");
