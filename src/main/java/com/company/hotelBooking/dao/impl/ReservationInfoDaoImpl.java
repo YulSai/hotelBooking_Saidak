@@ -37,8 +37,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public ReservationInfo findById(Long id) {
         log.debug("Accessing the database using the findById command. ReservationInfo id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_ID))) {
+                ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_ID)) {
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -56,8 +55,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         log.debug("Accessing the database using the findAll command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
         try (Statement statement = dataSource.getConnection().createStatement()) {
-            ResultSet result = statement.executeQuery(ConfigurationManager.getInstance()
-                    .getString(ConfigurationManager.SQL_RESERVATION_INFO_FIND_ALL));
+            ResultSet result = statement.executeQuery(ConfigurationManager.SQL_RESERVATION_INFO_FIND_ALL);
             while (result.next()) {
                 reservationsInfo.add(processReservationInfo(result));
             }
@@ -72,9 +70,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public ReservationInfo save(ReservationInfo entity) {
         log.debug("Accessing the database using the save command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_CREATE),
-                Statement.RETURN_GENERATED_KEYS)) {
+                ConfigurationManager.SQL_RESERVATION_INFO_CREATE, Statement.RETURN_GENERATED_KEYS)) {
             extractedDate(entity, statement);
             statement.executeUpdate();
 
@@ -119,8 +115,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. ReservationInfo id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_DELETE))) {
+                ConfigurationManager.SQL_RESERVATION_INFO_DELETE)) {
             statement.setLong(1, id);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted == 1;
@@ -135,8 +130,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         log.debug("Accessing the database using the findAllPages command");
         List<ReservationInfo> reservationInfos = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_PAGE))) {
+                ConfigurationManager.SQL_RESERVATION_INFO_PAGE)) {
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
@@ -154,8 +148,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO))) {
+                ConfigurationManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO)) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 return result.getLong("total");
@@ -172,8 +165,7 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         log.debug("Accessing the database using the findByReservationId command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID))) {
+                ConfigurationManager.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID)) {
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
             while (result.next()) {

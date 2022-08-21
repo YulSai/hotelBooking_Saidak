@@ -30,8 +30,7 @@ public class RoomDaoImpl implements IRoomDao {
     public Room findById(Long id) {
         log.debug("Accessing the database using the findById  command. Room id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_FIND_BY_ID))) {
+                ConfigurationManager.SQL_ROOM_FIND_BY_ID)) {
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -48,8 +47,7 @@ public class RoomDaoImpl implements IRoomDao {
         log.debug("Accessing the database using the findAll command");
         List<Room> rooms = new ArrayList<>();
         try (Statement statement = dataSource.getConnection().createStatement()) {
-            ResultSet result = statement.executeQuery(ConfigurationManager.getInstance()
-                    .getString(ConfigurationManager.SQL_ROOM_FIND_ALL));
+            ResultSet result = statement.executeQuery(ConfigurationManager.SQL_ROOM_FIND_ALL);
             while (result.next()) {
                 rooms.add(processRoom(result));
             }
@@ -64,8 +62,7 @@ public class RoomDaoImpl implements IRoomDao {
     public Room save(Room room) {
         log.debug("Accessing the database using the create command. Room = {}", room);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_CREATE), Statement.RETURN_GENERATED_KEYS)) {
+                ConfigurationManager.SQL_ROOM_CREATE, Statement.RETURN_GENERATED_KEYS)) {
             extractedDate(room, statement);
             statement.executeUpdate();
             ResultSet keys = statement.getGeneratedKeys();
@@ -84,8 +81,7 @@ public class RoomDaoImpl implements IRoomDao {
     public Room update(Room room) {
         log.debug("Accessing the database using the update command. Room = {}", room);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_UPDATE))) {
+                ConfigurationManager.SQL_ROOM_UPDATE)) {
             extractedDate(room, statement);
             statement.setLong(6, room.getId());
 
@@ -103,8 +99,7 @@ public class RoomDaoImpl implements IRoomDao {
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. Room id = {}", id);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_DELETE))) {
+                ConfigurationManager.SQL_ROOM_DELETE)) {
             statement.setLong(1, id);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted == 1;
@@ -119,8 +114,7 @@ public class RoomDaoImpl implements IRoomDao {
         log.debug("Accessing the database using the findAllPages command");
         List<Room> rooms = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_PAGE))) {
+                ConfigurationManager.SQL_ROOM_PAGE)) {
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
@@ -137,8 +131,7 @@ public class RoomDaoImpl implements IRoomDao {
     public Room findRoomByNumber(String number) {
         log.debug("Accessing the database using the findRoomByNumber command. Room number = {}", number);
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_FIND_BY_NUMBER))) {
+                ConfigurationManager.SQL_ROOM_FIND_BY_NUMBER)) {
             statement.setString(1, number);
             ResultSet result = statement.executeQuery();
 
@@ -157,8 +150,7 @@ public class RoomDaoImpl implements IRoomDao {
         log.debug("Accessing the database using the findAvailableRooms command");
         List<Room> rooms = new ArrayList<>();
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_FIND_AVAILABLE_ROOMS))) {
+                ConfigurationManager.SQL_ROOM_FIND_AVAILABLE_ROOMS)) {
             statement.setString(1, type.toUpperCase());
             statement.setString(2, capacity.toUpperCase());
             statement.setDate(3, java.sql.Date.valueOf(check_in));
@@ -181,8 +173,7 @@ public class RoomDaoImpl implements IRoomDao {
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.getInstance()
-                        .getString(ConfigurationManager.SQL_ROOM_COUNT_ROOMS))) {
+                ConfigurationManager.SQL_ROOM_COUNT_ROOMS)) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 return result.getLong("total");
