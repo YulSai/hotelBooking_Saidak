@@ -83,8 +83,20 @@ public class ReservationDaoImpl implements IReservationDao {
 
     @Override
     public Reservation update(Reservation entity) {
-        // TODO Auto-generated method stub
-        return null;
+        log.debug("Accessing the database using the update command. Reservation = {}", entity);
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.SQL_RESERVATION_UPDATE)) {
+            extractedDate(entity, statement);
+            statement.setLong(4, entity.getId());
+
+            if (statement.executeUpdate() == 0) {
+                log.error("Command update can't be executed");
+            }
+            return findById(entity.getId());
+        } catch (SQLException e) {
+            log.error("SQLRoomDAO update error. Failed to update reservation = {}", entity, e);
+            throw new DaoException("Failed to update reservation " + entity);
+        }
     }
 
     @Override
@@ -109,6 +121,27 @@ public class ReservationDaoImpl implements IReservationDao {
                 ConfigurationManager.SQL_RESERVATION_PAGE)) {
             statement.setInt(1, limit);
             statement.setLong(2, offset);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                reservations.add(processReservation(result));
+            }
+        } catch (SQLException e) {
+            log.error("SQLReservationDAO findAllPages error", e);
+            throw new DaoException("Failed to find reservation", e);
+        }
+        return reservations;
+    }
+
+    @Override
+    public List<Reservation> findAllPagesByUsers(int limit, long offset, Long id) {
+        log.debug("Accessing the database using the findAllPagesByUsers command");
+        List<Reservation> reservations = new ArrayList<>();
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
+                ConfigurationManager.SQL_RESERVATION_PAGE_BY_USER)) {
+            statement.setLong(1, id);
+            statement.setInt(2, limit);
+            statement.setLong(3, offset);
+
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 reservations.add(processReservation(result));

@@ -7,9 +7,12 @@ import com.company.hotelBooking.controller.command.impl.authorizations.LogoutCom
 
 import com.company.hotelBooking.controller.command.impl.reservations.AddBookingCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.BookingCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.CancelReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.CreateReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.UpdateReservationCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.UpdateReservationFormCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.CreateRoomCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.CreateRoomFormCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.RoomCommand;
@@ -82,6 +85,13 @@ public enum CommandName {
             SecurityLevel.GUEST_LEVEL),
     CREATE_RESERVATION(new CreateReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class),
             ServiceFactory.getINSTANCE().getService(IReservationInfoService.class)), SecurityLevel.CLIENT_LEVEL),
+    UPDATE_RESERVATION_FORM(new UpdateReservationFormCommand(ServiceFactory.getINSTANCE()
+            .getService(IReservationService.class)), SecurityLevel.ADMIN_LEVEL),
+    UPDATE_RESERVATION(new UpdateReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)),
+            SecurityLevel.ADMIN_LEVEL),
+    CANCEL_RESERVATION(new CancelReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)),
+            SecurityLevel.CLIENT_LEVEL),
+
 
     //Other
     ERROR(new ErrorCommand(), SecurityLevel.GUEST_LEVEL);

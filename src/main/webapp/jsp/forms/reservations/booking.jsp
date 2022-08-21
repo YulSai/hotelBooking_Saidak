@@ -20,6 +20,7 @@
             <th>Price/nights USD</th>
             <th>Check in date</th>
             <th>Check out date</th>
+            <th>Status</th>
         </tr>
         <c:forEach items="${requestScope.booking.details}" var="item">
             <tr>
@@ -27,6 +28,7 @@
                 <td>${item.room.price}</td>
                 <td>${item.checkIn}</td>
                 <td>${item.checkOut}</td>
+                <td>${requestScope.booking.status}</td>
             </tr>
         </c:forEach>
         <tr>

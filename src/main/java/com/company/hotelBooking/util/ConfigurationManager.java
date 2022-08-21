@@ -8,15 +8,19 @@ public class ConfigurationManager {
     public static final String DB_LOGIN = "db.login";
     public static final String DB_PASSWORD = "db.password";
     public static final String DB_DRIVER = "db.driver";
+
     // JSP
     // Index
     public static final String PAGE_INDEX = "page.index";
     // Error
     public static final String PAGE_ERROR = "page.error";
+
     // Reservation
     public static final String PAGE_RESERVATIONS = "page.reservations";
     public static final String PAGE_RESERVATION = "page.reservation";
     public static final String PAGE_BOOKING = "page.booking";
+    public static final String PAGE_UPDATE_RESERVATION = "page.update.reservation";
+
     // Room
     public static final String PAGE_ROOMS = "page.rooms";
     public static final String PAGE_ROOM = "page.room";
@@ -24,12 +28,14 @@ public class ConfigurationManager {
     public static final String PAGE_UPDATE_ROOM = "page.update.room";
     public static final String PAGE_SEARCH_AVAILABLE_ROOMS = "page.search.available";
     public static final String PAGE_ROOMS_AVAILABLE = "page.rooms.available";
+
     // User
     public static final String PAGE_USERS = "page.users";
     public static final String PAGE_USER = "page.user";
     public static final String PAGE_CREATE_USER = "page.create.user";
     public static final String PAGE_UPDATE_USERS = "page.update.user";
     public static final String PAGE_LOGIN = "page.login";
+
     // SQL
     // Reservation
     public static final String SQL_RESERVATION_FIND_BY_ID = "SELECT rs.id, rs.user_id, rs.total_cost, sr.name AS status " +
@@ -45,6 +51,9 @@ public class ConfigurationManager {
     public static final String SQL_RESERVATION_PAGE = "SELECT rs.id, rs.user_id, rs.total_cost, sr.name AS status " +
             "FROM reservations rs JOIN reservation_statuses sr ON sr.id = rs.status_id WHERE rs.deleted = false " +
             "ORDER BY id LIMIT ? OFFSET ?";
+    public static final String SQL_RESERVATION_PAGE_BY_USER = "SELECT rs.id, rs.user_id, rs.total_cost, sr.name AS status " +
+            "FROM reservations rs JOIN reservation_statuses sr ON sr.id = rs.status_id WHERE rs.user_id=? " +
+            "AND rs.deleted=false ORDER BY rs.id LIMIT ? OFFSET ?";
     // ReservationInfo
     public static final String SQL_RESERVATION_INFO_FIND_BY_ID = "SELECT i.id, i.reservation_id, i.room_id, i.check_in, " +
             "i.check_out, i.nights, i.room_price FROM reservation_info i WHERE i.id=? AND i.deleted=false";

@@ -7,7 +7,6 @@ import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -26,24 +25,24 @@ public class ReservationCommand implements ICommand {
         String regexId = "\\d*";
         String argument = req.getParameter("id");
         if (argument == null) {
-            log.error("Incorrect address entered. Time = {}", new Date());
+            log.error("Incorrect address entered");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         } else if (argument.equals("")) {
-            log.error("Incorrect address entered. Time = {}", new Date());
+            log.error("Incorrect address entered");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         } else if (Pattern.matches(regexId, argument)) {
             Long id = Long.parseLong(req.getParameter("id"));
             ReservationDto reservation = service.findById(id);
             if (reservation.getId() == null) {
-                log.error("Incorrect address entered. Time = {}", new Date());
+                log.error("Incorrect address entered");
                 return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
             } else {
                 req.setAttribute("reservation", reservation);
-                log.info("Appeal to reservation.jsp. Time = {}", new Date());
+                log.info("Appeal to reservation.jsp");
                 return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATION);
             }
         } else {
-            log.error("Incorrect address entered. Time = {}", new Date());
+            log.error("Incorrect address entered");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         }
     }

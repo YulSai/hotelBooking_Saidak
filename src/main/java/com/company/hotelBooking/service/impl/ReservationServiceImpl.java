@@ -55,6 +55,7 @@ public class ReservationServiceImpl implements IReservationService {
     @Override
     public ReservationDto create(ReservationDto entity) {
         log.debug("Calling a service method create. Reservation = {}", entity);
+        entity.setStatus(ReservationDto.StatusDto.CONFIRMED);
         return toDto(reservationDao.save(toEntity(entity)));
     }
 
@@ -111,6 +112,14 @@ public class ReservationServiceImpl implements IReservationService {
     public List<ReservationDto> findAllPages(Paging paging) {
         log.debug("Calling a service method findAllPages");
         return reservationDao.findAllPages(paging.getLimit(), paging.getOffset()).stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<ReservationDto> findAllPagesByUsers(Paging paging, Long id) {
+        log.debug("Calling a service method findAllPagesByUsers");
+        return reservationDao.findAllPagesByUsers(paging.getLimit(), paging.getOffset(), id).stream()
                 .map(this::toDto)
                 .toList();
     }

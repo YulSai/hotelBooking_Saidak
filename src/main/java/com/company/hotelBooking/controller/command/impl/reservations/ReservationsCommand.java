@@ -5,11 +5,12 @@ import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
+import com.company.hotelBooking.service.dto.UserDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,9 +31,14 @@ public class ReservationsCommand implements ICommand {
         Paging paging = pagingUtil.getPaging(req);
         List<ReservationDto> reservations = reservationService.findAllPages(paging);
         if (reservations.size() == 0) {
-            log.error("Incorrect address entered. Time = {}", new Date());
+            log.error("Incorrect address entered");
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
         } else {
+            HttpSession session = req.getSession();
+            UserDto user = (UserDto) session.getAttribute("user");
+            if ("CLIENT".equals(user.getRole().toString())) {
+                reservations = reservationService.findAllPagesByUsers(paging, user.getId());
+            }
             pagingUtil.setTotalPages(req, paging, reservationService);
             req.setAttribute("reservations", reservations);
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATIONS);

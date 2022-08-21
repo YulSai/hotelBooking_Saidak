@@ -12,7 +12,7 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1>Reservation Detailed Info</h1>
 <table class="first">
-    <jsp:include page="pagination.jsp"/>
+    <jsp:include page="../pagination.jsp"/>
     <tr>
         <th>Id</th>
         <th>Item</th>
@@ -51,7 +51,14 @@
     </td>
     <td>${requestScope.reservation.totalCost} USD</td>
     <td>${requestScope.reservation.status.toString().toLowerCase()}</td>
-    </tr>
+    <c:if test="${sessionScope.user.role == 'ADMIN'}">
+        <td><a href="controller?command=update_reservation_form&id=${requestScope.reservation.id}">Update status</a>
+        </td>
+    </c:if>
+    <c:if test="${sessionScope.user.role == 'CLIENT'}">
+        <td><a href="controller?command=cancel_reservation&id=${requestScope.reservation.id}">Cancel</a></td>
+    </c:if>
 </table>
+
 </body>
 </html>
