@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +25,7 @@
     <br/>
 
     <label for="email-input">Email: </label>
-    <input id="email-input" name="email" type="email" value="${requestScope.user.email}"/>
+    <input id="email-input" name="email" type="email" value="<c:out value="${requestScope.user.email}"/>"/>
     <br/>
 
     <label for="password-input">Password: </label>

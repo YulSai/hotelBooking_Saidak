@@ -26,7 +26,7 @@
             <td>${counter.count}</td>
             <td><a href="controller?command=user&id=${user.id}">${user.firstName}</a></td>
             <td><a href="controller?command=user&id=${user.id}">${user.lastName}</a></td>
-            <td>${user.email}</td>
+            <td><c:out value="${user.email}"/></td>
             <td>${user.phoneNumber}</td>
             <td>${user.role.toString().toLowerCase()}</td>
             <td>

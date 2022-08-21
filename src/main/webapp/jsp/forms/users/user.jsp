@@ -31,7 +31,7 @@
     </tr>
     <tr>
         <td>Phone number</td>
-        <td>${requestScope.user.phoneNumber}</td>
+        <td><c:out value="${requestScope.user.phoneNumber}"/></td>
     </tr>
     <tr>
         <td>Role</td>
