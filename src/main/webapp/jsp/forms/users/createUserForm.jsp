@@ -32,8 +32,6 @@
     <input id="role-input-admin" name="role" type="radio" value="admin"/>
     <label for="role-input-client">Client</label>
     <input id="role-input-client" name="role" type="radio" value="client"/>
-    <label for="role-input-guest">Guest</label>
-    <input id="role-input-guest" name="role" type="radio" value="guest"/>
     <br/>
     <input type="submit" value="REGISTER"/>
 </form>

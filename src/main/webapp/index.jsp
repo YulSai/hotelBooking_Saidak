@@ -8,6 +8,7 @@
 </head>
 <body>
 <jsp:include page="jsp/navbar.jsp"/>
+<p>${requestScope.message}</p>
 <h1>Welcome to HotelBooking, ${sessionScope.user != null ? sessionScope.user.firstName : 'Guest'}!</h1>
 <img src="images/main_hotel.jpg" alt="hotelBooking"/>
 </body>
