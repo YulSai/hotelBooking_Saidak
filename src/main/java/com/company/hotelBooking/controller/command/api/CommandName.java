@@ -9,6 +9,8 @@ import com.company.hotelBooking.controller.command.impl.reservations.AddBookingC
 import com.company.hotelBooking.controller.command.impl.reservations.BookingCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.CancelReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.CreateReservationCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.CleanBookingCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.DeleteBookingCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.UpdateReservationCommand;
@@ -78,9 +80,10 @@ public enum CommandName {
     SEARCH_AVAILABLE_ROOMS(
             new RoomsSearchAvailableCommand((ServiceFactory.getINSTANCE().getService(IRoomService.class))),
             SecurityLevel.GUEST),
-    ROOMS_AVAILABLE(new RoomsAvailableCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)),
-            SecurityLevel.GUEST),
+    ROOMS_AVAILABLE(new RoomsAvailableCommand(), SecurityLevel.GUEST),
     ADD_BOOKING(new AddBookingCommand(), SecurityLevel.GUEST),
+    CLEAN_BOOKING(new CleanBookingCommand(), SecurityLevel.GUEST),
+    DELETE_BOOKING(new DeleteBookingCommand(), SecurityLevel.GUEST),
     BOOKING(new BookingCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)),
             SecurityLevel.GUEST),
     CREATE_RESERVATION(new CreateReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class),

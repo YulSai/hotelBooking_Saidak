@@ -34,8 +34,10 @@
         <tr>
             <td colspan="3">TOTAL COST: ${requestScope.booking.totalCost} USD</td>
         </tr>
+
     </table>
-    <a href="controller?command=create_reservation">Reserve</a>
+    <a href="controller?command=create_reservation"><input type="submit" value="Reserve"></a>
+    <a href="controller?command=clean_booking"><input type="submit" value="Clean"></a>
 </c:if>
 </body>
 </html>
