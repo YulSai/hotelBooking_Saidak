@@ -1,7 +1,6 @@
 package com.company.hotelBooking.controller.command.impl.reservations;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
-import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -26,12 +25,9 @@ public class AddBookingCommand implements ICommand {
         }
         Long quantity = ChronoUnit.DAYS.between(checkIn, checkOut);
         booking.put(roomId, quantity);
-
         session.setAttribute("booking", booking);
         session.setAttribute("check_in", checkIn);
         session.setAttribute("check_out", checkOut);
-
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_SEARCH_AVAILABLE_ROOMS);
-        // return "redirect:controller?command=rooms_available";
+        return "redirect:controller?command=rooms_available";
     }
 }

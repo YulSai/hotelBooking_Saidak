@@ -5,6 +5,7 @@ import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ public class RoomsSearchAvailableCommand implements ICommand {
 
     @Override
     public String execute(HttpServletRequest req) {
+        HttpSession session = req.getSession();
         LocalDate checkIn = LocalDate.parse(req.getParameter("check_in"));
         LocalDate checkOut = LocalDate.parse(req.getParameter("check_out"));
         if (checkOut.equals(checkIn) | checkOut.isBefore(checkIn)) {
@@ -28,9 +30,9 @@ public class RoomsSearchAvailableCommand implements ICommand {
             String type = req.getParameter("type");
             String capacity = req.getParameter("capacity");
             List<RoomDto> roomsAvailable = roomService.findAvailableRooms(checkIn, checkOut, type, capacity);
-            req.setAttribute("rooms_available", roomsAvailable);
-            req.setAttribute("check_in", checkIn);
-            req.setAttribute("check_out", checkOut);
+            session.setAttribute("rooms_available", roomsAvailable);
+            session.setAttribute("check_in", checkIn);
+            session.setAttribute("check_out", checkOut);
             return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOMS_AVAILABLE);
         }
     }

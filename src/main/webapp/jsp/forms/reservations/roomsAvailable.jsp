@@ -11,8 +11,8 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1 id="title">Available rooms for the period</h1>
-<h2>${requestScope.check_in} - ${requestScope.check_out}</h2>
-<p>${requestScope.message}</p>
+<h2>${sessionScope.check_in} - ${sessionScope.check_out}</h2>
+<p>${sessionScope.message}</p>
 <table>
     <jsp:include page="../pagination.jsp"/>
     <tr>
@@ -24,7 +24,7 @@
         <th>Price/night USD</th>
         <th>Action</th>
     </tr>
-    <c:forEach items="${requestScope.rooms_available}" var="room" varStatus="counter">
+    <c:forEach items="${sessionScope.rooms_available}" var="room" varStatus="counter">
         <tr>
             <td><a href="controller?command=room&id=${room.id}">${counter.count}</a></td>
             <td>${room.number}</td>
