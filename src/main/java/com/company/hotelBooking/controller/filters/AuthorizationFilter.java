@@ -1,5 +1,7 @@
 package com.company.hotelBooking.controller.filters;
 
+import com.company.hotelBooking.controller.command.api.SecurityLevel;
+import com.company.hotelBooking.controller.command.factory.CommandFactory;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,9 +34,9 @@ public class AuthorizationFilter extends HttpFilter {
     }
 
     private boolean requiresAuthorization(String command) {
-        return switch (command) {
-            case "search_available_rooms_form", "search_available_rooms", "rooms_available", "booking", "add_booking",
-                    "login_form", "login", "logout", "create_user_form", "create_user" -> false;
+        SecurityLevel levelCommand = CommandFactory.getINSTANCE().getSecurityLevel(command);
+        return switch (levelCommand) {
+            case GUEST -> false;
             default -> true;
         };
     }
