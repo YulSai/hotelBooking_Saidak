@@ -121,8 +121,8 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
             return rowsDeleted == 1;
         } catch (SQLException e) {
             log.error("SQLReservationInfoDAO delete error id  = {}", id, e);
+            throw new DaoException("Failed to delete reservation " + id);
         }
-        return false;
     }
 
     @Override

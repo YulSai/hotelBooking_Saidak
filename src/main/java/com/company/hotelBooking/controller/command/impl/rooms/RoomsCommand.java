@@ -2,6 +2,7 @@ package com.company.hotelBooking.controller.command.impl.rooms;
 
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
+import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IRoomService;
@@ -30,7 +31,7 @@ public class RoomsCommand implements ICommand {
         List<RoomDto> rooms = roomService.findAllPages(paging);
         if (rooms.size() == 0) {
             log.error("Incorrect address entered");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            throw new NotFoundException("Page not found");
         } else {
             pagingUtil.setTotalPages(req, paging, roomService);
             req.setAttribute("rooms", rooms);

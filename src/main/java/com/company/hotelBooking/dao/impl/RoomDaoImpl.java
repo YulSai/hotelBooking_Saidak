@@ -86,7 +86,8 @@ public class RoomDaoImpl implements IRoomDao {
             statement.setLong(6, room.getId());
 
             if (statement.executeUpdate() == 0) {
-                log.error("Command \"update\" can't be executed");
+                log.error("Command update can't be executed");
+                throw new DaoException("Command update can't be executed" + room);
             }
             return findById(room.getId());
         } catch (SQLException e) {
@@ -105,8 +106,8 @@ public class RoomDaoImpl implements IRoomDao {
             return rowsDeleted == 1;
         } catch (SQLException e) {
             log.error("SQLRoomDAO delete error id  = {}", id, e);
+            throw new DaoException("Failed to delete room with id " + id);
         }
-        return false;
     }
 
     @Override

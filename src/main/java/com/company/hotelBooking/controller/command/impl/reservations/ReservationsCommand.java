@@ -3,6 +3,7 @@ package com.company.hotelBooking.controller.command.impl.reservations;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
+import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.UserDto;
@@ -32,7 +33,7 @@ public class ReservationsCommand implements ICommand {
         List<ReservationDto> reservations = reservationService.findAllPages(paging);
         if (reservations.size() == 0) {
             log.error("Incorrect address entered");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            throw new NotFoundException("Page not found");
         } else {
             HttpSession session = req.getSession();
             UserDto user = (UserDto) session.getAttribute("user");

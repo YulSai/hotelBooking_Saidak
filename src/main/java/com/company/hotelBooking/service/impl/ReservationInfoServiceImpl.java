@@ -4,7 +4,7 @@ import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.dao.api.IReservationInfoDao;
 import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
-import com.company.hotelBooking.exceptions.DaoException;
+import com.company.hotelBooking.exceptions.ServiceException;
 import com.company.hotelBooking.service.api.IReservationInfoService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.ReservationInfoDto;
@@ -29,12 +29,8 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
     @Override
     public ReservationInfoDto findById(Long id) {
         log.debug("Calling a service method findById. ReservationInfoDto id = {}", id);
-        ReservationInfoDto reservationInfo = toDto(reservationInfoDao.findById(id));
-        if (reservationInfo == null) {
-            log.error("SQLReservationInfoService findById error. id = {}", id);
-            throw new DaoException("No reservationInfo with id " + id);
-        }
-        return reservationInfo;
+
+        return toDto(reservationInfoDao.findById(id));
     }
 
     @Override
@@ -72,7 +68,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
         reservationInfoDao.delete(id);
         if (!reservationInfoDao.delete(id)) {
             log.error("SQLReservationService deleted error. Failed to delete reservation info with id = {}", id);
-            throw new DaoException("Failed to delete reservation info with id " + id);
+            throw new ServiceException("Failed to delete reservation info with id " + id);
         }
     }
 
@@ -109,7 +105,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             dto.setRoomPrice(entity.getRoomPrice());
         } catch (NullPointerException e) {
             log.error("This reservation info is not in the catalog.");
-            throw new DaoException("No reservation");
+            throw new ServiceException("No reservation");
         }
         return dto;
     }
@@ -132,7 +128,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             dto.setStatus(RoomDto.RoomStatusDto.valueOf(entity.getRoom().getStatus().toString()));
         } catch (NullPointerException e) {
             log.error("This room is not in the catalog.");
-            throw new DaoException("No room");
+            throw new ServiceException("No room");
         }
         return dto;
     }
@@ -156,7 +152,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             entity.setRoomPrice(dto.getRoomPrice());
         } catch (NullPointerException e) {
             log.error("This reservation info is not in the catalog.");
-            throw new DaoException("No reservation info");
+            throw new ServiceException("No reservation info");
         }
         return entity;
     }
@@ -179,7 +175,7 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
             entity.setStatus(Room.RoomStatus.valueOf(dto.getRoom().getStatus().toString()));
         } catch (NullPointerException e) {
             log.error("This room is not in the catalog.");
-            throw new DaoException("No room");
+            throw new ServiceException("No room");
         }
         return entity;
     }

@@ -4,6 +4,7 @@ import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
+import com.company.hotelBooking.exceptions.RegistrationException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
 
@@ -87,7 +88,7 @@ public class UserDaoImpl implements IUserDao {
             statement.setLong(7, user.getId());
 
             if (statement.executeUpdate() == 0) {
-                log.error("Command \"update\" can't be executed");
+                log.error("Command update can't be executed");
             }
             return findById(user.getId());
 
@@ -108,8 +109,8 @@ public class UserDaoImpl implements IUserDao {
             return rowsDeleted == 1;
         } catch (SQLException e) {
             log.error("SQLUserDAO delete error {}", id, e);
+            throw new DaoException("Failed to delete user with id " + id);
         }
-        return false;
     }
 
     @Override
@@ -160,7 +161,7 @@ public class UserDaoImpl implements IUserDao {
             }
         } catch (SQLException e) {
             log.error("SQLUserDAO findUserByEmail error {}", email, e);
-            throw new DaoException("Failed to find user with email" + email);
+            throw new RegistrationException("No user found with this email", e);
         }
         return null;
     }

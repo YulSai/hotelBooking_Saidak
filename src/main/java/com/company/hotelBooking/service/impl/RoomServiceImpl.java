@@ -3,7 +3,7 @@ package com.company.hotelBooking.service.impl;
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.entity.Room;
-import com.company.hotelBooking.exceptions.DaoException;
+import com.company.hotelBooking.exceptions.ServiceException;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
 import lombok.extern.log4j.Log4j2;
@@ -26,12 +26,7 @@ public class RoomServiceImpl implements IRoomService {
     @Override
     public RoomDto findById(Long id) {
         log.debug("Calling a service method findById. RoomDto id = {}", id);
-        RoomDto roomDto = toDto(roomDao.findById(id));
-        if (roomDto == null) {
-            log.error("SQLRoomService findById error. id = {}", id);
-            throw new DaoException("No room with id " + id);
-        }
-        return roomDto;
+        return toDto(roomDao.findById(id));
     }
 
     public List<RoomDto> findAll() {
@@ -47,7 +42,7 @@ public class RoomServiceImpl implements IRoomService {
         Room existing = roomDao.findRoomByNumber(roomDto.getNumber());
         if (existing != null) {
             log.error("Room with number = {} already exists", roomDto.getNumber());
-            throw new DaoException("Room already exists");
+            throw new ServiceException("Room already exists");
         }
         return toDto(roomDao.save(toEntity(roomDto)));
     }
@@ -58,7 +53,7 @@ public class RoomServiceImpl implements IRoomService {
         Room existing = roomDao.findRoomByNumber((roomDto.getNumber()));
         if (existing != null && !existing.getId().equals(roomDto.getId())) {
             log.error("Room with number = {} already exists", roomDto.getNumber());
-            throw new DaoException("Room already exists");
+            throw new ServiceException("Room already exists");
         }
         return toDto(roomDao.update(toEntity(roomDto)));
     }
@@ -69,7 +64,7 @@ public class RoomServiceImpl implements IRoomService {
         roomDao.delete(id);
         if (!roomDao.delete(id)) {
             log.error("SQLRoomService deleted error. Failed to delete room with id = {}", id);
-            throw new DaoException("Failed to delete room with id " + id);
+            throw new ServiceException("Failed to delete room with id " + id);
         }
     }
 
@@ -98,12 +93,7 @@ public class RoomServiceImpl implements IRoomService {
 
     public RoomDto findRoomByNumber(String number) {
         log.debug("Calling a service method findRoomByNumber. RoomDto number = {}", number);
-        RoomDto roomDto = toDto(roomDao.findRoomByNumber(number));
-        if (roomDto == null) {
-            log.error("SQLRoomService deleted error. No room with number = {}", number);
-            throw new DaoException("No room with number" + number);
-        }
-        return roomDto;
+        return toDto(roomDao.findRoomByNumber(number));
     }
 
     /**
@@ -124,7 +114,7 @@ public class RoomServiceImpl implements IRoomService {
             dto.setNumber(entity.getNumber());
         } catch (NullPointerException e) {
             log.error("This room is not in the catalog.");
-            throw new DaoException("This room is not in the catalog");
+            throw new ServiceException("This room is not in the catalog");
         }
         return dto;
     }

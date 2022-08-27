@@ -1,5 +1,6 @@
 package com.company.hotelBooking.controller.command.impl.users;
 
+import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.util.ConfigurationManager;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IUserService;
@@ -27,16 +28,16 @@ public class UserCommand implements ICommand {
         String argument = req.getParameter("id");
         if (argument == null) {
             log.error("Incorrect address entered");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            throw new NotFoundException("Page not found");
         } else if (argument.equals("")) {
             log.error("Incorrect address entered");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            throw new NotFoundException("Page not found");
         } else if (Pattern.matches(regexId, argument)) {
             Long id = Long.parseLong(req.getParameter("id"));
             UserDto user = service.findById(id);
             if (user.getId() == null) {
                 log.error("Incorrect address entered");
-                return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+                throw new NotFoundException("Page not found");
             } else {
                 HttpSession session = req.getSession();
                 UserDto userDto = (UserDto) session.getAttribute("user");
@@ -49,7 +50,7 @@ public class UserCommand implements ICommand {
             }
         } else {
             log.error("Incorrect address entered");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR);
+            throw new NotFoundException("Page not found");
         }
     }
 }
