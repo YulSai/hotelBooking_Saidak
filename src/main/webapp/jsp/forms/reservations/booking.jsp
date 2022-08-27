@@ -29,6 +29,8 @@
                 <td>${item.checkIn}</td>
                 <td>${item.checkOut}</td>
                 <td>${requestScope.booking.status}</td>
+                <td><a href="controller?command=delete_booking&id=${item.room.id}"><input type="submit" value="Delete"></a>
+                </td>
             </tr>
         </c:forEach>
         <tr>
