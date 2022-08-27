@@ -24,7 +24,8 @@
     <input id="password-input" type="password" placeholder="Enter password" name="password" min="6" required>
     <br/>
     <button type="submit">Login</button>
-    <button type="button"><a href="/hotel_booking">Cancel</a></button>
+    <button type="button"><a href="controller?command=create_user_form">New user?</a></button>
+    <button type="button"><a href="${pageContext.request.contextPath}/hotel_booking">Cancel</a></button>
 </form>
 </body>
 </html>

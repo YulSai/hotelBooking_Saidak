@@ -16,15 +16,6 @@ public class CreateUserCommand implements ICommand {
         this.service = service;
     }
 
-    @Override
-    public String execute(HttpServletRequest req) {
-        UserDto user = getUserFromInput(req);
-        UserDto created = service.create(user);
-        req.setAttribute("user", created);
-        req.setAttribute("massage", "New user was created successfully");
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_USER);
-    }
-
     private static UserDto getUserFromInput(HttpServletRequest req) {
         UserDto user = new UserDto();
         user.setFirstName(req.getParameter("first_name"));
@@ -32,7 +23,16 @@ public class CreateUserCommand implements ICommand {
         user.setEmail(req.getParameter("email"));
         user.setPassword(req.getParameter("password"));
         user.setPhoneNumber(req.getParameter("phone_number"));
-        user.setRole(UserDto.RoleDto.valueOf(req.getParameter("role").toUpperCase()));
+        user.setRole(UserDto.RoleDto.CLIENT);
         return user;
+    }
+
+    @Override
+    public String execute(HttpServletRequest req) {
+        UserDto user = getUserFromInput(req);
+        UserDto created = service.create(user);
+        req.setAttribute("user", created);
+        req.setAttribute("massage", "New user was created successfully");
+        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_USER);
     }
 }

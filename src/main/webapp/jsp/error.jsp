@@ -1,4 +1,3 @@
-=
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <html>
@@ -10,11 +9,6 @@
 <body>
 <jsp:include page="navbar.jsp"/>
 <h1>Error</h1>
-<p>This page doesn't exist</p>
-
-<ul>
-    <li><a id="home" href="/hotel_booking">Home page</a></li>
-</ul>
-
+<p>${requestScope.message}</p>
 </body>
 </html>

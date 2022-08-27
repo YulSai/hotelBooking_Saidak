@@ -4,7 +4,8 @@ import com.company.hotelBooking.controller.command.api.CommandName;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
 import com.company.hotelBooking.dao.connection.DataSource;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.exceptions.Exceptions;
+import com.company.hotelBooking.exceptions.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,10 +17,8 @@ import java.io.IOException;
 
 /**
  * Class for processing HttpServletRequest "/controller"
- *
- * @author Yulia
  */
-@WebServlet("/controller")
+@WebServlet({"/", "/controller"})
 @Log4j2
 public class Controller extends HttpServlet {
     public static final String REDIRECT = "redirect:";
@@ -27,27 +26,31 @@ public class Controller extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter("command");
-
-        if (!CommandName.contains(commandName.toUpperCase())) {
-            log.error("Incorrect address entered");
-            commandName = "error";
-        }
+        validateCommandName(commandName);
         ICommand command = CommandFactory.getINSTANCE().getCommand(commandName);
+        String page;
         try {
-            String page = command.execute(req);
-            if (page.startsWith(REDIRECT)) {
-                resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));
-            } else {
-                req.getRequestDispatcher(page).forward(req, resp);
-            }
-        } catch (IOException e) {
-            req.getRequestDispatcher(ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR))
-                    .forward(req, resp);
+            page = command.execute(req);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            page = Exceptions.getINSTANCE().handleException(req, resp, e);
+        }
+        if (page.startsWith(REDIRECT)) {
+            resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));
+        } else {
+            req.getRequestDispatcher(page).forward(req, resp);
         }
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
+    }
+
+    public void validateCommandName(String commandName) {
+        if (commandName == null || !CommandName.contains(commandName.toUpperCase())) {
+            log.error("Incorrect address entered");
+            throw new NotFoundException("Incorrect address entered");
+        }
     }
 
     @Override

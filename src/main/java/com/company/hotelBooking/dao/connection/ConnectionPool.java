@@ -19,6 +19,14 @@ public class ConnectionPool {
     private final BlockingQueue<ProxyConnection> freeConnections;
     private final Queue<ProxyConnection> givenAwayConnections;
 
+    /**
+     * Method creates connection with database
+     *
+     * @param driver   database driver
+     * @param url      path to database
+     * @param login    login for database
+     * @param password password for database
+     */
     ConnectionPool(String driver, String url, String login, String password) {
         freeConnections = new LinkedBlockingDeque<>(POOL_SIZE);
         givenAwayConnections = new ArrayDeque<>();

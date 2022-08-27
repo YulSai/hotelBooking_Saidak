@@ -1,5 +1,6 @@
 package com.company.hotelBooking.controller.filters;
 
+import com.company.hotelBooking.controller.command.api.CommandName;
 import com.company.hotelBooking.controller.command.api.SecurityLevel;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
 import com.company.hotelBooking.util.ConfigurationManager;
@@ -10,29 +11,48 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 
+/**
+ * Class with filter for authorization
+ */
+@Log4j2
 @WebFilter(urlPatterns = "/controller/*")
 public class AuthorizationFilter extends HttpFilter {
-
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-        String command = req.getParameter("command");
-        if (requiresAuthorization(command)) {
-            HttpSession session = req.getSession(false);
-            if (session == null || session.getAttribute("user") == null) {
-                req.setAttribute("message", "Please, login");
-                req.getRequestDispatcher(
-                                ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN))
-                        .forward(req, res);
-                return;
+        String command = req.getParameter("command").toUpperCase();
+        if (command == null || "".equals(command) || !CommandName.contains(command.toUpperCase())) {
+            log.error("Incorrect address entered");
+            req.setAttribute("status", 404);
+            req.setAttribute("message", "Incorrect address entered");
+            req.getRequestDispatcher(
+                            ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ERROR))
+                    .forward(req, res);
+        } else {
+            if (requiresAuthorization(command)) {
+                HttpSession session = req.getSession(false);
+                if (session == null || session.getAttribute("user") == null) {
+                    req.setAttribute("message", "Please, login");
+                    req.getRequestDispatcher(
+                                    ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN))
+                            .forward(req, res);
+                    return;
+                }
             }
+            chain.doFilter(req, res);
         }
-        chain.doFilter(req, res);
     }
 
+    /**
+     * Method checks if authorization is required to execute the given command
+     *
+     * @param command given command
+     * @return true if authorization is required, otherwise - false
+     */
     private boolean requiresAuthorization(String command) {
         SecurityLevel levelCommand = CommandFactory.getINSTANCE().getSecurityLevel(command);
         return switch (levelCommand) {
