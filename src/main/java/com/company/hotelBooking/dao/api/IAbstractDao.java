@@ -12,7 +12,7 @@ public interface IAbstractDao<K, T> {
     /**
      * Method finds Entity object in the data source by id
      *
-     * @param id Object id to be deleted
+     * @param id Object id
      */
     T findById(K id);
 
@@ -32,7 +32,7 @@ public interface IAbstractDao<K, T> {
     /**
      * Method is used for saving updating Entity objects in the data source
      *
-     * @param entity Entity object to be saved
+     * @param entity Entity object to be updated
      */
     T update(T entity);
 
@@ -46,7 +46,7 @@ public interface IAbstractDao<K, T> {
     /**
      * Method gets list of objects starting from begin position in the table
      *
-     * @param limit number of records from the table
+     * @param limit  number of records from the table
      * @param offset starting position for search in the table
      * @return List of objects
      */

@@ -7,21 +7,21 @@ import com.company.hotelBooking.service.dto.RoomDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Class executes the command "update_room"
+ * Class executes the command "update_room_form"
  */
 public class UpdateRoomFormCommand implements ICommand {
 
-	private final IRoomService service;
+    private final IRoomService service;
 
-	public UpdateRoomFormCommand(IRoomService service) {
-		this.service = service;
-	}
-	
-	@Override
-	public String execute(HttpServletRequest req) {
-		Long id = Long.parseLong(req.getParameter("id"));
-		RoomDto room = service.findById(id);
-		req.setAttribute("room", room);
-		return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_UPDATE_ROOM);
-	}
+    public UpdateRoomFormCommand(IRoomService service) {
+        this.service = service;
+    }
+
+    @Override
+    public String execute(HttpServletRequest req) {
+        Long id = Long.parseLong(req.getParameter("id"));
+        RoomDto room = service.findById(id);
+        req.setAttribute("room", room);
+        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_UPDATE_ROOM);
+    }
 }

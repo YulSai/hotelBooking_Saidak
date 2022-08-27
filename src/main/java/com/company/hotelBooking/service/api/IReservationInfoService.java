@@ -12,6 +12,15 @@ import java.util.Map;
  */
 public interface IReservationInfoService extends IAbstractService<Long, ReservationInfoDto> {
 
+    /**
+     * Method processes information about booking
+     *
+     * @param booking     Map collection with booking data
+     * @param checkIn     booking start date
+     * @param checkOut    booking end date
+     * @param reservation order
+     * @return list of reservation info
+     */
     List<ReservationInfoDto> processBookingInfo(Map<Long, Long> booking, LocalDate checkIn,
                                                 LocalDate checkOut, ReservationDto reservation);
 

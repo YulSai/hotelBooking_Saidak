@@ -5,12 +5,12 @@ import com.company.hotelBooking.controller.command.api.ICommand;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Class executes the command "create_room"
+ * Class executes the command "create_room_form"
  */
 public class CreateRoomFormCommand implements ICommand {
-	
-	@Override
-	public String execute(HttpServletRequest req) {
-		return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_CREATE_ROOM);
-	}
+
+    @Override
+    public String execute(HttpServletRequest req) {
+        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_CREATE_ROOM);
+    }
 }

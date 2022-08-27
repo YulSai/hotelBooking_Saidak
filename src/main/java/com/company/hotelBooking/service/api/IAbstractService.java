@@ -32,7 +32,7 @@ public interface IAbstractService<K, T> {
     T create(T entity);
 
     /**
-     * Method saves an edited Dto object
+     * Method updates an edited Dto object
      *
      * @param entity Dto object
      */
@@ -46,7 +46,8 @@ public interface IAbstractService<K, T> {
     void delete(K id);
 
     /**
-     *  Method gets list of Objects starting from begin position in the table
+     * Method gets list of Objects starting from begin position in the table
+     *
      * @param paging an instance of a class object Paging
      * @return list of Objects
      */
@@ -54,6 +55,7 @@ public interface IAbstractService<K, T> {
 
     /**
      * Method gets number of pages depending on the number of object on the page
+     *
      * @return number of pages
      */
     long countRow();

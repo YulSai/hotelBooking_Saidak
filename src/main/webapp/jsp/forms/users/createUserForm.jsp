@@ -28,12 +28,7 @@
     <label for="phone_number-input">Phone number: </label>
     <input id="phone_number-input" name="phone_number" type="tel" min="6"/>
     <br/>
-    <label for="role-input-admin">Admin</label>
-    <input id="role-input-admin" name="role" type="radio" value="admin"/>
-    <label for="role-input-client">Client</label>
-    <input id="role-input-client" name="role" type="radio" value="client"/>
-    <br/>
-    <input type="submit" value="REGISTER"/>
+    <input type="submit" value="Register"/>
 </form>
 </body>
 </html>

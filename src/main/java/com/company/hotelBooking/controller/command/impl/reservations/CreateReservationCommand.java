@@ -4,16 +4,17 @@ import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IReservationInfoService;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
-import com.company.hotelBooking.service.dto.ReservationInfoDto;
 import com.company.hotelBooking.service.dto.UserDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for processing HttpServletRequest "create_reservation"
+ */
 public class CreateReservationCommand implements ICommand {
     private final IReservationService reservationService;
     private final IReservationInfoService reservationInfoService;
@@ -39,8 +40,7 @@ public class CreateReservationCommand implements ICommand {
 
             ReservationDto processed = reservationService.processBooking(booking, user, checkIn, checkOut);
             ReservationDto created = reservationService.create(processed);
-            List<ReservationInfoDto> createdInfo = reservationInfoService.processBookingInfo(booking, checkIn, checkOut,
-                    created);
+            reservationInfoService.processBookingInfo(booking, checkIn, checkOut, created);
 
             ReservationDto reservation = reservationService.findById(created.getId());
             req.setAttribute("reservation", reservation);

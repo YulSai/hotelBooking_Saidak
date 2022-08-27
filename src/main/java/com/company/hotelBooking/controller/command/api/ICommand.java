@@ -3,7 +3,7 @@ package com.company.hotelBooking.controller.command.api;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Interface
+ * Interface commands
  */
 public interface ICommand {
 

@@ -51,12 +51,12 @@ public class ProxyConnection implements Connection {
         return this.connection.nativeSQL(sql);
     }
 
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
-        this.connection.setAutoCommit(autoCommit);
-    }
-
     public boolean getAutoCommit() throws SQLException {
         return this.connection.getAutoCommit();
+    }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        this.connection.setAutoCommit(autoCommit);
     }
 
     public void commit() throws SQLException {
@@ -75,28 +75,28 @@ public class ProxyConnection implements Connection {
         return this.connection.getMetaData();
     }
 
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        this.connection.setReadOnly(readOnly);
-    }
-
     public boolean isReadOnly() throws SQLException {
         return this.connection.isReadOnly();
     }
 
-    public void setCatalog(String catalog) throws SQLException {
-        this.connection.setCatalog(catalog);
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        this.connection.setReadOnly(readOnly);
     }
 
     public String getCatalog() throws SQLException {
         return this.connection.getCatalog();
     }
 
-    public void setTransactionIsolation(int level) throws SQLException {
-        this.connection.setTransactionIsolation(level);
+    public void setCatalog(String catalog) throws SQLException {
+        this.connection.setCatalog(catalog);
     }
 
     public int getTransactionIsolation() throws SQLException {
         return this.connection.getTransactionIsolation();
+    }
+
+    public void setTransactionIsolation(int level) throws SQLException {
+        this.connection.setTransactionIsolation(level);
     }
 
     public SQLWarning getWarnings() throws SQLException {
@@ -128,12 +128,12 @@ public class ProxyConnection implements Connection {
         this.connection.setTypeMap(map);
     }
 
-    public void setHoldability(int holdability) throws SQLException {
-        this.connection.setHoldability(holdability);
-    }
-
     public int getHoldability() throws SQLException {
         return this.connection.getHoldability();
+    }
+
+    public void setHoldability(int holdability) throws SQLException {
+        this.connection.setHoldability(holdability);
     }
 
     public Savepoint setSavepoint() throws SQLException {
@@ -203,16 +203,16 @@ public class ProxyConnection implements Connection {
         this.connection.setClientInfo(name, value);
     }
 
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        this.connection.setClientInfo(properties);
-    }
-
     public String getClientInfo(String name) throws SQLException {
         return this.connection.getClientInfo(name);
     }
 
     public Properties getClientInfo() throws SQLException {
         return this.connection.getClientInfo();
+    }
+
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        this.connection.setClientInfo(properties);
     }
 
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
@@ -223,12 +223,12 @@ public class ProxyConnection implements Connection {
         return this.connection.createStruct(typeName, attributes);
     }
 
-    public void setSchema(String schema) throws SQLException {
-        this.connection.setSchema(schema);
-    }
-
     public String getSchema() throws SQLException {
         return this.connection.getSchema();
+    }
+
+    public void setSchema(String schema) throws SQLException {
+        this.connection.setSchema(schema);
     }
 
     public void abort(Executor executor) throws SQLException {

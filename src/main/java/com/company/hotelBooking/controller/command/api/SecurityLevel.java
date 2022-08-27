@@ -1,7 +1,7 @@
 package com.company.hotelBooking.controller.command.api;
 
 /**
- * Enum with name of level
+ * Enum of access levels
  */
 public enum SecurityLevel {
     GUEST,

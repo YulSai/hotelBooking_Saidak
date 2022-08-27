@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Class for processing HttpServletRequest "booking"
+ */
 public class BookingCommand implements ICommand {
     private final IReservationService reservationService;
 

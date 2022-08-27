@@ -26,6 +26,7 @@ import com.company.hotelBooking.controller.command.impl.rooms.UpdateRoomCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.UpdateRoomFormCommand;
 import com.company.hotelBooking.controller.command.impl.users.CreateUserCommand;
 import com.company.hotelBooking.controller.command.impl.users.CreateUserFormCommand;
+import com.company.hotelBooking.controller.command.impl.users.DeleteUserCommand;
 import com.company.hotelBooking.controller.command.impl.users.UpdateUserCommand;
 import com.company.hotelBooking.controller.command.impl.users.UpdateUserFormCommand;
 import com.company.hotelBooking.controller.command.impl.users.UserCommand;
@@ -38,7 +39,7 @@ import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.factory.ServiceFactory;
 
 /**
- * Enum with names of commands
+ * Enum with commands
  */
 public enum CommandName {
 
@@ -58,6 +59,8 @@ public enum CommandName {
             SecurityLevel.CLIENT),
     UPDATE_USER(new UpdateUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
             SecurityLevel.CLIENT),
+    DELETE_USER(new DeleteUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
+            SecurityLevel.ADMIN),
 
     //Rooms
     ROOM(new RoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)), SecurityLevel.ADMIN),

@@ -6,6 +6,9 @@ import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Class for processing HttpServletRequest "cancel_reservation"
+ */
 public class CancelReservationCommand implements ICommand {
     private final IReservationService service;
 

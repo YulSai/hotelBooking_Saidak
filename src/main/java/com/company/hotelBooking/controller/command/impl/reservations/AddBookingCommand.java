@@ -9,6 +9,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for processing HttpServletRequest "add_booking"
+ */
 public class AddBookingCommand implements ICommand {
 
     @Override

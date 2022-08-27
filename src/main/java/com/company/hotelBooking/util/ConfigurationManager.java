@@ -2,6 +2,9 @@ package com.company.hotelBooking.util;
 
 import java.util.ResourceBundle;
 
+/**
+ * Class with constants
+ */
 public class ConfigurationManager {
     // DataBase Connection Properties
     public static final String DB_URL = "db.url";
@@ -61,8 +64,6 @@ public class ConfigurationManager {
             "i.check_out, i.nights, i.room_price FROM reservation_info i WHERE i.deleted=false";
     public static final String SQL_RESERVATION_INFO_CREATE = "INSERT INTO reservation_info (reservation_id, room_id, " +
             "check_in, check_out, nights, room_price) VALUES (?, ?, ?, ?, ?, ?)";
-    public static final String SQL_RESERVATION_INFO_UPDATE = "UPDATE reservation_info SET room_id=?, check_in=?, " +
-            "check_out=?, nights=?, room_price=? WHERE id=? AND deleted=false";
     public static final String SQL_RESERVATION_INFO_DELETE = " UPDATE reservation_info SET deleted=true WHERE id=?";
     public static final String SQL_RESERVATION_INFO_PAGE = "SELECT i.id, i.reservation_id, i.room_id, i.check_in, " +
             "i.check_out, i.nights, i.room_price FROM reservation_info i WHERE i.deleted = false ORDER BY id LIMIT ? " +

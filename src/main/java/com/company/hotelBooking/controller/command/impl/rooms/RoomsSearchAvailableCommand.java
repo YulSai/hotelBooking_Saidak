@@ -10,13 +10,15 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Class for processing HttpServletRequest "search_available_rooms"
+ */
 public class RoomsSearchAvailableCommand implements ICommand {
     private final IRoomService roomService;
 
     public RoomsSearchAvailableCommand(IRoomService roomService) {
         this.roomService = roomService;
     }
-
 
     @Override
     public String execute(HttpServletRequest req) {
@@ -30,6 +32,9 @@ public class RoomsSearchAvailableCommand implements ICommand {
             String type = req.getParameter("type");
             String capacity = req.getParameter("capacity");
             List<RoomDto> roomsAvailable = roomService.findAvailableRooms(checkIn, checkOut, type, capacity);
+            if (roomsAvailable.isEmpty()) {
+                session.setAttribute("message", "No rooms available for the selected dates");
+            }
             session.setAttribute("rooms_available", roomsAvailable);
             session.setAttribute("check_in", checkIn);
             session.setAttribute("check_out", checkOut);

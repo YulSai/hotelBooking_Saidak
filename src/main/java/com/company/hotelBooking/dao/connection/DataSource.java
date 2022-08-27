@@ -11,11 +11,18 @@ import java.sql.Connection;
 @Log4j2
 public class DataSource implements AutoCloseable {
     private static DataSource INSTANCE;
-    private ConnectionPool connectionPool;
     private final String url;
     private final String login;
     private final String password;
     private final String driver;
+    private ConnectionPool connectionPool;
+
+    private DataSource() {
+        url = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_URL);
+        login = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_LOGIN);
+        password = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_PASSWORD);
+        driver = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_DRIVER);
+    }
 
     /**
      * Method gets an instance of the class object
@@ -28,13 +35,6 @@ public class DataSource implements AutoCloseable {
         }
 
         return INSTANCE;
-    }
-
-    private DataSource() {
-        url = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_URL);
-        login = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_LOGIN);
-        password = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_PASSWORD);
-        driver = ConfigurationManager.getInstance().getString(ConfigurationManager.DB_DRIVER);
     }
 
     /**

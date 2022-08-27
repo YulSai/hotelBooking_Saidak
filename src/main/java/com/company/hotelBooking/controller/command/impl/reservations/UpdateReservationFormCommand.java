@@ -6,6 +6,9 @@ import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.util.ConfigurationManager;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Class for processing HttpServletRequest "update_reservation_form"
+ */
 public class UpdateReservationFormCommand implements ICommand {
 
     private final IReservationService service;
@@ -13,7 +16,6 @@ public class UpdateReservationFormCommand implements ICommand {
     public UpdateReservationFormCommand(IReservationService service) {
         this.service = service;
     }
-
 
     @Override
     public String execute(HttpServletRequest req) {

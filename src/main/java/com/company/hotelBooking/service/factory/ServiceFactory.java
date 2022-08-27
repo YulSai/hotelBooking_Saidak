@@ -42,6 +42,13 @@ public class ServiceFactory {
         return INSTANCE;
     }
 
+    /**
+     * Method gets service
+     *
+     * @param clazz object Class
+     * @param <T>   general type
+     * @return service
+     */
     @SuppressWarnings("unchecked")
     public <T> T getService(Class<?> clazz) {
         T service = (T) map.get(clazz);

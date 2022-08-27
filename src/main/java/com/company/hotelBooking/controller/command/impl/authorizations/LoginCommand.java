@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 
+/**
+ * Class for processing HttpServletRequest "login"
+ */
 @Log4j2
 public class LoginCommand implements ICommand {
     private final IUserService userService;

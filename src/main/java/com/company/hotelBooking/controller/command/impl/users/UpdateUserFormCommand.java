@@ -7,19 +7,20 @@ import com.company.hotelBooking.service.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Class executes the command "update_user"
+ * Class executes the command "update_user_form"
  */
 public class UpdateUserFormCommand implements ICommand {
-	private final IUserService service;
+    private final IUserService service;
 
-	public UpdateUserFormCommand(IUserService service) {
-		this.service = service;
-	}
-	@Override
-	public String execute(HttpServletRequest req) {
-		Long id = Long.parseLong(req.getParameter("id"));
-		UserDto user = service.findById(id);
-		req.setAttribute("user", user);
-		return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_UPDATE_USERS);
-	}
+    public UpdateUserFormCommand(IUserService service) {
+        this.service = service;
+    }
+
+    @Override
+    public String execute(HttpServletRequest req) {
+        Long id = Long.parseLong(req.getParameter("id"));
+        UserDto user = service.findById(id);
+        req.setAttribute("user", user);
+        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_UPDATE_USERS);
+    }
 }
