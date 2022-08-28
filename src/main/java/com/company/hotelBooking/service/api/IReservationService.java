@@ -33,4 +33,12 @@ IReservationService extends IAbstractService<Long, ReservationDto> {
      */
     ReservationDto processBooking(Map<Long, Long> booking, UserDto user, LocalDate checkIn,
                                   LocalDate checkOut);
+
+    /**
+     * Method gets list of reservations by user
+     *
+     * @param id user's id
+     * @return List of reservations by user
+     */
+    List<ReservationDto> findAllByUsers(Long id);
 }

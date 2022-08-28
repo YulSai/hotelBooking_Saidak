@@ -18,4 +18,12 @@ public interface IReservationDao extends IAbstractDao<Long, Reservation> {
      * @return List of reservations by user
      */
     List<Reservation> findAllPagesByUsers(int limit, long offset, Long id);
+
+    /**
+     * Method gets list of reservations by user
+     *
+     * @param id user's id
+     * @return List of reservations by user
+     */
+    List<Reservation> findAllByUsers(Long id);
 }

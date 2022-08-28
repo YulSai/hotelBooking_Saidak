@@ -19,6 +19,7 @@ public class ReservationDto {
     public enum StatusDto {
         IN_PROGRESS,
         CONFIRMED,
-        REJECTED
+        REJECTED,
+        DELETED
     }
 }

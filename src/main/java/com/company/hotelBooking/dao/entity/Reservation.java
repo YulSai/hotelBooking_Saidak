@@ -19,6 +19,7 @@ public class Reservation {
     public enum Status {
         IN_PROGRESS,
         CONFIRMED,
-        REJECTED
+        REJECTED,
+        DELETED
     }
 }

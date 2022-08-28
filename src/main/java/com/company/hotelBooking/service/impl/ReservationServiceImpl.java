@@ -129,6 +129,14 @@ public class ReservationServiceImpl implements IReservationService {
         return reservationDao.countRow();
     }
 
+    @Override
+    public List<ReservationDto> findAllByUsers(Long id) {
+        log.debug("Calling a service method findAllPagesByUsers");
+        return reservationDao.findAllByUsers(id).stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     /**
      * Method transforms object Reservation into object ReservationDto
      *
