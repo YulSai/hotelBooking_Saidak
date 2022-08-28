@@ -2,8 +2,8 @@ package com.company.hotelBooking.controller.filters;
 
 import com.company.hotelBooking.controller.command.api.SecurityLevel;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
-import com.company.hotelBooking.exceptions.ForbiddenException;
 import com.company.hotelBooking.service.dto.UserDto;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
@@ -28,7 +28,7 @@ public class UserRoleFilter extends HttpFilter {
      * @param session HttpSession
      * @return user's role
      */
-    private static String getRole(HttpSession session) {
+    private String getRole(HttpSession session) {
         String role = "GUEST";
         if (session.getAttribute("user") != null) {
             UserDto user = (UserDto) session.getAttribute("user");
@@ -43,12 +43,15 @@ public class UserRoleFilter extends HttpFilter {
      * @param command given command
      * @param role    user's role
      */
-    private static void verifyAccessLevel(String command, String role) {
+    private void verifyAccessLevel(HttpServletRequest req, HttpServletResponse res, String command,
+                                   String role) throws ServletException, IOException {
         SecurityLevel levelUser = SecurityLevel.valueOf(role);
         SecurityLevel levelCommand = CommandFactory.getINSTANCE().getSecurityLevel(command);
         if (levelUser.ordinal() < levelCommand.ordinal()) {
             log.error("Insufficient access rights");
-            throw new ForbiddenException("Insufficient access rights");
+            req.setAttribute("status", 404);
+            req.setAttribute("message", "Insufficient access rights");
+            req.getRequestDispatcher(AppConstants.PAGE_ERROR).forward(req, res);
         }
     }
 
@@ -58,7 +61,7 @@ public class UserRoleFilter extends HttpFilter {
         String command = req.getParameter("command");
         HttpSession session = req.getSession(false);
         String role = getRole(session);
-        verifyAccessLevel(command, role);
+        verifyAccessLevel(req, res, command, role);
         chain.doFilter(req, res);
     }
 }

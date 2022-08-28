@@ -1,7 +1,7 @@
 package com.company.hotelBooking.controller.command.impl.rooms;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -10,6 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class RoomsAvailableCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest req) {
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOMS_AVAILABLE);
+        return AppConstants.PAGE_ROOMS_AVAILABLE;
     }
 }

@@ -5,7 +5,7 @@ import com.company.hotelBooking.service.api.IReservationInfoService;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -33,7 +33,7 @@ public class CreateReservationCommand implements ICommand {
         LocalDate checkOut = (LocalDate) session.getAttribute("check_out");
         if (user == null) {
             req.setAttribute("message", "Please, login");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN);
+            return AppConstants.PAGE_LOGIN;
         } else {
             @SuppressWarnings("unchecked")
             Map<Long, Long> booking = (Map<Long, Long>) session.getAttribute("booking");
@@ -44,8 +44,9 @@ public class CreateReservationCommand implements ICommand {
 
             ReservationDto reservation = reservationService.findById(created.getId());
             req.setAttribute("reservation", reservation);
-            req.setAttribute("massage", "Reservation created successfully");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATION);
+            req.setAttribute("message", "Reservation created successfully");
+            req.getSession().removeAttribute("booking");
+            return AppConstants.PAGE_RESERVATION;
         }
     }
 }

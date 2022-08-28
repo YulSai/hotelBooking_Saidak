@@ -65,8 +65,6 @@ public class UserServiceImpl implements IUserService {
             throw new ServiceException("User exists");
         }
         UserValidator.getINSTANCE().isValid(userDto);
-        String hashPassword = DigestUtil.INSTANCE.hash(userDto.getPassword());
-        userDto.setPassword(hashPassword);
         return toDto(userDao.update(toEntity(userDto)));
     }
 
@@ -104,17 +102,6 @@ public class UserServiceImpl implements IUserService {
             }
             return userDto;
         }
-    }
-
-    @Override
-    public UserDto findUserByEmail(String email) {
-        log.debug("Calling a service method findUserByEmail UserDto email = {}", email);
-        User user = userDao.findUserByEmail(email);
-        if (user == null) {
-            log.error("SQLUserService findUserByEmail error. No user with email = {}", email);
-            throw new ServiceException("No user with email " + email);
-        }
-        return toDto(user);
     }
 
     @Override

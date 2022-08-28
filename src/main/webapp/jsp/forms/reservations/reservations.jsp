@@ -12,6 +12,7 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1>Reservations</h1>
+<p>${requestScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>
@@ -30,7 +31,7 @@
             <td>
                 <table class="second">
                     <c:forEach items="${requestScope.reservation.details }" var="info">
-                        <tr><a href="controller?command=room&id=${info.room.id}">${info.room.number} </a></tr>
+                        <tr><a href="controller?command=room&id=${info.room.id}">${info.room.number}</a></tr>
                         <tr>${info.checkIn} </tr>
                         <tr>${info.checkOut} </tr>
                     </c:forEach>

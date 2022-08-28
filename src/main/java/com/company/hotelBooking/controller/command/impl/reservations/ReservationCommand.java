@@ -4,7 +4,7 @@ import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
@@ -40,7 +40,7 @@ public class ReservationCommand implements ICommand {
             } else {
                 req.setAttribute("reservation", reservation);
                 log.info("Appeal to reservation.jsp");
-                return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_RESERVATION);
+                return AppConstants.PAGE_RESERVATION;
             }
         } else {
             log.error("Incorrect address entered");

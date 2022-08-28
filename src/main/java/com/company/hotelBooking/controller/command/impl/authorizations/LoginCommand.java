@@ -3,7 +3,7 @@ package com.company.hotelBooking.controller.command.impl.authorizations;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -26,12 +26,12 @@ public class LoginCommand implements ICommand {
 
         if (email == null || ("").equals(email) || password == null || ("").equals(password)) {
             req.setAttribute("massage", "Enter your login details");
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_LOGIN);
+            return AppConstants.PAGE_LOGIN;
         }
         UserDto userDto = userService.login(email, password);
         HttpSession session = req.getSession();
         session.setAttribute("user", userDto);
         log.info("Appeal to login.jsp.");
-        return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_INDEX);
+        return AppConstants.PAGE_INDEX;
     }
 }

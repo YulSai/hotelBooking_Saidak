@@ -20,26 +20,28 @@
         <label for="first_name-input">First name: </label>
         <input id="first_name-input" name="first_name" type="text" value="${requestScope.user.firstName}"/>
         <br/>
-
         <label for="last_name-input">Last name: </label>
         <input id="last_name-input" name="last_name" type="text" value="${requestScope.user.lastName}"/>
         <br/>
-
         <label for="email-input">Email: </label>
         <input id="email-input" name="email" type="email" value="<c:out value="${requestScope.user.email}"/>"/>
         <br/>
-
         <label for="password-input">Password: </label>
-        <input id="password-input" name="password" type="password" min="6"/>
-        <br/>
-
+        <input id="password-input" name="password" type="hidden" min="6" value="${requestScope.user.password}"/>
         <label for="phone_number-input">Phone number: </label>
         <input id="phone_number-input" name="phone_number" type="tel" min="13"
                value="${requestScope.user.phoneNumber}"/>
         <br/>
+        <input id="role-input-admin" name="role" type="hidden" value="${requestScope.user.role}"/>
     </c:if>
 
     <c:if test="${sessionScope.user.role == 'ADMIN'}">
+        <input id="first_name-input" name="first_name" type="hidden" value="${requestScope.user.firstName}"/>
+        <input id="last_name-input" name="last_name" type="hidden" value="${requestScope.user.lastName}"/>
+        <input id="email-input" name="email" type="hidden" value="<c:out value="${requestScope.user.email}"/>"/>
+        <input id="password-input" name="password" type="hidden" min="6" value="${requestScope.user.password}"/>
+        <input id="phone_number-input" name="phone_number" type="hidden" min="13"
+               value="${requestScope.user.phoneNumber}"/>
         <input id="role-input-admin" name="role" type="radio"
                value="ADMIN" ${requestScope.user.role='ADMIN' ? 'checked' : ''}/>
         <label for="role-input-admin">Admin</label>

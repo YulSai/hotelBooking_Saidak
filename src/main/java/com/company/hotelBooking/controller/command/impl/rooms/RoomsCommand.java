@@ -3,10 +3,10 @@ package com.company.hotelBooking.controller.command.impl.rooms;
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
 import com.company.hotelBooking.exceptions.NotFoundException;
-import com.company.hotelBooking.util.ConfigurationManager;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
@@ -35,7 +35,7 @@ public class RoomsCommand implements ICommand {
         } else {
             pagingUtil.setTotalPages(req, paging, roomService);
             req.setAttribute("rooms", rooms);
-            return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_ROOMS);
+            return AppConstants.PAGE_ROOMS;
         }
     }
 }

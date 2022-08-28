@@ -32,6 +32,9 @@
             <td>
                 <li><a href="controller?command=update_user_form&id=${user.id}">Update user</a></li>
             </td>
+            <td>
+                <li><a href="controller?command=delete_user&id=${user.id}">Delete user</a></li>
+            </td>
         </tr>
     </c:forEach>
 </table>

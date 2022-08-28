@@ -1,10 +1,10 @@
 package com.company.hotelBooking.controller.command.impl.users;
 
 import com.company.hotelBooking.exceptions.NotFoundException;
-import com.company.hotelBooking.util.ConfigurationManager;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
+import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -46,7 +46,7 @@ public class UserCommand implements ICommand {
                 }
                 req.setAttribute("user", user);
                 log.info("Appeal to user.jsp.");
-                return ConfigurationManager.getInstance().getString(ConfigurationManager.PAGE_USER);
+                return AppConstants.PAGE_USER;
             }
         } else {
             log.error("Incorrect address entered");

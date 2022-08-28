@@ -22,11 +22,6 @@ li a {
     text-decoration: none;
 }
 
-li a:hover:not(.active) {
-    background-color: rgba(2, 2, 2, 0.17);
-}
-
-.active {
-    color: #333333;
+li a {
     background-color: rgba(2, 2, 2, 0.17);
 }

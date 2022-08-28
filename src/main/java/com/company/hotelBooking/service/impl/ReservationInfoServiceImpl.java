@@ -29,7 +29,6 @@ public class ReservationInfoServiceImpl implements IReservationInfoService {
     @Override
     public ReservationInfoDto findById(Long id) {
         log.debug("Calling a service method findById. ReservationInfoDto id = {}", id);
-
         return toDto(reservationInfoDao.findById(id));
     }
 

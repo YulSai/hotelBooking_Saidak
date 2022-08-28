@@ -15,6 +15,7 @@ import com.company.hotelBooking.controller.command.impl.reservations.Reservation
 import com.company.hotelBooking.controller.command.impl.reservations.ReservationsCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.UpdateReservationCommand;
 import com.company.hotelBooking.controller.command.impl.reservations.UpdateReservationFormCommand;
+import com.company.hotelBooking.controller.command.impl.reservations.UserReservationsCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.CreateRoomCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.CreateRoomFormCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.RoomCommand;
@@ -59,7 +60,8 @@ public enum CommandName {
             SecurityLevel.CLIENT),
     UPDATE_USER(new UpdateUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
             SecurityLevel.CLIENT),
-    DELETE_USER(new DeleteUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
+    DELETE_USER(new DeleteUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class),
+            ServiceFactory.getINSTANCE().getService(IReservationService.class)),
             SecurityLevel.ADMIN),
 
     //Rooms
@@ -97,6 +99,8 @@ public enum CommandName {
             SecurityLevel.ADMIN),
     CANCEL_RESERVATION(new CancelReservationCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class)),
             SecurityLevel.CLIENT),
+    USER_RESERVATIONS(new UserReservationsCommand(ServiceFactory.getINSTANCE().getService(IReservationService.class),
+            PagingUtil.INSTANCE), SecurityLevel.CLIENT),
 
 
     //Other

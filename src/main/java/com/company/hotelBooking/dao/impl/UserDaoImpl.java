@@ -5,9 +5,10 @@ import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.exceptions.RegistrationException;
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.util.AppConstants;
 import lombok.extern.log4j.Log4j2;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,8 +30,8 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User findById(Long id) {
         log.debug("Accessing the database using the findById command. User's id = {}", id);
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_FIND_BY_ID)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_FIND_BY_ID)) {
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
 
@@ -48,8 +49,9 @@ public class UserDaoImpl implements IUserDao {
     public List<User> findAll() {
         log.debug("Accessing the database using the findAll command");
         List<User> users = new ArrayList<>();
-        try (Statement statement = dataSource.getConnection().createStatement()) {
-            ResultSet result = statement.executeQuery(ConfigurationManager.SQL_USER_FIND_ALL);
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(AppConstants.SQL_USER_FIND_ALL)) {
             while (result.next()) {
                 users.add(processUser(result));
             }
@@ -63,8 +65,9 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User save(User user) {
         log.debug("Accessing the database using the create command. User = {}", user);
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_CREATE, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_CREATE,
+                     Statement.RETURN_GENERATED_KEYS)) {
             extractedDate(user, statement);
             statement.executeUpdate();
             ResultSet keys = statement.getGeneratedKeys();
@@ -76,14 +79,14 @@ public class UserDaoImpl implements IUserDao {
         } catch (SQLException e) {
             log.error("SQLUserDAO create error ", e);
         }
-        throw new DaoException("Failed to create new user" + user);
+        throw new DaoException("Failed to create new user");
     }
 
     @Override
     public User update(User user) {
         log.debug("Accessing the database using the update command. User = {}", user);
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_UPDATE)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_UPDATE)) {
             extractedDate(user, statement);
             statement.setLong(7, user.getId());
 
@@ -101,8 +104,8 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. User's id = {}", id);
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_DELETE)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_DELETE)) {
             statement.setLong(1, id);
 
             int rowsDeleted = statement.executeUpdate();
@@ -117,8 +120,8 @@ public class UserDaoImpl implements IUserDao {
     public List<User> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the findAllPages command");
         List<User> users = new ArrayList<>();
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_PAGE)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_PAGE)) {
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
@@ -135,8 +138,8 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_COUNT_USERS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_COUNT_USERS)) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 return result.getLong("total");
@@ -151,8 +154,8 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User findUserByEmail(String email) {
         log.debug("Accessing the database using the findUserByEmail command. User's email = {}", email);
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(
-                ConfigurationManager.SQL_USER_FIND_BY_EMAIL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_FIND_BY_EMAIL)) {
             statement.setString(1, email);
             ResultSet result = statement.executeQuery();
 

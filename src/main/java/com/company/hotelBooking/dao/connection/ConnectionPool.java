@@ -1,5 +1,6 @@
 package com.company.hotelBooking.dao.connection;
 
+import com.company.hotelBooking.util.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
@@ -15,12 +16,13 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 @Log4j2
 public class ConnectionPool {
-    private static final int POOL_SIZE = 100;
+    private static final Integer POOL_SIZE = Integer.valueOf(
+            ConfigurationManager.getInstance().getString(ConfigurationManager.POOL_SIZE));
     private final BlockingQueue<ProxyConnection> freeConnections;
     private final Queue<ProxyConnection> givenAwayConnections;
 
     /**
-     * Method creates connection with database
+     * Constructor creates connection with database
      *
      * @param driver   database driver
      * @param url      path to database

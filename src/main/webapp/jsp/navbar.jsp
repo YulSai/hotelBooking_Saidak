@@ -16,7 +16,7 @@
 
     <c:if test="${sessionScope.user.role == 'CLIENT'}">
         <li><a href="controller?command=user&id=${sessionScope.user.id}">Profile</a></li>
-        <li><a href="controller?command=reservations">My reservations</a></li>
+        <li><a href="controller?command=user_reservations&id=${sessionScope.user.id}">My reservations</a></li>
     </c:if>
 
     <c:if test="${sessionScope.user != null}">

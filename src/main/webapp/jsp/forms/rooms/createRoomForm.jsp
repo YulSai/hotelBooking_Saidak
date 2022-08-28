@@ -43,10 +43,5 @@
     <br/>
     <input type="submit" value="REGISTER"/>
 </form>
-<ul>
-    <li><a id="all_rooms" href="controller?command=rooms">Return
-        to the list of all rooms</a></li>
-    <li><a id="home" href="/hotel_booking">Home page</a></li>
-</ul>
 </body>
 </html>

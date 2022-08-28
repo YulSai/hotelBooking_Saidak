@@ -4,7 +4,7 @@ import com.company.hotelBooking.controller.command.api.CommandName;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
 import com.company.hotelBooking.dao.connection.DataSource;
-import com.company.hotelBooking.exceptions.Exceptions;
+import com.company.hotelBooking.exceptions.ExceptionsHandler;
 import com.company.hotelBooking.exceptions.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,7 +33,7 @@ public class Controller extends HttpServlet {
             page = command.execute(req);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            page = Exceptions.getINSTANCE().handleException(req, resp, e);
+            page = ExceptionsHandler.getINSTANCE().handleException(req, resp, e);
         }
         if (page.startsWith(REDIRECT)) {
             resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));

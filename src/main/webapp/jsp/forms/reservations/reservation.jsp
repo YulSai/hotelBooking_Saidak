@@ -11,6 +11,7 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1>Reservation Detailed Info</h1>
+<p>${requestScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>

@@ -7,7 +7,8 @@ INSERT INTO reservation_statuses (name)
 VALUES
 ('IN_PROGRESS'),
 ('CONFIRMED'),
-('REJECTED');
+('REJECTED'),
+('DELETED');
 
 INSERT INTO reservations (user_id, total_cost, status_id)
 VALUES

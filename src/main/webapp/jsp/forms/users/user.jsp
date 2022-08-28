@@ -40,6 +40,9 @@
 </table>
 <ul>
     <li><a href="controller?command=update_user_form&id=${requestScope.user.id}">Update user</a></li>
+    <c:if test="${sessionScope.user.role == 'ADMIN'}">
+        <li><a href="controller?command=delete_user&id=${requestScope.user.id}">Delete user</a></li>
+    </c:if>
 </ul>
 </body>
 </html>
