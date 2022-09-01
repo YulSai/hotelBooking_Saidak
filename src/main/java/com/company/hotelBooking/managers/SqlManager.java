@@ -1,39 +1,6 @@
-package com.company.hotelBooking.util;
+package com.company.hotelBooking.managers;
 
-public class AppConstants {
-    // JSP
-    // Index
-    public static final String PAGE_INDEX = "index.jsp";
-
-    // Error
-    public static final String PAGE_ERROR = "jsp/error.jsp";
-    public static final String PAGE_404 = "jsp/404.jsp";
-
-    // Reservation
-    public static final String PAGE_RESERVATIONS = "jsp/forms/reservations/reservations.jsp";
-    public static final String PAGE_RESERVATION = "jsp/forms/reservations/reservation.jsp";
-    public static final String PAGE_BOOKING = "jsp/forms/reservations/booking.jsp";
-    public static final String PAGE_UPDATE_RESERVATION = "jsp/forms/reservations/updateReservationForm.jsp";
-
-    // Room
-    public static final String PAGE_ROOMS = "jsp/forms/rooms/rooms.jsp";
-    public static final String PAGE_ROOM = "jsp/forms/rooms/room.jsp";
-    public static final String PAGE_CREATE_ROOM = "jsp/forms/rooms/createRoomForm.jsp";
-    public static final String PAGE_UPDATE_ROOM = "jsp/forms/rooms/updateRoomForm.jsp";
-    public static final String PAGE_SEARCH_AVAILABLE_ROOMS = "jsp/forms/reservations/searchAvailableRoomsForm.jsp";
-    public static final String PAGE_ROOMS_AVAILABLE = "jsp/forms/reservations/roomsAvailable.jsp";
-
-    // User
-    public static final String PAGE_USERS = "jsp/forms/users/users.jsp";
-    public static final String PAGE_USER = "jsp/forms/users/user.jsp";
-    public static final String PAGE_CREATE_USER = "jsp/forms/users/createUserForm.jsp";
-    public static final String PAGE_UPDATE_USERS = "jsp/forms/users/updateUserForm.jsp";
-    public static final String PAGE_DELETE_USER = "jsp/forms/users/deleteUser.jsp";
-
-    //Login
-    public static final String PAGE_LOGIN = "jsp/forms/authorizations/loginForm.jsp";
-
-
+public class SqlManager {
     // SQL
     // Reservation
     public static final String SQL_RESERVATION_FIND_BY_ID = "SELECT rs.id, rs.user_id, rs.total_cost, sr.name AS status " +
@@ -46,8 +13,8 @@ public class AppConstants {
     public static final String SQL_RESERVATION_UPDATE = "UPDATE reservations SET user_id=?, total_cost=?, status_id=" +
             "(SELECT s.id FROM reservation_statuses s WHERE s.name=?) WHERE id=? AND deleted=false";
     public static final String SQL_RESERVATION_DELETE = "UPDATE reservations SET deleted=true WHERE id=?;";
-    public static final String SQL_RESERVATION_COUNT_RESERVATIONS = "SELECT COUNT(*) AS total FROM reservations " +
-            "WHERE deleted = false";
+    public static final String SQL_RESERVATION_COUNT_RESERVATIONS = "SELECT COUNT(*) AS total FROM reservations WHERE " +
+            "status_id!=(SELECT id FROM reservation_statuses s WHERE s.name='DELETED') AND deleted = false";
     public static final String SQL_RESERVATION_PAGE = "SELECT rs.id, rs.user_id, rs.total_cost, sr.name AS status " +
             "FROM reservations rs JOIN reservation_statuses sr ON sr.id = rs.status_id WHERE rs.deleted = false " +
             "AND rs.status_id!=(SELECT id FROM reservation_statuses s WHERE s.name='DELETED') " +
