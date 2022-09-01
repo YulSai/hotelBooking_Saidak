@@ -2,8 +2,9 @@ package com.company.hotelBooking.controller.filters;
 
 import com.company.hotelBooking.controller.command.api.SecurityLevel;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
@@ -50,8 +51,8 @@ public class UserRoleFilter extends HttpFilter {
         if (levelUser.ordinal() < levelCommand.ordinal()) {
             log.error("Insufficient access rights");
             req.setAttribute("status", 404);
-            req.setAttribute("message", "Insufficient access rights");
-            req.getRequestDispatcher(AppConstants.PAGE_ERROR).forward(req, res);
+            req.setAttribute("message", MessageManger.getMessage("msg.insufficient.rights"));
+            req.getRequestDispatcher(PagesManager.PAGE_ERROR).forward(req, res);
         }
     }
 

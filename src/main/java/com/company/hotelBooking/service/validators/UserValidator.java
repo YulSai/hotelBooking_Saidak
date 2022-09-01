@@ -1,6 +1,7 @@
 package com.company.hotelBooking.service.validators;
 
 import com.company.hotelBooking.exceptions.RegistrationException;
+import com.company.hotelBooking.managers.MessageManger;
 import com.company.hotelBooking.service.dto.UserDto;
 import lombok.extern.log4j.Log4j2;
 
@@ -32,52 +33,52 @@ public class UserValidator {
 
         String firstName = userDto.getFirstName();
         if (firstName == null || ("").equals(firstName)) {
-            log.error("Invalid input firstName empty", firstName);
-            throw new RegistrationException("Invalid input first name empty");
+            log.error("Invalid input first name empty");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.first.name.empty"));
         }
         if (!firstName.matches("^[A-Za-z]+")) {
-            log.error("Invalid input firstName format", firstName);
-            throw new RegistrationException("Invalid input first name format");
+            log.error("Invalid input last name format");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.first.name.format"));
         }
 
         String lastName = userDto.getLastName();
         if (lastName == null || ("").equals(lastName)) {
-            log.error("Invalid input last name empty", lastName);
-            throw new RegistrationException("Invalid input last name empty");
+            log.error("Invalid input last name empty");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.last.name.empty"));
         }
         if (!lastName.matches("^[A-Za-z-]+")) {
-            log.error("Invalid input last name format", lastName);
-            throw new RegistrationException("Invalid input last name format");
+            log.error("Invalid input last name format");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.last.name.format"));
         }
 
         String email = userDto.getEmail();
         if (email == null || ("").equals(email)) {
-            log.error("Invalid input email empty", email);
-            throw new RegistrationException("Invalid input email empty");
+            log.error("Invalid input email empty");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.email.empty"));
         }
         if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            log.error("Invalid input email format", email);
-            throw new RegistrationException("Invalid input email format");
+            log.error("Invalid input email format");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.email.format"));
         }
 
         String password = userDto.getPassword();
         if (password == null || ("").equals(password)) {
-            log.error("Invalid input password empty", email);
-            throw new RegistrationException("Invalid input password empty");
+            log.error("Invalid input password empty");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.password.empty"));
         }
         if (!password.matches("[A-Za-z0-9_]+")) {
-            log.error("Invalid input password format", email);
-            throw new RegistrationException("Invalid input password format");
+            log.error("Invalid input password format");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.password.format"));
         }
         if (password.length() < 6) {
-            log.error("Invalid input password short", email);
-            throw new RegistrationException("Invalid input password short");
+            log.error("Invalid input password short");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.password.length"));
         }
 
         String phoneNumber = userDto.getPhoneNumber();
         if (phoneNumber == null || ("").equals(phoneNumber)) {
-            log.error("Invalid input phoneNumber empty", phoneNumber);
-            throw new RegistrationException("Invalid input phone number empty");
+            log.error("Invalid input phoneNumber empty");
+            throw new RegistrationException(MessageManger.getMessage("msg.error.phone.empty"));
         }
     }
 }

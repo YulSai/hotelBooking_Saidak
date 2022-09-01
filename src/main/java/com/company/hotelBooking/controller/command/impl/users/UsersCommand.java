@@ -4,9 +4,9 @@ import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
 import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
@@ -31,11 +31,11 @@ public class UsersCommand implements ICommand {
         List<UserDto> users = userService.findAllPages(paging);
         if (users.size() == 0) {
             log.error("Incorrect address entered");
-            throw new NotFoundException("Page not found");
+            throw new NotFoundException();
         } else {
             pagingUtil.setTotalPages(req, paging, userService);
             req.setAttribute("users", users);
-            return AppConstants.PAGE_USERS;
+            return PagesManager.PAGE_USERS;
         }
     }
 }

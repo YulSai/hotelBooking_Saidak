@@ -5,6 +5,7 @@ import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.LoginUserException;
 import com.company.hotelBooking.exceptions.ServiceException;
+import com.company.hotelBooking.managers.MessageManger;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
 import com.company.hotelBooking.service.utils.DigestUtil;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements IUserService {
         User user = userDao.findById(id);
         if (user == null) {
             log.error("SQLUserService findById error. No user with id = {}", id);
-            throw new ServiceException("No user type with id " + id);
+            throw new ServiceException(MessageManger.getMessage("msg.error.find") + id);
         }
         return toDto(user);
     }
@@ -48,7 +49,7 @@ public class UserServiceImpl implements IUserService {
         log.debug("Calling a service method create. UserDto = {}", userDto);
         if (userDao.findUserByEmail(userDto.getEmail()) != null) {
             log.error("User with email = {} already exists", userDto.getEmail());
-            throw new ServiceException("User exists");
+            throw new ServiceException(MessageManger.getMessage("msg.error.exists"));
         }
         UserValidator.getINSTANCE().isValid(userDto);
         String hashPassword = DigestUtil.INSTANCE.hash(userDto.getPassword());
@@ -62,7 +63,7 @@ public class UserServiceImpl implements IUserService {
         User existing = userDao.findUserByEmail(userDto.getEmail());
         if (existing != null && !existing.getId().equals(userDto.getId())) {
             log.error("User with email = {} already exists", userDto.getEmail());
-            throw new ServiceException("User exists");
+            throw new ServiceException(MessageManger.getMessage("msg.error.exists"));
         }
         UserValidator.getINSTANCE().isValid(userDto);
         return toDto(userDao.update(toEntity(userDto)));
@@ -74,7 +75,7 @@ public class UserServiceImpl implements IUserService {
         userDao.delete(id);
         if (!userDao.delete(id)) {
             log.error("SQLUserService deleted error. Failed to delete user with id = {}", id);
-            throw new ServiceException("Failed to delete user with id " + id);
+            throw new ServiceException(MessageManger.getMessage("msg.error.delete") + id);
         }
     }
 
@@ -129,7 +130,7 @@ public class UserServiceImpl implements IUserService {
             dto.setRole(UserDto.RoleDto.valueOf(entity.getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog");
-            throw new ServiceException("No user found with this email", e);
+            throw new ServiceException(MessageManger.getMessage("msg.error.find"));
         }
         return dto;
     }
@@ -153,7 +154,7 @@ public class UserServiceImpl implements IUserService {
             entity.setRole(User.Role.valueOf(dto.getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog");
-            throw new ServiceException("This user is not in the catalog");
+            throw new ServiceException(MessageManger.getMessage("msg.error.find"));
         }
         return entity;
     }

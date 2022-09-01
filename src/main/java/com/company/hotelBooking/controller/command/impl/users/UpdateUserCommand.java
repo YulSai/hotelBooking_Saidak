@@ -1,9 +1,10 @@
 package com.company.hotelBooking.controller.command.impl.users;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -33,7 +34,7 @@ public class UpdateUserCommand implements ICommand {
         UserDto user = getUserFromInput(req);
         UserDto updated = service.update(user);
         req.setAttribute("user", updated);
-        req.setAttribute("massage", "User was updated successfully");
-        return AppConstants.PAGE_USER;
+        req.setAttribute("massage", MessageManger.getMessage("msg.user.updated"));
+        return PagesManager.PAGE_USER;
     }
 }

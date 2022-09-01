@@ -1,9 +1,10 @@
 package com.company.hotelBooking.controller.command.impl.users;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -32,7 +33,7 @@ public class CreateUserCommand implements ICommand {
         UserDto user = getUserFromInput(req);
         UserDto created = service.create(user);
         req.setAttribute("user", created);
-        req.setAttribute("message", "New user was created successfully");
-        return AppConstants.PAGE_USER;
+        req.setAttribute("message", MessageManger.getMessage("msg.user.created"));
+        return PagesManager.PAGE_USER;
     }
 }

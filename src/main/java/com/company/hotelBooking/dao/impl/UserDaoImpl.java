@@ -3,9 +3,11 @@ package com.company.hotelBooking.dao.impl;
 import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.User;
+import com.company.hotelBooking.exceptions.ConnectionPoolException;
 import com.company.hotelBooking.exceptions.DaoException;
 import com.company.hotelBooking.exceptions.RegistrationException;
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.SqlManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
@@ -30,18 +32,28 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User findById(Long id) {
         log.debug("Accessing the database using the findById command. User's id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_FIND_BY_ID)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_FIND_BY_ID)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+            connection.commit();
 
             if (result.next()) {
                 return processUser(result);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO findById error {}", id, e);
-            throw new DaoException("Error findById {}" + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        } finally {
+            close(connection);
         }
+        return null;
+    }
+
+    @Override
+    public User findById(Long id, Connection connection) {
         return null;
     }
 
@@ -49,15 +61,21 @@ public class UserDaoImpl implements IUserDao {
     public List<User> findAll() {
         log.debug("Accessing the database using the findAll command");
         List<User> users = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(AppConstants.SQL_USER_FIND_ALL)) {
+        Connection connection = dataSource.getConnection();
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(SqlManager.SQL_USER_FIND_ALL)) {
+            connection.setAutoCommit(false);
+
             while (result.next()) {
                 users.add(processUser(result));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO findAll", e);
-            throw new DaoException("Error findAll");
+            throw new DaoException(MessageManger.getMessage("msg.error.find.all"));
+        } finally {
+            close(connection);
         }
         return users;
     }
@@ -65,54 +83,69 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User save(User user) {
         log.debug("Accessing the database using the create command. User = {}", user);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_CREATE,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_CREATE,
+                Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
             extractedDate(user, statement);
             statement.executeUpdate();
             ResultSet keys = statement.getGeneratedKeys();
+            connection.commit();
 
             if (keys.next()) {
                 Long id = keys.getLong("id");
-                return findById(id);
+                return findById(id, connection);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO create error ", e);
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to create new user");
+        throw new DaoException(MessageManger.getMessage("msg.error.create") + user);
     }
 
     @Override
     public User update(User user) {
         log.debug("Accessing the database using the update command. User = {}", user);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_UPDATE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_UPDATE)) {
+            connection.setAutoCommit(false);
             extractedDate(user, statement);
             statement.setLong(7, user.getId());
 
             if (statement.executeUpdate() == 0) {
                 log.error("Command update can't be executed");
+                throw new DaoException(MessageManger.getMessage("msg.error.command") + user);
             }
-            return findById(user.getId());
-
+            connection.commit();
+            return findById(user.getId(), connection);
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO update error. Failed to update user {}", user, e);
-            throw new DaoException("Failed to update user" + user);
+            throw new DaoException(MessageManger.getMessage("msg.error.update") + user);
+        } finally {
+            close(connection);
         }
     }
 
     @Override
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. User's id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_DELETE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_DELETE)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
 
             int rowsDeleted = statement.executeUpdate();
+            connection.commit();
             return rowsDeleted == 1;
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO delete error {}", id, e);
-            throw new DaoException("Failed to delete user with id " + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.delete") + id);
+        } finally {
+            close(connection);
         }
     }
 
@@ -120,17 +153,23 @@ public class UserDaoImpl implements IUserDao {
     public List<User> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the findAllPages command");
         List<User> users = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_PAGE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_PAGE)) {
+            connection.setAutoCommit(false);
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
                 users.add(processUser(result));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO findAllPages error", e);
-            throw new DaoException("Failed to find users", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return users;
     }
@@ -138,33 +177,44 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_COUNT_USERS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_COUNT_USERS)) {
+            connection.setAutoCommit(false);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
                 return result.getLong("total");
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO findRowCount error", e);
-            throw new DaoException("Failed to find count of users", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to count users");
+        throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
     }
 
     @Override
     public User findUserByEmail(String email) {
         log.debug("Accessing the database using the findUserByEmail command. User's email = {}", email);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_USER_FIND_BY_EMAIL)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_FIND_BY_EMAIL)) {
             statement.setString(1, email);
+            connection.setAutoCommit(false);
             ResultSet result = statement.executeQuery();
+            connection.commit();
 
             if (result.next()) {
                 return processUser(result);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLUserDAO findUserByEmail error {}", email, e);
-            throw new RegistrationException("No user found with this email", e);
+            throw new RegistrationException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return null;
     }
@@ -200,5 +250,33 @@ public class UserDaoImpl implements IUserDao {
         statement.setString(4, user.getPassword());
         statement.setString(5, user.getPhoneNumber());
         statement.setString(6, user.getRole().toString());
+    }
+
+    /**
+     * Method rolls back to the last commit state
+     *
+     * @param connection Connection
+     */
+    private void rollback(Connection connection) {
+        try {
+            connection.setAutoCommit(true);
+            connection.rollback();
+        } catch (SQLException ex) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.error.rollback"), ex);
+        }
+    }
+
+    /**
+     * Method closes connection
+     *
+     * @param connection Connection
+     */
+    private void close(Connection connection) {
+        try {
+            log.debug("Connection was 'close'");
+            connection.close();
+        } catch (SQLException e) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.no.close"), e);
+        }
     }
 }

@@ -3,10 +3,11 @@ package com.company.hotelBooking.controller.command.impl.reservations;
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.UserDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +33,8 @@ public class UserReservationsCommand implements ICommand {
         Long id = Long.valueOf(req.getParameter("id"));
         List<ReservationDto> reservations = reservationService.findAllPagesByUsers(paging, id);
         if (reservations.isEmpty()) {
-            req.setAttribute("message", "No reservations yet");
-            return AppConstants.PAGE_RESERVATIONS;
+            req.setAttribute("message", MessageManger.getMessage("msg.empty"));
+            return PagesManager.PAGE_RESERVATIONS;
         } else {
             HttpSession session = req.getSession();
             UserDto user = (UserDto) session.getAttribute("user");
@@ -42,7 +43,7 @@ public class UserReservationsCommand implements ICommand {
             }
             pagingUtil.setTotalPages(req, paging, reservationService);
             req.setAttribute("reservations", reservations);
-            return AppConstants.PAGE_RESERVATIONS;
+            return PagesManager.PAGE_RESERVATIONS;
         }
     }
 }
