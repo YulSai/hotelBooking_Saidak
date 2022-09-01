@@ -3,7 +3,8 @@ package com.company.hotelBooking.controller.filters;
 import com.company.hotelBooking.controller.command.api.CommandName;
 import com.company.hotelBooking.controller.command.api.SecurityLevel;
 import com.company.hotelBooking.controller.command.factory.CommandFactory;
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
@@ -28,14 +29,14 @@ public class AuthorizationFilter extends HttpFilter {
         if (command == null || "".equals(command) || !CommandName.contains(command.toUpperCase())) {
             log.error("Incorrect address entered");
             req.setAttribute("status", 404);
-            req.setAttribute("message", "Incorrect address entered");
-            req.getRequestDispatcher(AppConstants.PAGE_ERROR).forward(req, res);
+            res.setStatus(404);
+            req.getRequestDispatcher(PagesManager.PAGE_404).forward(req, res);
         } else {
             if (requiresAuthorization(command)) {
                 HttpSession session = req.getSession(false);
                 if (session == null || session.getAttribute("user") == null) {
-                    req.setAttribute("message", "Please, login");
-                    req.getRequestDispatcher(AppConstants.PAGE_LOGIN).forward(req, res);
+                    req.setAttribute("message", MessageManger.getMessage("msg.login"));
+                    req.getRequestDispatcher(PagesManager.PAGE_LOGIN).forward(req, res);
                     return;
                 }
             }

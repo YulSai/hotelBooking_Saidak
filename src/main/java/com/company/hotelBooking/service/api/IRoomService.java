@@ -9,15 +9,6 @@ import java.util.List;
  * Interface for serving Room objects according to the business logics of Room
  */
 public interface IRoomService extends IAbstractService<Long, RoomDto> {
-
-    /**
-     * Method gets Room Dto by room number
-     *
-     * @param number rooms number
-     * @return Room Dto object
-     */
-    RoomDto findRoomByNumber(String number);
-
     /**
      * Method gets list of an available Rooms limited by time period
      *
