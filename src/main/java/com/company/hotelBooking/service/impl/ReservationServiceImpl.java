@@ -8,6 +8,7 @@ import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
 import com.company.hotelBooking.dao.entity.User;
 import com.company.hotelBooking.exceptions.ServiceException;
+import com.company.hotelBooking.managers.MessageManger;
 import com.company.hotelBooking.service.api.IReservationService;
 import com.company.hotelBooking.service.dto.ReservationDto;
 import com.company.hotelBooking.service.dto.ReservationInfoDto;
@@ -36,12 +37,12 @@ public class ReservationServiceImpl implements IReservationService {
     @Override
     public ReservationDto findById(Long id) {
         log.debug("Calling a service method findById. Reservation id = {}", id);
-        ReservationDto reservation = toDto(reservationDao.findById(id));
+        Reservation reservation = reservationDao.findById(id);
         if (reservation == null) {
             log.error("SQLReservationService findById error. id = {}", id);
-            throw new ServiceException("No reservation with id " + id);
+            throw new ServiceException(MessageManger.getMessage("msg.empty") + id);
         }
-        return reservation;
+        return toDto(reservation);
     }
 
     public List<ReservationDto> findAll() {
@@ -55,6 +56,7 @@ public class ReservationServiceImpl implements IReservationService {
     public ReservationDto create(ReservationDto entity) {
         log.debug("Calling a service method create. Reservation = {}", entity);
         entity.setStatus(ReservationDto.StatusDto.CONFIRMED);
+
         return toDto(reservationDao.save(toEntity(entity)));
     }
 
@@ -103,7 +105,7 @@ public class ReservationServiceImpl implements IReservationService {
         reservationDao.delete(id);
         if (!reservationDao.delete(id)) {
             log.error("SQLReservationService deleted error. Failed to delete reservation with id = {}", id);
-            throw new ServiceException("Failed to delete reservation with id " + id);
+            throw new ServiceException(MessageManger.getMessage("msg.error.delete") + id);
         }
     }
 
@@ -160,7 +162,7 @@ public class ReservationServiceImpl implements IReservationService {
             dto.setDetails(reservationInfoDto);
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
-            throw new ServiceException("No reservation");
+            throw new ServiceException(MessageManger.getMessage("msg.empty"));
         }
         return dto;
     }
@@ -197,7 +199,7 @@ public class ReservationServiceImpl implements IReservationService {
             dto.setRole(UserDto.RoleDto.valueOf(entity.getUser().getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
-            throw new ServiceException("No user");
+            throw new ServiceException(MessageManger.getMessage("msg.empty"));
         }
         return dto;
     }
@@ -218,7 +220,7 @@ public class ReservationServiceImpl implements IReservationService {
             entity.setStatus(Reservation.Status.valueOf(dto.getStatus().toString()));
         } catch (NullPointerException e) {
             log.error("This reservation is not in the catalog.");
-            throw new ServiceException("No reservation");
+            throw new ServiceException(MessageManger.getMessage("msg.empty"));
         }
         return entity;
     }
@@ -242,7 +244,7 @@ public class ReservationServiceImpl implements IReservationService {
             entity.setRole(User.Role.valueOf(dto.getUser().getRole().toString()));
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
-            throw new ServiceException("No user");
+            throw new ServiceException(MessageManger.getMessage("msg.empty"));
         }
         return entity;
     }

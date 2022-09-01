@@ -5,9 +5,11 @@ import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.ReservationInfo;
 import com.company.hotelBooking.dao.entity.Room;
+import com.company.hotelBooking.exceptions.ConnectionPoolException;
 import com.company.hotelBooking.exceptions.DaoException;
+import com.company.hotelBooking.managers.MessageManger;
 import com.company.hotelBooking.service.dto.ReservationDto;
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.SqlManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
@@ -37,16 +39,39 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     @Override
     public ReservationInfo findById(Long id) {
         log.debug("Accessing the database using the findById command. ReservationInfo id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_INFO_FIND_BY_ID)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_INFO_FIND_BY_ID)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
-                return processReservationInfo(result);
+                return processReservationInfo(result, connection);
+            }
+        } catch (SQLException e) {
+            rollback(connection);
+            log.error("SQLReservationInfo findById error: = {}", id, e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        } finally {
+            close(connection);
+        }
+        return null;
+    }
+
+    @Override
+    public ReservationInfo findById(Long id, Connection connection) {
+        log.debug("Accessing the database using the findById command. ReservationInfo id = {}", id);
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_INFO_FIND_BY_ID)) {
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return processReservationInfo(result, connection);
             }
         } catch (SQLException e) {
             log.error("SQLReservationInfo findById error: = {}", id, e);
-            throw new DaoException("Error findById");
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
         }
         return null;
     }
@@ -55,15 +80,21 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public List<ReservationInfo> findAll() {
         log.debug("Accessing the database using the findAll command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(AppConstants.SQL_RESERVATION_INFO_FIND_ALL)) {
+        Connection connection = dataSource.getConnection();
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(SqlManager.SQL_RESERVATION_INFO_FIND_ALL)) {
+            connection.setAutoCommit(false);
+
             while (result.next()) {
-                reservationsInfo.add(processReservationInfo(result));
+                reservationsInfo.add(processReservationInfo(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationInfoDAO findAll", e);
-            throw new DaoException("Error findAll");
+            throw new DaoException(MessageManger.getMessage("msg.error.find.all"));
+        } finally {
+            close(connection);
         }
         return reservationsInfo;
     }
@@ -71,21 +102,26 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     @Override
     public ReservationInfo save(ReservationInfo entity) {
         log.debug("Accessing the database using the save command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_INFO_CREATE,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_INFO_CREATE,
+                Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
             extractedDate(entity, statement);
             statement.executeUpdate();
-
             ResultSet keys = statement.getGeneratedKeys();
+            connection.commit();
+
             if (keys.next()) {
                 Long id = keys.getLong("id");
-                return findById(id);
+                return findById(id, connection);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationInfoDAO save error: " + entity, e);
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to save new reservation " + entity);
+        throw new DaoException(MessageManger.getMessage("msg.error.create") + entity);
     }
 
     @Override
@@ -117,14 +153,20 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     @Override
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. ReservationInfo id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_INFO_DELETE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_INFO_DELETE)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
+
             int rowsDeleted = statement.executeUpdate();
+            connection.commit();
             return rowsDeleted == 1;
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationInfoDAO delete error id  = {}", id, e);
-            throw new DaoException("Failed to delete reservation " + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.delete") + id);
+        } finally {
+            close(connection);
         }
     }
 
@@ -132,17 +174,23 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     public List<ReservationInfo> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the findAllPages command");
         List<ReservationInfo> reservationInfos = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_INFO_PAGE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_INFO_PAGE)) {
+            connection.setAutoCommit(false);
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
-                reservationInfos.add(processReservationInfo(result));
+                reservationInfos.add(processReservationInfo(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationInfoDAO findAllPages error", e);
-            throw new DaoException("Failed to find reservation info", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return reservationInfos;
     }
@@ -150,35 +198,66 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
     @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     AppConstants.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(
+                SqlManager.SQL_RESERVATION_INFO_COUNT_RESERVATIONS_INFO)) {
+            connection.setAutoCommit(false);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
                 return result.getLong("total");
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationInfoDAO findRowCount error", e);
-            throw new DaoException("Failed to find count of reservations info", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to count reservations info");
+        throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
     }
 
     @Override
     public List<ReservationInfo> findByReservationId(Long id) {
         log.debug("Accessing the database using the findByReservationId command");
         List<ReservationInfo> reservationsInfo = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     AppConstants.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(
+                SqlManager.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
-                reservationsInfo.add(processReservationInfo(result));
+                reservationsInfo.add(processReservationInfo(result, connection));
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            rollback(connection);
+            log.error("SQLReservationInfoDAO findByReservationId", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
+        }
+        return reservationsInfo;
+    }
+
+    @Override
+    public List<ReservationInfo> findByReservationId(Long id, Connection connection) {
+        log.debug("Accessing the database using the findByReservationId command");
+        List<ReservationInfo> reservationsInfo = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(
+                SqlManager.SQL_RESERVATION_INFO_FIND_BY_RESERVATION_ID)) {
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                reservationsInfo.add(processReservationInfo(result, connection));
             }
         } catch (SQLException e) {
             log.error("SQLReservationInfoDAO findByReservationId", e);
-            throw new DaoException("Error findByReservationId");
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
         }
         return reservationsInfo;
     }
@@ -189,11 +268,11 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
      * @param result resulting query
      * @return ReservationInfo object
      */
-    private ReservationInfo processReservationInfo(ResultSet result) throws SQLException {
+    private ReservationInfo processReservationInfo(ResultSet result, Connection connection) throws SQLException {
         ReservationInfo reservationInfo = new ReservationInfo();
         reservationInfo.setId(result.getLong("id"));
         reservationInfo.setReservationId(result.getLong("reservation_id"));
-        Room room = roomDao.findById(result.getLong("room_id"));
+        Room room = roomDao.findById(result.getLong("room_id"), connection);
         reservationInfo.setRoom(room);
         LocalDate checkIn = LocalDate.parse(result.getString("check_in"));
         LocalDate checkOut = LocalDate.parse(result.getString("check_out"));
@@ -217,5 +296,33 @@ public class ReservationInfoDaoImpl implements IReservationInfoDao {
         statement.setDate(4, java.sql.Date.valueOf(reservationInfo.getCheckOut()));
         statement.setLong(5, reservationInfo.getNights());
         statement.setBigDecimal(6, reservationInfo.getRoomPrice());
+    }
+
+    /**
+     * Method rolls back to the last commit state
+     *
+     * @param connection Connection
+     */
+    private void rollback(Connection connection) {
+        try {
+            connection.setAutoCommit(true);
+            connection.rollback();
+        } catch (SQLException ex) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.error.rollback"), ex);
+        }
+    }
+
+    /**
+     * Method closes connection
+     *
+     * @param connection Connection
+     */
+    private void close(Connection connection) {
+        try {
+            log.debug("Connection was 'close'");
+            connection.close();
+        } catch (SQLException e) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.no.close"), e);
+        }
     }
 }

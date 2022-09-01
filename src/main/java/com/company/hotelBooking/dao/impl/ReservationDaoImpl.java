@@ -6,8 +6,10 @@ import com.company.hotelBooking.dao.api.IUserDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.Reservation;
 import com.company.hotelBooking.dao.entity.ReservationInfo;
+import com.company.hotelBooking.exceptions.ConnectionPoolException;
 import com.company.hotelBooking.exceptions.DaoException;
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.SqlManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.*;
@@ -32,16 +34,39 @@ public class ReservationDaoImpl implements IReservationDao {
     @Override
     public Reservation findById(Long id) {
         log.debug("Accessing the database using the findById command. Reservation id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_FIND_BY_ID)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_FIND_BY_ID)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
-                return processReservation(result);
+                return processReservation(result, connection);
+            }
+        } catch (SQLException e) {
+            rollback(connection);
+            log.error("SQLRoomDAO findById error id = {}", id, e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        } finally {
+            close(connection);
+        }
+        return null;
+    }
+
+    @Override
+    public Reservation findById(Long id, Connection connection) {
+        log.debug("Accessing the database using the findById command. Reservation id = {}", id);
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_FIND_BY_ID)) {
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return processReservation(result, connection);
             }
         } catch (SQLException e) {
             log.error("SQLRoomDAO findById error id = {}", id, e);
-            throw new DaoException("Error findById with id" + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
         }
         return null;
     }
@@ -50,15 +75,21 @@ public class ReservationDaoImpl implements IReservationDao {
     public List<Reservation> findAll() {
         log.debug("Accessing the database using the findAll command");
         List<Reservation> reservations = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(AppConstants.SQL_RESERVATION_FIND_ALL)) {
+        Connection connection = dataSource.getConnection();
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(SqlManager.SQL_RESERVATION_FIND_ALL)) {
+            connection.setAutoCommit(false);
+
             while (result.next()) {
-                reservations.add(processReservation(result));
+                reservations.add(processReservation(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findAll", e);
-            throw new DaoException("Error findAll reservations");
+            throw new DaoException(MessageManger.getMessage("msg.error.find.all"));
+        } finally {
+            close(connection);
         }
         return reservations;
     }
@@ -66,52 +97,69 @@ public class ReservationDaoImpl implements IReservationDao {
     @Override
     public Reservation save(Reservation entity) {
         log.debug("Accessing the database using the save command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_CREATE,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_CREATE,
+                Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
             extractedDate(entity, statement);
             statement.executeUpdate();
-
             ResultSet keys = statement.getGeneratedKeys();
+            connection.commit();
+
             if (keys.next()) {
                 Long id = keys.getLong("id");
-                return findById(id);
+                return findById(id, connection);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO save error: " + entity, e);
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to save new reservation " + entity);
+        throw new DaoException(MessageManger.getMessage("msg.error.create") + entity);
     }
 
     @Override
     public Reservation update(Reservation entity) {
         log.debug("Accessing the database using the update command. Reservation = {}", entity);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_UPDATE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_UPDATE)) {
+            connection.setAutoCommit(false);
             extractedDate(entity, statement);
             statement.setLong(4, entity.getId());
 
             if (statement.executeUpdate() == 0) {
                 log.error("Command update can't be executed");
+                throw new DaoException(MessageManger.getMessage("msg.error.command") + entity);
             }
-            return findById(entity.getId());
+            connection.commit();
+            return findById(entity.getId(), connection);
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO update error. Failed to update reservation = {}", entity, e);
-            throw new DaoException("Failed to update reservation " + entity);
+            throw new DaoException(MessageManger.getMessage("msg.error.update") + entity);
+        } finally {
+            close(connection);
         }
     }
 
     @Override
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. Reservation id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_DELETE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_DELETE)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
+
             int rowsDeleted = statement.executeUpdate();
+            connection.commit();
             return rowsDeleted == 1;
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO delete error id  = {}", id, e);
-            throw new DaoException("Failed to delete reservation " + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.delete") + id);
+        } finally {
+            close(connection);
         }
     }
 
@@ -119,17 +167,23 @@ public class ReservationDaoImpl implements IReservationDao {
     public List<Reservation> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the findAllPages command");
         List<Reservation> reservations = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_PAGE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_PAGE)) {
+            connection.setAutoCommit(false);
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
-                reservations.add(processReservation(result));
+                reservations.add(processReservation(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO findAllPages error", e);
-            throw new DaoException("Failed to find reservation", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return reservations;
     }
@@ -138,19 +192,24 @@ public class ReservationDaoImpl implements IReservationDao {
     public List<Reservation> findAllPagesByUsers(int limit, long offset, Long id) {
         log.debug("Accessing the database using the findAllPagesByUsers command");
         List<Reservation> reservations = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_PAGE_BY_USER)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_PAGE_BY_USER)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             statement.setInt(2, limit);
             statement.setLong(3, offset);
-
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
-                reservations.add(processReservation(result));
+                reservations.add(processReservation(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO findAllPages error", e);
-            throw new DaoException("Failed to find reservation", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return reservations;
     }
@@ -158,33 +217,45 @@ public class ReservationDaoImpl implements IReservationDao {
     @Override
     public long countRow() throws DaoException {
         log.debug("Accessing the database using the findRowCount command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     AppConstants.SQL_RESERVATION_COUNT_RESERVATIONS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(
+                SqlManager.SQL_RESERVATION_COUNT_RESERVATIONS)) {
+            connection.setAutoCommit(false);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
                 return result.getLong("total");
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO findRowCount error", e);
-            throw new DaoException("Failed to find count of reservations", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to count reservations");
+        throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
     }
 
     public List<Reservation> findAllByUsers(Long id) {
         log.debug("Accessing the database using the findAllByUsers command");
         List<Reservation> reservations = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_RESERVATION_BY_USER)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_RESERVATION_BY_USER)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
-                reservations.add(processReservation(result));
+                reservations.add(processReservation(result, connection));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLReservationDAO findAllPages error", e);
-            throw new DaoException("Failed to find reservation", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return reservations;
     }
@@ -195,13 +266,13 @@ public class ReservationDaoImpl implements IReservationDao {
      * @param result resulting query
      * @return Reservation object
      */
-    private Reservation processReservation(ResultSet result) throws SQLException {
+    private Reservation processReservation(ResultSet result, Connection connection) throws SQLException {
         Reservation reservation = new Reservation();
         reservation.setId(result.getLong("id"));
         reservation.setUser(userDao.findById((result.getLong("user_id"))));
         reservation.setTotalCost(result.getBigDecimal("total_cost"));
         reservation.setStatus(Reservation.Status.valueOf(result.getString("status")));
-        List<ReservationInfo> details = reservationInfoDao.findByReservationId(reservation.getId());
+        List<ReservationInfo> details = reservationInfoDao.findByReservationId(reservation.getId(), connection);
         reservation.setDetails(details);
         return reservation;
     }
@@ -216,5 +287,33 @@ public class ReservationDaoImpl implements IReservationDao {
         statement.setLong(1, reservation.getUser().getId());
         statement.setBigDecimal(2, reservation.getTotalCost());
         statement.setString(3, reservation.getStatus().toString().toUpperCase());
+    }
+
+    /**
+     * Method rolls back to the last commit state
+     *
+     * @param connection Connection
+     */
+    private void rollback(Connection connection) {
+        try {
+            connection.setAutoCommit(true);
+            connection.rollback();
+        } catch (SQLException ex) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.error.rollback"), ex);
+        }
+    }
+
+    /**
+     * Method closes connection
+     *
+     * @param connection Connection
+     */
+    private void close(Connection connection) {
+        try {
+            log.debug("Connection was 'close'");
+            connection.close();
+        } catch (SQLException e) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.no.close"), e);
+        }
     }
 }
