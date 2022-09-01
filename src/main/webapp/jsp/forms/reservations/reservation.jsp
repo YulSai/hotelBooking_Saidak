@@ -1,24 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.language}"/>
+<fmt:setBundle basename="pageMessage"/>
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/tables.css">
-    <title>Reservation</title>
+    <title><fmt:message key="msg.reservation.title"/></title>
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
-<h1>Reservation Detailed Info</h1>
+<h1><fmt:message key="msg.reservation.detail"/></h1>
 <p>${requestScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>
-        <th>Id</th>
-        <th>Item</th>
-        <th>Total cost USD</th>
-        <th>Status</th>
+        <th><fmt:message key="msg.id"/></th>
+        <th><fmt:message key="msg.item"/></th>
+        <th><fmt:message key="msg.cost"/></th>
+        <th><fmt:message key="msg.status"/></th>
     </tr>
     <td><a
             href="controller?command=reservation&id=${requestScope.reservation.id}">${requestScope.reservation.id}</a>
@@ -26,14 +29,14 @@
     <td>
         <table>
             <tr>
-                <th>Room number</th>
-                <th>Type</th>
-                <th>Capacity</th>
-                <th>CheckIn</th>
-                <th>CheckOut</th>
-                <th>Nights</th>
-                <th>Price/night USD</th>
-                <th>Calculation</th>
+                <th><fmt:message key="msg.reservation.room"/></th>
+                <th><fmt:message key="msg.type"/></th>
+                <th><fmt:message key="msg.capacity"/></th>
+                <th><fmt:message key="msg.checkIn"/></th>
+                <th><fmt:message key="msg.checkOut"/></th>
+                <th><fmt:message key="msg.reservation.nights"/></th>
+                <th><fmt:message key="msg.price"/>USD</th>
+                <th><fmt:message key="msg.reservation.calc"/></th>
 
             </tr>
             <c:forEach items="${requestScope.reservation.details }" var="info">
@@ -53,13 +56,14 @@
     <td>${requestScope.reservation.totalCost} USD</td>
     <td>${requestScope.reservation.status.toString().toLowerCase()}</td>
     <c:if test="${sessionScope.user.role == 'ADMIN'}">
-        <td><a href="controller?command=update_reservation_form&id=${requestScope.reservation.id}">Update status</a>
+        <td><a href="controller?command=update_reservation_form&id=${requestScope.reservation.id}">
+            <fmt:message key="msg.update"/></a>
         </td>
     </c:if>
     <c:if test="${sessionScope.user.role == 'CLIENT'}">
-        <td><a href="controller?command=cancel_reservation&id=${requestScope.reservation.id}">Cancel</a></td>
+        <td><a href="controller?command=cancel_reservation&id=${requestScope.reservation.id}">
+            <fmt:message key="msg.cancel"/></a></td>
     </c:if>
 </table>
-
 </body>
 </html>
