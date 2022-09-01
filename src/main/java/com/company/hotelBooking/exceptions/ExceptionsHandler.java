@@ -1,11 +1,13 @@
 package com.company.hotelBooking.exceptions;
 
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class ExceptionsHandler {
     private static ExceptionsHandler INSTANCE;
+
 
     /**
      * Method gets an instance of the class object
@@ -27,35 +29,39 @@ public class ExceptionsHandler {
         if (e instanceof DaoException) {
             status = 400;
             message = e.getMessage();
-            page = AppConstants.PAGE_ERROR;
+            page = PagesManager.PAGE_ERROR;
         } else if (e instanceof ServiceException) {
             status = 400;
             message = e.getMessage();
-            page = AppConstants.PAGE_ERROR;
+            page = PagesManager.PAGE_ERROR;
         } else if (e instanceof LoginUserException) {
             status = 400;
-            message = "The email or password provided is incorrect";
-            page = AppConstants.PAGE_LOGIN;
+            message = MessageManger.getMessage("msg.incorrect.email.password");
+            page = PagesManager.PAGE_LOGIN;
         } else if (e instanceof RegistrationException) {
             status = 400;
             message = e.getMessage();
-            page = AppConstants.PAGE_CREATE_USER;
+            page = PagesManager.PAGE_CREATE_USER;
         } else if (e instanceof UnAuthorizedException) {
             status = 401;
             message = e.getMessage();
-            page = AppConstants.PAGE_LOGIN;
+            page = PagesManager.PAGE_LOGIN;
         } else if (e instanceof ForbiddenException) {
             status = 403;
             message = e.getMessage();
-            page = AppConstants.PAGE_INDEX;
+            page = PagesManager.PAGE_INDEX;
         } else if (e instanceof NotFoundException) {
             status = 404;
-            message = "Incorrect address entered";
-            page = AppConstants.PAGE_404;
+            message = MessageManger.getMessage("msg.not.found");
+            page = PagesManager.PAGE_404;
+        } else if (e instanceof ConnectionPoolException) {
+            status = 404;
+            message = e.getMessage();
+            page = PagesManager.PAGE_404;
         } else {
             status = 500;
-            message = "Internal error";
-            page = AppConstants.PAGE_ERROR;
+            message = MessageManger.getMessage("msg.internal.error");
+            page = PagesManager.PAGE_ERROR;
         }
         req.setAttribute("status", status);
         req.setAttribute("message", message);

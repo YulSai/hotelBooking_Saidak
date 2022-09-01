@@ -1,4 +1,4 @@
-package com.company.hotelBooking.util;
+package com.company.hotelBooking.managers;
 
 import java.util.ResourceBundle;
 
