@@ -1,9 +1,10 @@
 package com.company.hotelBooking.controller.command.impl.rooms;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.math.BigDecimal;
@@ -29,7 +30,7 @@ public class UpdateRoomCommand implements ICommand {
 
         RoomDto updated = service.update(room);
         req.setAttribute("room", updated);
-        req.setAttribute("massage", "Room was updated successfully");
-        return AppConstants.PAGE_ROOM;
+        req.setAttribute("massage", MessageManger.getMessage("msg.room.updated"));
+        return PagesManager.PAGE_ROOM;
     }
 }

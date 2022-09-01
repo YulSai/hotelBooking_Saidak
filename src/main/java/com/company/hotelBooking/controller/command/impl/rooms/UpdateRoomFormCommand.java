@@ -1,9 +1,9 @@
 package com.company.hotelBooking.controller.command.impl.rooms;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -22,6 +22,6 @@ public class UpdateRoomFormCommand implements ICommand {
         Long id = Long.parseLong(req.getParameter("id"));
         RoomDto room = service.findById(id);
         req.setAttribute("room", room);
-        return AppConstants.PAGE_UPDATE_ROOM;
+        return PagesManager.PAGE_UPDATE_ROOM;
     }
 }

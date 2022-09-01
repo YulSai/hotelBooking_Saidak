@@ -3,8 +3,10 @@ package com.company.hotelBooking.dao.impl;
 import com.company.hotelBooking.dao.api.IRoomDao;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.dao.entity.Room;
+import com.company.hotelBooking.exceptions.ConnectionPoolException;
 import com.company.hotelBooking.exceptions.DaoException;
-import com.company.hotelBooking.util.AppConstants;
+import com.company.hotelBooking.managers.MessageManger;
+import com.company.hotelBooking.managers.SqlManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
@@ -30,16 +32,44 @@ public class RoomDaoImpl implements IRoomDao {
     @Override
     public Room findById(Long id) {
         log.debug("Accessing the database using the findById  command. Room id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_FIND_BY_ID)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_FIND_BY_ID)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
+            connection.commit();
+
             if (result.next()) {
                 return processRoom(result);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findById error id = {}", id, e);
-            throw new DaoException("Error findById ", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        } finally {
+            close(connection);
+        }
+        return null;
+    }
+
+    @Override
+    public Room findById(Long id, Connection connection) {
+        log.debug("Accessing the database using the findById  command. Room id = {}", id);
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_FIND_BY_ID)) {
+            connection.setAutoCommit(false);
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+            connection.commit();
+
+            if (result.next()) {
+                return processRoom(result);
+            }
+        } catch (SQLException e) {
+            rollback(connection);
+            log.error("SQLRoomDAO findById error id = {}", id, e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        } finally {
+            close(connection);
         }
         return null;
     }
@@ -47,15 +77,21 @@ public class RoomDaoImpl implements IRoomDao {
     public List<Room> findAll() {
         log.debug("Accessing the database using the findAll command");
         List<Room> rooms = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet result = statement.executeQuery(AppConstants.SQL_ROOM_FIND_ALL)) {
+        Connection connection = dataSource.getConnection();
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(SqlManager.SQL_ROOM_FIND_ALL)) {
+            connection.setAutoCommit(false);
+
             while (result.next()) {
                 rooms.add(processRoom(result));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findAll", e);
-            throw new DaoException("Error findAll rooms", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.all"));
+        } finally {
+            close(connection);
         }
         return rooms;
     }
@@ -63,53 +99,69 @@ public class RoomDaoImpl implements IRoomDao {
     @Override
     public Room save(Room room) {
         log.debug("Accessing the database using the create command. Room = {}", room);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_CREATE,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_CREATE,
+                Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
             extractedDate(room, statement);
             statement.executeUpdate();
             ResultSet keys = statement.getGeneratedKeys();
+            connection.commit();
 
             if (keys.next()) {
                 Long id = keys.getLong("id");
-                return findById(id);
+                return findById(id, connection);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO create error new room = {}", room, e);
+        } finally {
+            close(connection);
         }
-        throw new DaoException("Failed to create new room" + room);
+        throw new DaoException(MessageManger.getMessage("msg.error.create") + room);
     }
 
     @Override
     public Room update(Room room) {
         log.debug("Accessing the database using the update command. Room = {}", room);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_UPDATE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_UPDATE)) {
+            connection.setAutoCommit(false);
             extractedDate(room, statement);
             statement.setLong(6, room.getId());
 
             if (statement.executeUpdate() == 0) {
                 log.error("Command update can't be executed");
-                throw new DaoException("Command update can't be executed" + room);
+                throw new DaoException(MessageManger.getMessage("msg.error.command") + room);
             }
-            return findById(room.getId());
+            connection.commit();
+            return findById(room.getId(), connection);
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO update error. Failed to update room = {}", room, e);
-            throw new DaoException("Failed to update room " + room);
+            throw new DaoException(MessageManger.getMessage("msg.error.update") + room);
+        } finally {
+            close(connection);
         }
     }
 
     @Override
     public boolean delete(Long id) {
         log.debug("Accessing the database using the delete command. Room id = {}", id);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_DELETE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_DELETE)) {
+            connection.setAutoCommit(false);
             statement.setLong(1, id);
+
             int rowsDeleted = statement.executeUpdate();
+            connection.commit();
             return rowsDeleted == 1;
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO delete error id  = {}", id, e);
-            throw new DaoException("Failed to delete room with id " + id);
+            throw new DaoException(MessageManger.getMessage("msg.error.delete") + id);
+        } finally {
+            close(connection);
         }
     }
 
@@ -117,34 +169,67 @@ public class RoomDaoImpl implements IRoomDao {
     public List<Room> findAllPages(int limit, long offset) {
         log.debug("Accessing the database using the findAllPages command");
         List<Room> rooms = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_PAGE)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_PAGE)) {
+            connection.setAutoCommit(false);
             statement.setInt(1, limit);
             statement.setLong(2, offset);
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
                 rooms.add(processRoom(result));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findAllPages error", e);
-            throw new DaoException("Failed to find rooms", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return rooms;
     }
 
+    @Override
+    public long countRow() throws DaoException {
+        log.debug("Accessing the database using the findRowCount command");
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_COUNT_ROOMS)) {
+            connection.setAutoCommit(false);
+            ResultSet result = statement.executeQuery();
+            connection.commit();
+
+            if (result.next()) {
+                return result.getLong("total");
+            }
+        } catch (SQLException e) {
+            rollback(connection);
+            log.error("SQLRoomDAO findRowCount error", e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
+        } finally {
+            close(connection);
+        }
+        throw new DaoException(MessageManger.getMessage("msg.error.find.count"));
+    }
+
     public Room findRoomByNumber(String number) {
         log.debug("Accessing the database using the findRoomByNumber command. Room number = {}", number);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_FIND_BY_NUMBER)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_FIND_BY_NUMBER)) {
+            connection.setAutoCommit(false);
             statement.setString(1, number);
             ResultSet result = statement.executeQuery();
+            connection.commit();
 
             if (result.next()) {
                 return processRoom(result);
             }
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findRoomByNumber error number = {}", number, e);
-            throw new DaoException("Failed to find room with number " + number);
+            throw new DaoException(MessageManger.getMessage("msg.error.find") + number);
+        } finally {
+            close(connection);
         }
         return null;
     }
@@ -153,41 +238,31 @@ public class RoomDaoImpl implements IRoomDao {
     public List<Room> findAvailableRooms(LocalDate check_in, LocalDate check_out, String type, String capacity) {
         log.debug("Accessing the database using the findAvailableRooms command");
         List<Room> rooms = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_FIND_AVAILABLE_ROOMS)) {
+        Connection connection = dataSource.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_FIND_AVAILABLE_ROOMS)) {
+            connection.setAutoCommit(false);
             statement.setString(1, type.toUpperCase());
             statement.setString(2, capacity.toUpperCase());
             statement.setDate(3, java.sql.Date.valueOf(check_in));
             statement.setDate(4, java.sql.Date.valueOf(check_out));
             statement.setDate(5, java.sql.Date.valueOf(check_in));
             statement.setDate(6, java.sql.Date.valueOf(check_out));
-
             ResultSet result = statement.executeQuery();
+
             while (result.next()) {
                 rooms.add(processRoom(result));
             }
+            connection.commit();
         } catch (SQLException e) {
+            rollback(connection);
             log.error("SQLRoomDAO findAllAvailableRooms error", e);
-            throw new DaoException("Failed to find available rooms");
+            throw new DaoException(MessageManger.getMessage("msg.error.find"));
+        } finally {
+            close(connection);
         }
         return rooms;
     }
 
-    @Override
-    public long countRow() throws DaoException {
-        log.debug("Accessing the database using the findRowCount command");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AppConstants.SQL_ROOM_COUNT_ROOMS)) {
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                return result.getLong("total");
-            }
-        } catch (SQLException e) {
-            log.error("SQLRoomDAO findRowCount error", e);
-            throw new DaoException("Failed to find count of rooms", e);
-        }
-        throw new DaoException("Failed to count rooms");
-    }
 
     /**
      * Method fills the Room object with data from the database
@@ -219,5 +294,33 @@ public class RoomDaoImpl implements IRoomDao {
         statement.setString(3, room.getCapacity().toString().toUpperCase());
         statement.setBigDecimal(4, room.getPrice());
         statement.setString(5, room.getStatus().toString().toUpperCase());
+    }
+
+    /**
+     * Method rolls back to the last commit state
+     *
+     * @param connection Connection
+     */
+    private void rollback(Connection connection) {
+        try {
+            connection.setAutoCommit(true);
+            connection.rollback();
+        } catch (SQLException ex) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.error.rollback"), ex);
+        }
+    }
+
+    /**
+     * Method closes connection
+     *
+     * @param connection Connection
+     */
+    private void close(Connection connection) {
+        try {
+            log.debug("Connection was 'close'");
+            connection.close();
+        } catch (SQLException e) {
+            throw new ConnectionPoolException(MessageManger.getMessage("msg.no.close"), e);
+        }
     }
 }

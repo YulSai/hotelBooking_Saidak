@@ -4,9 +4,9 @@ import com.company.hotelBooking.controller.command.util.Paging;
 import com.company.hotelBooking.controller.command.util.PagingUtil;
 import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
-import com.company.hotelBooking.util.AppConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
@@ -31,11 +31,11 @@ public class RoomsCommand implements ICommand {
         List<RoomDto> rooms = roomService.findAllPages(paging);
         if (rooms.size() == 0) {
             log.error("Incorrect address entered");
-            throw new NotFoundException("Page not found");
+            throw new NotFoundException();
         } else {
             pagingUtil.setTotalPages(req, paging, roomService);
             req.setAttribute("rooms", rooms);
-            return AppConstants.PAGE_ROOMS;
+            return PagesManager.PAGE_ROOMS;
         }
     }
 }
