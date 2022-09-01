@@ -1,6 +1,6 @@
 package com.company.hotelBooking.dao.connection;
 
-import com.company.hotelBooking.util.ConfigurationManager;
+import com.company.hotelBooking.managers.ConfigurationManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;

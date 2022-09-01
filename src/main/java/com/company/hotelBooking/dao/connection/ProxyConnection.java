@@ -20,10 +20,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void close() {
+        log.debug("Connection 'close' used 'releaseConnection'");
         DataSource.getINSTANCE().getConnectionPool().releaseConnection(this);
     }
 
     void reallyClose() throws SQLException {
+        log.debug("Connection was really close");
         connection.close();
     }
 
