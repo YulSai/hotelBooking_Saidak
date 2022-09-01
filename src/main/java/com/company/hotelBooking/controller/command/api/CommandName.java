@@ -1,6 +1,7 @@
 package com.company.hotelBooking.controller.command.api;
 
 import com.company.hotelBooking.controller.command.impl.ErrorCommand;
+import com.company.hotelBooking.controller.command.impl.LanguageSelectionCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginFormCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LogoutCommand;
@@ -104,7 +105,8 @@ public enum CommandName {
 
 
     //Other
-    ERROR(new ErrorCommand(), SecurityLevel.GUEST);
+    ERROR(new ErrorCommand(), SecurityLevel.GUEST),
+    LANGUAGE_SELECT(new LanguageSelectionCommand(), SecurityLevel.GUEST);
 
     private final ICommand command;
     private final SecurityLevel level;

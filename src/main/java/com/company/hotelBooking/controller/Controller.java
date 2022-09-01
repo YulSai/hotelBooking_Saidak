@@ -6,25 +6,30 @@ import com.company.hotelBooking.controller.command.factory.CommandFactory;
 import com.company.hotelBooking.dao.connection.DataSource;
 import com.company.hotelBooking.exceptions.ExceptionsHandler;
 import com.company.hotelBooking.exceptions.NotFoundException;
+import com.company.hotelBooking.managers.MessageManger;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Class for processing HttpServletRequest "/controller"
  */
-@WebServlet({"/", "/controller"})
+@WebServlet("/controller")
 @Log4j2
 public class Controller extends HttpServlet {
     public static final String REDIRECT = "redirect:";
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        MessageManger messageManger = getLocale(req);
         String commandName = req.getParameter("command");
         validateCommandName(commandName);
         ICommand command = CommandFactory.getINSTANCE().getCommand(commandName);
@@ -42,6 +47,12 @@ public class Controller extends HttpServlet {
         }
     }
 
+    private MessageManger getLocale(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        String language = (String) session.getAttribute("language");
+        return new MessageManger(new Locale(language));
+    }
+
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
     }
@@ -49,7 +60,7 @@ public class Controller extends HttpServlet {
     public void validateCommandName(String commandName) {
         if (commandName == null || !CommandName.contains(commandName.toUpperCase())) {
             log.error("Incorrect address entered");
-            throw new NotFoundException("Incorrect address entered");
+            throw new NotFoundException();
         }
     }
 
