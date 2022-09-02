@@ -4,6 +4,9 @@ import com.company.hotelBooking.controller.command.api.ICommand;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Class for processing HttpServletRequest "language_select"
+ */
 public class LanguageSelectionCommand implements ICommand {
 
     @Override
@@ -14,7 +17,6 @@ public class LanguageSelectionCommand implements ICommand {
 
         String url = req.getHeader("referer");
         String REFERER = "http://localhost:8080/hotel_booking/";
-        String path = url.substring(REFERER.length());
-        return "redirect:";
+        return "redirect:" + url.substring(REFERER.length());
     }
 }
