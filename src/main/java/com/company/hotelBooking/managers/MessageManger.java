@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  */
 public class MessageManger {
     private static final String RESOURCE_NAME = "pageMessage";
-    private static ResourceBundle resourceBundle = null;
+    private static ResourceBundle resourceBundle;
 
     public MessageManger(Locale locale) {
         resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME, locale);

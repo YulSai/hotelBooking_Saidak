@@ -1,4 +1,4 @@
-package com.company.hotelBooking.controller.command.impl;
+package com.company.hotelBooking.controller.command.impl.local;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
 import jakarta.servlet.http.HttpServletRequest;

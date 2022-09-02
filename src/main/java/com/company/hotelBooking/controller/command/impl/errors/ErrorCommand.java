@@ -1,4 +1,4 @@
-package com.company.hotelBooking.controller.command.impl;
+package com.company.hotelBooking.controller.command.impl.errors;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.managers.PagesManager;

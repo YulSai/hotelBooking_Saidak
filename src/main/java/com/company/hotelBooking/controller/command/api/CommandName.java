@@ -1,7 +1,7 @@
 package com.company.hotelBooking.controller.command.api;
 
-import com.company.hotelBooking.controller.command.impl.ErrorCommand;
-import com.company.hotelBooking.controller.command.impl.LanguageSelectionCommand;
+import com.company.hotelBooking.controller.command.impl.errors.ErrorCommand;
+import com.company.hotelBooking.controller.command.impl.local.LanguageSelectionCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LoginFormCommand;
 import com.company.hotelBooking.controller.command.impl.authorizations.LogoutCommand;
