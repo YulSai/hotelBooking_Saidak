@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Class with filter for localization
+ */
 @WebFilter(urlPatterns = {"/*", "/controller/*"})
 public class LocaleFilter extends HttpFilter {
 

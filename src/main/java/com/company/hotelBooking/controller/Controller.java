@@ -47,6 +47,12 @@ public class Controller extends HttpServlet {
         }
     }
 
+    /**
+     * Method gets localization information passes it to MessageManger
+     *
+     * @param req HttpServletRequest
+     * @return object MessageManger
+     */
     private MessageManger getLocale(HttpServletRequest req) {
         HttpSession session = req.getSession();
         String language = (String) session.getAttribute("language");
@@ -57,6 +63,11 @@ public class Controller extends HttpServlet {
         doGet(req, resp);
     }
 
+    /**
+     * Method validates command names
+     *
+     * @param commandName command name
+     */
     public void validateCommandName(String commandName) {
         if (commandName == null || !CommandName.contains(commandName.toUpperCase())) {
             log.error("Incorrect address entered");

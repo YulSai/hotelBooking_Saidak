@@ -1,5 +1,8 @@
 package com.company.hotelBooking.managers;
 
+/**
+ * Class with SQL constants
+ */
 public class SqlManager {
     // SQL
     // Reservation

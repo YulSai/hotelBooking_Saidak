@@ -3,7 +3,7 @@ package com.company.hotelBooking.managers;
 import java.util.ResourceBundle;
 
 /**
- * Class with constants
+ * Class with configuration constants and for getting settings
  */
 public class ConfigurationManager {
     // DataBase Connection Properties

@@ -1,5 +1,8 @@
 package com.company.hotelBooking.managers;
 
+/**
+ * Class with page constants
+ */
 public class PagesManager {
     // JSP
     // Index
