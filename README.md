@@ -1,4 +1,4 @@
-<h2 align="center"> 🎓 Java Web Development<br/>EPAM Systems<br/>Minsk, Belarus (Минск, Беларусь)<br/>March 2021<br/>Final project: Online-shop</h2>
+<h2 align="center"> 🎓 Java Web Development <br/>(powered by Epam)<br/>Final project: HotelBooking</h2>
 
 <h4> EN: All copyrights to the terms of the project provided below belong to the company 
 <a href="https://www.epam.com/" rel="nofollow">EPAM</a></br>
@@ -21,14 +21,14 @@
 🛒 Project topic
 </h2>
 <p>
-<strong>HotelBooking</strong>. <br>
 <strong>User</strong> is looking for free rooms, indicating the capacity and the class of apartments, the time of stay.<br> According to the search results, the user adds the selected commands to the booking. User can remove items from the booking or clear it completely. User can log in to an account or register a new one. <br>
-Change of languages ​​(RU and EN) is implemented.
+Change of languages (RU and EN) is implemented.
 <br><br>
 <strong>When logged in</strong>, <strong>Client</strong> can, based on the booking, make a reservation. The cancellation option of the reservation is available.<br>
-Client has a personal profile in which he can change his personal information, upload a profile photo and view all their orders
+<br>
+<strong>Client</strong> has a personal profile in which he can change his personal information, upload a profile photo and view all their reservations
 <br><br>
-<strong>Administrator</strong> has the ability to change roles, reservation status, edit information about rooms and add new ones, view all information about users and reservations.
+<strong>Administrator</strong> additionally has the ability to change roles, reservation status, edit information about rooms and add new ones, view all information about users and reservations.
 </p>
 
 <h2> 
