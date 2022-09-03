@@ -46,6 +46,10 @@
 <ul>
     <li><a href="controller?command=update_user_form&id=${requestScope.user.id}">
         <fmt:message key="msg.user.update"/></a></li>
+    <c:if test="${sessionScope.user.role == 'CLIENT'}">
+        <li><a href="controller?command=change_password_form&id=${requestScope.user.id}"> <fmt:message
+                key="msg.user.change.password"/></a></li>
+    </c:if>
     <c:if test="${sessionScope.user.role == 'ADMIN'}">
         <li><a href="controller?command=delete_user&id=${requestScope.user.id}"> <fmt:message
                 key="msg.user.delete"/></a></li>

@@ -23,4 +23,12 @@ public interface IUserService extends IAbstractService<Long, UserDto> {
      * @return User if found
      */
     UserDto login(String email, String password);
+
+    /**
+     * Method replaces the old password with the new one entered by the user
+     *
+     * @param userDto user
+     * @return User with new password
+     */
+    UserDto changePassword(UserDto userDto);
 }

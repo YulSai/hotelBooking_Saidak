@@ -32,6 +32,7 @@ public class PagesManager {
     public static final String PAGE_CREATE_USER = "jsp/forms/users/createUserForm.jsp";
     public static final String PAGE_UPDATE_USERS = "jsp/forms/users/updateUserForm.jsp";
     public static final String PAGE_DELETE_USER = "jsp/forms/users/deleteUser.jsp";
+    public static final String PAGE_CHANGE_PASSWORD = "jsp/forms/users/changePasswordForm.jsp";
 
     //Login
     public static final String PAGE_LOGIN = "jsp/forms/authorizations/loginForm.jsp";

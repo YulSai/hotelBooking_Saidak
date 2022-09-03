@@ -26,6 +26,8 @@ import com.company.hotelBooking.controller.command.impl.rooms.RoomsSearchAvailab
 import com.company.hotelBooking.controller.command.impl.rooms.RoomsSearchAvailableFormCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.UpdateRoomCommand;
 import com.company.hotelBooking.controller.command.impl.rooms.UpdateRoomFormCommand;
+import com.company.hotelBooking.controller.command.impl.users.ChangePasswordCommand;
+import com.company.hotelBooking.controller.command.impl.users.ChangePasswordFormCommand;
 import com.company.hotelBooking.controller.command.impl.users.CreateUserCommand;
 import com.company.hotelBooking.controller.command.impl.users.CreateUserFormCommand;
 import com.company.hotelBooking.controller.command.impl.users.DeleteUserCommand;
@@ -64,6 +66,10 @@ public enum CommandName {
     DELETE_USER(new DeleteUserCommand(ServiceFactory.getINSTANCE().getService(IUserService.class),
             ServiceFactory.getINSTANCE().getService(IReservationService.class)),
             SecurityLevel.ADMIN),
+    CHANGE_PASSWORD_FORM(new ChangePasswordFormCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
+            SecurityLevel.CLIENT),
+    CHANGE_PASSWORD(new ChangePasswordCommand(ServiceFactory.getINSTANCE().getService(IUserService.class)),
+            SecurityLevel.CLIENT),
 
     //Rooms
     ROOM(new RoomCommand(ServiceFactory.getINSTANCE().getService(IRoomService.class)), SecurityLevel.ADMIN),

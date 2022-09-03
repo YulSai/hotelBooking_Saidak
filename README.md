@@ -26,7 +26,7 @@ Change of languages (RU and EN) is implemented.
 <br><br>
 <strong>When logged in</strong>, <strong>Client</strong> can, based on the booking, make a reservation. The cancellation option of the reservation is available.<br>
 <br>
-<strong>Client</strong> has a personal profile in which he can change his personal information, upload a profile photo and view all their reservations
+<strong>Client</strong> has a personal profile in which he can change his personal information or password, upload or change a profile photo and view all their reservations
 <br><br>
 <strong>Administrator</strong> additionally has the ability to change roles, reservation status, edit information about rooms and add new ones, view all information about users and reservations.
 </p>

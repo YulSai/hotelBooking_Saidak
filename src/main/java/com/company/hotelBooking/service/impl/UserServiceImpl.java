@@ -70,6 +70,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public UserDto changePassword(UserDto userDto) {
+        log.debug("Calling a service method changePassword. UserDto = {}", userDto);
+        UserValidator.getINSTANCE().isValid(userDto);
+        String existPassword = userDao.findById(userDto.getId()).getPassword();
+        String hashPassword = DigestUtil.INSTANCE.hash(userDto.getPassword());
+        if (hashPassword.equals(existPassword)) {
+            throw new ServiceException(MessageManger.getMessage("msg.error.new.password"));
+        }
+        userDto.setPassword(hashPassword);
+        return toDto(userDao.update(toEntity(userDto)));
+    }
+
+    @Override
     public void delete(Long id) {
         log.debug("Calling a service method delete. UserDto id = {}", id);
         userDao.delete(id);
