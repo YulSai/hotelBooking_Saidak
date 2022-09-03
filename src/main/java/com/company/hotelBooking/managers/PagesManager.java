@@ -28,7 +28,7 @@ public class PagesManager {
 
     // User
     public static final String PAGE_USERS = "jsp/forms/users/users.jsp";
-    public static final String PAGE_USER = "jsp/forms/users/user.jsp";
+    public static final String PAGE_USER = "jsp/forms/users/userInfo.jsp";
     public static final String PAGE_CREATE_USER = "jsp/forms/users/createUserForm.jsp";
     public static final String PAGE_UPDATE_USERS = "jsp/forms/users/updateUserForm.jsp";
     public static final String PAGE_DELETE_USER = "jsp/forms/users/deleteUser.jsp";

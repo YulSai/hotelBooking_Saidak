@@ -19,5 +19,6 @@ email TEXT UNIQUE NOT NULL,
 password text NOT NULL,
 phone_number TEXT NOT NULL,
 role_id BIGINT NOT NULL REFERENCES roles,
+avatar TEXT,
 deleted BOOLEAN NOT NULL DEFAULT FALSE
 );

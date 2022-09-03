@@ -15,7 +15,9 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1><fmt:message key="msg.user.title"/></h1>
 <p>${requestScope.message}</p>
+<p>${sessionScope.message}</p>
 <table class="first">
+    <tr><img src="images/avatars/${requestScope.user.avatar}" alt="${requestScope.user.avatar}" class="avatar"></tr>
     <tr>
         <th><fmt:message key="msg.field"/></th>
         <th><fmt:message key="msg.value"/></th>

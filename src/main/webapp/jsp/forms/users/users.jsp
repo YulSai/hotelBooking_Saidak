@@ -14,15 +14,16 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
+<p>${sessionScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>
         <th>#</th>
-        <th><fmt:message key="msg.user.first.name"/>First name</th>
-        <th><fmt:message key="msg.user.last.name"/>Last name</th>
-        <th><fmt:message key="msg.user.email"/>Email</th>
-        <th><fmt:message key="msg.user.phone"/>Phone number</th>
-        <th><fmt:message key="msg.user.role"/>Role</th>
+        <th><fmt:message key="msg.user.first.name"/></th>
+        <th><fmt:message key="msg.user.last.name"/></th>
+        <th><fmt:message key="msg.user.email"/></th>
+        <th><fmt:message key="msg.user.phone"/></th>
+        <th><fmt:message key="msg.user.role"/></th>
     </tr>
     <c:forEach items="${requestScope.users}" var="user" varStatus="counter">
         <tr>

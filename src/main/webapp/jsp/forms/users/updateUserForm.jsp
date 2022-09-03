@@ -15,7 +15,7 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1><fmt:message key="msg.update.user.title"/></h1>
 <p>${requestScope.message}</p>
-<form method="post" action="controller">
+<form method="post" action="controller" enctype="multipart/form-data">
     <input name="command" type="hidden" value="update_user"/>
     <input name="id" type="hidden" value="${requestScope.user.id}"/>
 
@@ -29,11 +29,13 @@
         <label for="email-input"><fmt:message key="msg.create.user.email"/></label>
         <input id="email-input" name="email" type="email" value="<c:out value="${requestScope.user.email}"/>"/>
         <br/>
-        <label for="password-input"><fmt:message key="msg.create.user.password"/></label>
         <input id="password-input" name="password" type="hidden" min="6" value="${requestScope.user.password}"/>
         <label for="phone_number-input"><fmt:message key="msg.create.user.phone"/></label>
         <input id="phone_number-input" name="phone_number" type="tel" min="13"
                value="${requestScope.user.phoneNumber}"/>
+        <br/>
+        <label for="avatar_input"><fmt:message key="msg.user.avatar"/></label>
+        <input id="avatar_input" name="avatar" type="file" accept="image/*"/>
         <br/>
         <input id="role-input-admin" name="role" type="hidden" value="${requestScope.user.role}"/>
     </c:if>
@@ -45,11 +47,12 @@
         <input id="password-input" name="password" type="hidden" min="6" value="${requestScope.user.password}"/>
         <input id="phone_number-input" name="phone_number" type="hidden" min="13"
                value="${requestScope.user.phoneNumber}"/>
+        <input id="avatar_input" name="avatar" type="hidden" value="${requestScope.user.avatar}"/>
         <input id="role-input-admin" name="role" type="radio"
-               value="ADMIN" ${requestScope.user.role='ADMIN' ? 'checked' : ''}/>
+               value="ADMIN" ${requestScope.user.role=='ADMIN' ? 'checked' : ''}/>
         <label for="role-input-admin"><fmt:message key="msg.update.user.admin"/></label>
         <input id="role-input-client" name="role" type="radio"
-               value="CLIENT" ${requestScope.user.role='CLIENT' ? 'checked' : ''}/>
+               value="CLIENT" ${requestScope.user.role=='CLIENT' ? 'checked' : ''}/>
         <label for="role-input-client"><fmt:message key="msg.update.user.client"/></label>
         <br/>
     </c:if>

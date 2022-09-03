@@ -128,6 +128,7 @@ public class UserServiceImpl implements IUserService {
             dto.setPassword(entity.getPassword());
             dto.setPhoneNumber(entity.getPhoneNumber());
             dto.setRole(UserDto.RoleDto.valueOf(entity.getRole().toString()));
+            dto.setAvatar(entity.getAvatar());
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog");
             throw new ServiceException(MessageManger.getMessage("msg.error.find"));
@@ -152,6 +153,7 @@ public class UserServiceImpl implements IUserService {
             entity.setPassword(dto.getPassword());
             entity.setPhoneNumber(dto.getPhoneNumber());
             entity.setRole(User.Role.valueOf(dto.getRole().toString()));
+            entity.setAvatar(dto.getAvatar());
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog");
             throw new ServiceException(MessageManger.getMessage("msg.error.find"));

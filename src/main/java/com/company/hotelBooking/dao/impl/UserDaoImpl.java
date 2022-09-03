@@ -54,6 +54,19 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User findById(Long id, Connection connection) {
+        log.debug("Accessing the database using the findById command. User's id = {}", id);
+        try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_FIND_BY_ID)) {
+            statement.setLong(1, id);
+            ResultSet result = statement.executeQuery();
+            connection.commit();
+
+            if (result.next()) {
+                return processUser(result);
+            }
+        } catch (SQLException e) {
+            log.error("SQLUserDAO findById error {}", id, e);
+            throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
+        }
         return null;
     }
 
@@ -112,7 +125,7 @@ public class UserDaoImpl implements IUserDao {
         try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_USER_UPDATE)) {
             connection.setAutoCommit(false);
             extractedDate(user, statement);
-            statement.setLong(7, user.getId());
+            statement.setLong(8, user.getId());
 
             if (statement.executeUpdate() == 0) {
                 log.error("Command update can't be executed");
@@ -234,6 +247,7 @@ public class UserDaoImpl implements IUserDao {
         user.setPassword(result.getString("password"));
         user.setPhoneNumber(result.getString("phone_number"));
         user.setRole(User.Role.valueOf((result.getString("role")).toUpperCase()));
+        user.setAvatar(result.getString("avatar"));
         return user;
     }
 
@@ -250,6 +264,7 @@ public class UserDaoImpl implements IUserDao {
         statement.setString(4, user.getPassword());
         statement.setString(5, user.getPhoneNumber());
         statement.setString(6, user.getRole().toString());
+        statement.setString(7, user.getAvatar());
     }
 
     /**

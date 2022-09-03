@@ -45,7 +45,7 @@ public class UserCommand implements ICommand {
                     user = service.findById(userDto.getId());
                 }
                 req.setAttribute("user", user);
-                log.info("Appeal to user.jsp.");
+                log.info("Appeal to userInfo.jsp.");
                 return PagesManager.PAGE_USER;
             }
         } else {

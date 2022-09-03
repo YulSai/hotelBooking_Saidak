@@ -7,17 +7,18 @@ import lombok.Data;
  */
 @Data
 public class User {
-	private Long id;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String password;
-	private String phoneNumber;
-	private Role role;
-	
-	public enum Role{
-		ADMIN,
-		CLIENT,
-		GUEST
-	}
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private String phoneNumber;
+    private Role role;
+    private String avatar;
+
+    public enum Role {
+        ADMIN,
+        CLIENT,
+        GUEST
+    }
 }

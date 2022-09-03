@@ -1,11 +1,17 @@
 package com.company.hotelBooking.controller.command.impl.users;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
+import com.company.hotelBooking.managers.ConfigurationManager;
 import com.company.hotelBooking.managers.MessageManger;
-import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Class for processing HttpServletRequest "update_user"
@@ -17,7 +23,16 @@ public class UpdateUserCommand implements ICommand {
         this.service = service;
     }
 
-    private static UserDto getUserFromInput(HttpServletRequest req) {
+    @Override
+    public String execute(HttpServletRequest req) {
+        UserDto user = getUserFromInput(req);
+        UserDto updated = service.update(user);
+        HttpSession session = req.getSession();
+        session.setAttribute("message", MessageManger.getMessage("msg.user.updated"));
+        return "redirect:controller?command=user&id=" + updated.getId();
+    }
+
+    private UserDto getUserFromInput(HttpServletRequest req) {
         UserDto user = new UserDto();
         user.setId(Long.parseLong(req.getParameter("id")));
         user.setEmail(req.getParameter("email"));
@@ -26,15 +41,30 @@ public class UpdateUserCommand implements ICommand {
         user.setLastName(req.getParameter("last_name"));
         user.setPhoneNumber(req.getParameter("phone_number"));
         user.setRole(UserDto.RoleDto.valueOf(req.getParameter("role").toUpperCase()));
+        HttpSession session = req.getSession();
+        UserDto userDto = (UserDto) session.getAttribute("user");
+        if ("ADMIN".equals(userDto.getRole().toString())) {
+            user.setAvatar(req.getParameter("avatar"));
+        } else {
+            user.setAvatar(getAvatarPath(req));
+        }
         return user;
     }
 
-    @Override
-    public String execute(HttpServletRequest req) {
-        UserDto user = getUserFromInput(req);
-        UserDto updated = service.update(user);
-        req.setAttribute("user", updated);
-        req.setAttribute("massage", MessageManger.getMessage("msg.user.updated"));
-        return PagesManager.PAGE_USER;
+    private String getAvatarPath(HttpServletRequest req) {
+        String avatarName;
+        try {
+            Part part = req.getPart("avatar");
+            if (part.getSize() > 0) {
+                avatarName = UUID.randomUUID() + "_" + part.getSubmittedFileName();
+                String partFile = ConfigurationManager.getInstance().getString("part.avatar");
+                part.write(partFile + avatarName);
+            } else {
+                avatarName = service.findById(Long.parseLong(req.getParameter("id"))).getAvatar();
+            }
+        } catch (IOException | ServletException e) {
+            throw new RuntimeException(e);
+        }
+        return avatarName;
     }
 }

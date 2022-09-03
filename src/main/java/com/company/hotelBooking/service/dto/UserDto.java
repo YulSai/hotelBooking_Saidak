@@ -14,6 +14,7 @@ public class UserDto {
     private String lastName;
     private String phoneNumber;
     private RoleDto role;
+    private String avatar;
 
     public enum RoleDto {
         ADMIN,
