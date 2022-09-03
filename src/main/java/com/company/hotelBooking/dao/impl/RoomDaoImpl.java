@@ -56,7 +56,6 @@ public class RoomDaoImpl implements IRoomDao {
     public Room findById(Long id, Connection connection) {
         log.debug("Accessing the database using the findById  command. Room id = {}", id);
         try (PreparedStatement statement = connection.prepareStatement(SqlManager.SQL_ROOM_FIND_BY_ID)) {
-            connection.setAutoCommit(false);
             statement.setLong(1, id);
             ResultSet result = statement.executeQuery();
             connection.commit();
@@ -65,11 +64,8 @@ public class RoomDaoImpl implements IRoomDao {
                 return processRoom(result);
             }
         } catch (SQLException e) {
-            rollback(connection);
             log.error("SQLRoomDAO findById error id = {}", id, e);
             throw new DaoException(MessageManger.getMessage("msg.error.find.by.id") + id);
-        } finally {
-            close(connection);
         }
         return null;
     }

@@ -24,7 +24,7 @@ public class CancelReservationCommand implements ICommand {
 
         ReservationDto updated = service.update(reservation);
         req.setAttribute("reservation", updated);
-        req.setAttribute("massage", MessageManger.getMessage("msg.reservation.updated"));
+        req.setAttribute("message", MessageManger.getMessage("msg.reservation.updated"));
         return PagesManager.PAGE_RESERVATION;
     }
 }

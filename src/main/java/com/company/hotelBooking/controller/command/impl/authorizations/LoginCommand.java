@@ -33,6 +33,6 @@ public class LoginCommand implements ICommand {
         HttpSession session = req.getSession();
         session.setAttribute("user", userDto);
         log.info("Appeal to login.jsp.");
-        return PagesManager.PAGE_INDEX;
+        return "redirect:";
     }
 }

@@ -197,6 +197,7 @@ public class ReservationServiceImpl implements IReservationService {
             dto.setPassword(entity.getUser().getPassword());
             dto.setPhoneNumber(entity.getUser().getPhoneNumber());
             dto.setRole(UserDto.RoleDto.valueOf(entity.getUser().getRole().toString()));
+            dto.setAvatar(entity.getUser().getAvatar());
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
             throw new ServiceException(MessageManger.getMessage("msg.empty"));
@@ -242,6 +243,7 @@ public class ReservationServiceImpl implements IReservationService {
             entity.setPassword(dto.getUser().getPassword());
             entity.setPhoneNumber(dto.getUser().getPhoneNumber());
             entity.setRole(User.Role.valueOf(dto.getUser().getRole().toString()));
+            entity.setAvatar(dto.getUser().getAvatar());
         } catch (NullPointerException e) {
             log.error("This user is not in the catalog.");
             throw new ServiceException(MessageManger.getMessage("msg.empty"));

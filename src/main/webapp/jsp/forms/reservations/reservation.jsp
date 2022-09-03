@@ -15,6 +15,7 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1><fmt:message key="msg.reservation.detail"/></h1>
 <p>${requestScope.message}</p>
+<p>${sessionScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>

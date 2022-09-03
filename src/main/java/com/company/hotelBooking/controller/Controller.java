@@ -8,6 +8,7 @@ import com.company.hotelBooking.exceptions.ExceptionsHandler;
 import com.company.hotelBooking.exceptions.NotFoundException;
 import com.company.hotelBooking.managers.MessageManger;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +23,10 @@ import java.util.Locale;
  * Class for processing HttpServletRequest "/controller"
  */
 @WebServlet("/controller")
+@MultipartConfig(maxFileSize = Controller.MB * 10, maxRequestSize = Controller.MB * 100)
 @Log4j2
 public class Controller extends HttpServlet {
+    public static final int MB = 1024 * 1024;
     public static final String REDIRECT = "redirect:";
 
 

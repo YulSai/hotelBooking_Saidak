@@ -34,7 +34,7 @@ public class RoomsSearchAvailableCommand implements ICommand {
             String capacity = req.getParameter("capacity");
             List<RoomDto> roomsAvailable = roomService.findAvailableRooms(checkIn, checkOut, type, capacity);
             if (roomsAvailable.isEmpty()) {
-                session.setAttribute("message", MessageManger.getMessage("msg.no.available.rooms"));
+                req.setAttribute("message", MessageManger.getMessage("msg.no.available.rooms"));
             }
             session.setAttribute("rooms_available", roomsAvailable);
             session.setAttribute("check_in", checkIn);
