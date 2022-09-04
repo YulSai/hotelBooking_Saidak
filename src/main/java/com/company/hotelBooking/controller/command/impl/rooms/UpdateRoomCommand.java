@@ -2,7 +2,6 @@ package com.company.hotelBooking.controller.command.impl.rooms;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.managers.MessageManger;
-import com.company.hotelBooking.managers.PagesManager;
 import com.company.hotelBooking.service.api.IRoomService;
 import com.company.hotelBooking.service.dto.RoomDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +21,6 @@ public class UpdateRoomCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest req) {
         RoomDto room = getRoomFromInput(req);
-        BigDecimal price = new BigDecimal(req.getParameter("price"));
-        if (price.compareTo(BigDecimal.valueOf(0)) < 0 || price.compareTo(BigDecimal.valueOf(10000)) >= 0) {
-            req.setAttribute("message", MessageManger.getMessage("msg.create.new.room.price"));
-            return PagesManager.PAGE_CREATE_ROOM;
-        }
         RoomDto updated = service.update(room);
         req.setAttribute("message", MessageManger.getMessage("msg.room.updated"));
         return "redirect:controller?command=room&id=" + updated.getId();

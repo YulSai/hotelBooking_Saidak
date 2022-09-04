@@ -43,7 +43,7 @@
     </select>
     <br/>
     <label for="price-input"><fmt:message key="msg.price"/>USD: </label>
-    <input id="price-input" name="price" type="text" value="${requestScope.room.price}"/>
+    <input id="price-input" name="price" type="number" min="1" max="9999" value="${requestScope.room.price}"/>
     <br/>
     <input type="submit" value="<fmt:message key="msg.update"/>"/>
 </form>

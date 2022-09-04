@@ -42,7 +42,7 @@
     </select>
     <br/>
     <label for="price-input"><fmt:message key="msg.price"/></label>
-    <input id="price-input" name="price" type="text"/>
+    <input id="price-input" name="price" type="number" min="1" max="9999"/>
     <br/>
     <input type="submit" value="<fmt:message key="msg.create.new.room.register"/>"/>
 </form>
