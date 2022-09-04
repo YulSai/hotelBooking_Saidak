@@ -28,6 +28,7 @@ public class UpdateRoomCommand implements ICommand {
             return PagesManager.PAGE_CREATE_ROOM;
         }
         RoomDto updated = service.update(room);
+        req.setAttribute("message", MessageManger.getMessage("msg.room.updated"));
         return "redirect:controller?command=room&id=" + updated.getId();
     }
 

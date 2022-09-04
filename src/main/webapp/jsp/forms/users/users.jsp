@@ -14,7 +14,6 @@
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <p>${requestScope.message}</p>
-<p>${sessionScope.message}</p>
 <table class="first">
     <jsp:include page="../pagination.jsp"/>
     <tr>

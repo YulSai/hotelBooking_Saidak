@@ -15,7 +15,6 @@
 <jsp:include page="../../navbar.jsp"/>
 <h1 id="title"><fmt:message key="msg.available.detail"/></h1>
 <h2>${sessionScope.check_in} - ${sessionScope.check_out}</h2>
-<p>${sessionScope.message}</p>
 <p>${requestScope.message}</p>
 <table>
     <jsp:include page="../pagination.jsp"/>

@@ -42,6 +42,7 @@ public class CreateReservationCommand implements ICommand {
             ReservationDto created = reservationService.create(processed);
             reservationInfoService.processBookingInfo(booking, checkIn, checkOut, created);
             req.getSession().removeAttribute("booking");
+            req.setAttribute("message", MessageManger.getMessage("msg.reservation.created"));
             return "redirect:controller?command=reservation&id=" + created.getId();
         }
     }

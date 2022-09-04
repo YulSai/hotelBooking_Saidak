@@ -9,13 +9,13 @@
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/tables.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
     <title><fmt:message key="msg.user"/></title>
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
 <h1><fmt:message key="msg.user.title"/></h1>
 <p>${requestScope.message}</p>
-<p>${sessionScope.message}</p>
 <table class="first">
     <tr><img src="images/avatars/${requestScope.user.avatar}" alt="${requestScope.user.avatar}" class="avatar"></tr>
     <tr>

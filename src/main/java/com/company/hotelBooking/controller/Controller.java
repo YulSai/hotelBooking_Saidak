@@ -44,9 +44,23 @@ public class Controller extends HttpServlet {
             page = ExceptionsHandler.getINSTANCE().handleException(req, resp, e);
         }
         if (page.startsWith(REDIRECT)) {
+            setMessageSession(req);
             resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));
         } else {
             req.getRequestDispatcher(page).forward(req, resp);
+        }
+    }
+
+    /**
+     * Method checks for a message in the request and, if it's not null, sets it into the session
+     *
+     * @param req HttpServletRequest
+     */
+    private void setMessageSession(HttpServletRequest req) {
+        String message = (String) req.getAttribute("message");
+        if (message != null) {
+            HttpSession session = req.getSession();
+            session.setAttribute("message", message);
         }
     }
 

@@ -28,6 +28,7 @@ public class CreateRoomCommand implements ICommand {
             return PagesManager.PAGE_CREATE_ROOM;
         }
         RoomDto created = service.create(room);
+        req.setAttribute("message", MessageManger.getMessage("msg.room.created"));
         return "redirect:controller?command=room&id=" + created.getId();
     }
 
