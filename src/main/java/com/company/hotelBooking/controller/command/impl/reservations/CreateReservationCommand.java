@@ -38,12 +38,9 @@ public class CreateReservationCommand implements ICommand {
         } else {
             @SuppressWarnings("unchecked")
             Map<Long, Long> booking = (Map<Long, Long>) session.getAttribute("booking");
-
             ReservationDto processed = reservationService.processBooking(booking, user, checkIn, checkOut);
             ReservationDto created = reservationService.create(processed);
             reservationInfoService.processBookingInfo(booking, checkIn, checkOut, created);
-
-            session.setAttribute("message", MessageManger.getMessage("msg.reservation.created"));
             req.getSession().removeAttribute("booking");
             return "redirect:controller?command=reservation&id=" + created.getId();
         }

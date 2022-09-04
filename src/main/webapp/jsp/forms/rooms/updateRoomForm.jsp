@@ -21,7 +21,7 @@
     <input id="room_number-input" name="room_number" type="text" value="${requestScope.room.number}"/>
     <br/>
     <select name="type" required="required">
-        <option value=""><fmt:message key="msg.choose.type"/></option>
+        <option value="${requestScope.room.type}">${requestScope.room.type}</option>
         <option value="STANDARD"><fmt:message key="msg.standard"/></option>
         <option value="COMFORT"><fmt:message key="msg.comfort"/></option>
         <option value="LUX"><fmt:message key="msg.lux"/></option>
@@ -29,7 +29,7 @@
     </select>
     <br/>
     <select name="capacity" required="required">
-        <option value=""><fmt:message key="msg.choose.capacity"/></option>
+        <option value="${requestScope.room.capacity}">${requestScope.room.capacity}</option>
         <option value="SINGLE"><fmt:message key="msg.single"/></option>
         <option value="DOUBLE"><fmt:message key="msg.double"/></option>
         <option value="TRIPLE"><fmt:message key="msg.triple"/></option>
@@ -37,7 +37,7 @@
     </select>
     <br/>
     <select name="status" required="required">
-        <option value=""><fmt:message key="msg.choose.status"/></option>
+        <option value="${requestScope.room.status}">${requestScope.room.status}</option>
         <option value="AVAILABLE"><fmt:message key="msg.available"/></option>
         <option value="UNAVAILABLE"><fmt:message key="msg.unavailable"/></option>
     </select>

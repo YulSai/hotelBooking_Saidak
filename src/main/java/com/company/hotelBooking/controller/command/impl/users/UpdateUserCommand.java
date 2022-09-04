@@ -2,7 +2,6 @@ package com.company.hotelBooking.controller.command.impl.users;
 
 import com.company.hotelBooking.controller.command.api.ICommand;
 import com.company.hotelBooking.managers.ConfigurationManager;
-import com.company.hotelBooking.managers.MessageManger;
 import com.company.hotelBooking.service.api.IUserService;
 import com.company.hotelBooking.service.dto.UserDto;
 import jakarta.servlet.ServletException;
@@ -27,8 +26,6 @@ public class UpdateUserCommand implements ICommand {
     public String execute(HttpServletRequest req) {
         UserDto user = getUserFromInput(req);
         UserDto updated = service.update(user);
-        HttpSession session = req.getSession();
-        session.setAttribute("message", MessageManger.getMessage("msg.user.updated"));
         return "redirect:controller?command=user&id=" + updated.getId();
     }
 

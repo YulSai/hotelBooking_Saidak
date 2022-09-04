@@ -12,7 +12,7 @@
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"/>
-<h1><fmt:message key="msg.reservation.update.title"</h1>
+<h1><fmt:message key="msg.reservation.update.title"/></h1>
 <p>${requestScope.message}</p>
 <form method="post" action="controller">
     <input name="command" type="hidden" value="update_reservation"/>
