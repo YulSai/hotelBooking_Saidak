@@ -25,7 +25,7 @@ id BIGSERIAL PRIMARY KEY,
 room_number TEXT UNIQUE NOT NULL,
 room_type_id BIGINT NOT NULL REFERENCES room_type,
 room_capacity_id BIGINT NOT NULL REFERENCES room_capacity,
-price DECIMAL(6, 2) NOT NULL,
+price DECIMAL NOT NULL,
 room_status_id BIGINT NOT NULL REFERENCES room_status,
 deleted BOOLEAN NOT NULL DEFAULT FALSE
 );

@@ -16,7 +16,6 @@ public class Room {
     private BigDecimal price;
     private RoomStatus status;
 
-
     public enum RoomStatus {
         AVAILABLE,
         UNAVAILABLE
@@ -28,10 +27,23 @@ public class Room {
         LUX,
         PRESIDENT
     }
+
     public enum Capacity {
         SINGLE,
         DOUBLE,
         TRIPLE,
         FAMILY
+    }
+
+    public Room() {
+    }
+
+    public Room(Long id, String number, RoomType type, Capacity capacity, BigDecimal price, RoomStatus status) {
+        this.id = id;
+        this.number = number;
+        this.type = type;
+        this.capacity = capacity;
+        this.price = price;
+        this.status = status;
     }
 }

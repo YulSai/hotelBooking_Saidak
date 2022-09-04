@@ -96,17 +96,6 @@ public class RoomServiceImpl implements IRoomService {
                 .toList();
     }
 
-
-    public RoomDto findRoomByNumber(String number) {
-        log.debug("Calling a service method findRoomByNumber. RoomDto number = {}", number);
-        Room room = roomDao.findRoomByNumber(number);
-        if (room == null) {
-            log.error("SQLUserService findById error. No room with number = {}", number);
-            throw new ServiceException(MessageManger.getMessage("msg.error.find") + number);
-        }
-        return toDto(room);
-    }
-
     /**
      * Method transforms object Room into object RoomDto
      *
