@@ -63,6 +63,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <artifactId>junit-jupiter-api</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
