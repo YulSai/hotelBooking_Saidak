@@ -21,7 +21,7 @@ public class CancelReservationCommand implements ICommand {
         ReservationDto reservation = service.findById(Long.valueOf(req.getParameter("id")));
         reservation.setStatus(ReservationDto.StatusDto.REJECTED);
         ReservationDto updated = service.update(reservation);
-        req.setAttribute("message", MessageManger.getMessage("msg.reservation.updated"));
+        req.setAttribute("message", MessageManger.getMessage("msg.reservations.cancel"));
         return "redirect:controller?command=reservation&id=" + updated.getId();
     }
 }

@@ -32,6 +32,6 @@
         <li><a href="controller?command=login_form"><fmt:message key="msg.main.sign.in"/></a></li>
     </c:if>
 
-    <li><a href="controller?command=language_select&language=en">En</a></li>
-    <li><a href="controller?command=language_select&language=ru">Ru</a></li>
+    <li><a href="controller?command=language_select&language=en"><fmt:message key="msg.main.en"/></a></li>
+    <li><a href="controller?command=language_select&language=ru"><fmt:message key="msg.main.ru"/></a></li>
 </ul>

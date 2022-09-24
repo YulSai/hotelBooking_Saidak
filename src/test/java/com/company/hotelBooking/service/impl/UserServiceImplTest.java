@@ -19,7 +19,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void loginCorrectException() throws LoginUserException {
+    public void loginCorrectException() {
         try {
             userService.login("maxim_hammond@kwontol.com", "111111");
         } catch (LoginUserException e) {

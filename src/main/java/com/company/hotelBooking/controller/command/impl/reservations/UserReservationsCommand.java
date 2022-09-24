@@ -33,7 +33,7 @@ public class UserReservationsCommand implements ICommand {
         Long id = Long.valueOf(req.getParameter("id"));
         List<ReservationDto> reservations = reservationService.findAllPagesByUsers(paging, id);
         if (reservations.isEmpty()) {
-            req.setAttribute("message", MessageManger.getMessage("msg.empty"));
+            req.setAttribute("message", MessageManger.getMessage("msg.reservations.no"));
             return PagesManager.PAGE_RESERVATIONS;
         } else {
             HttpSession session = req.getSession();
